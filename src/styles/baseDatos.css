@@ -1,0 +1,203 @@
+.base-datos-container {
+  max-width: 100%;
+  padding: var(--spacing-md);
+  min-height: 100vh;
+}
+
+.base-datos-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--text-white);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.base-datos-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.base-datos-title {
+  font-family: var(--font-title);
+  font-size: 2rem;
+}
+
+.estadisticas-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.estadistica-card {
+  background-color: var(--bg-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  border-left: 4px solid var(--color-primary);
+}
+
+.estadistica-numero {
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.estadistica-label {
+  font-family: var(--font-subtitle);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.busqueda-container {
+  background-color: var(--bg-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.busqueda-input {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-family: var(--font-text);
+}
+
+.busqueda-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.ots-lista-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.ot-card {
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-left: 4px solid var(--color-primary);
+}
+
+.ot-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.ot-card-header {
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ot-card-numero {
+  font-family: var(--font-subtitle);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ot-card-fecha {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.ot-card-body {
+  padding: var(--spacing-md);
+}
+
+.ot-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.ot-info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.ot-info-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.ot-info-valor {
+  font-family: var(--font-text);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ot-card-acciones {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: var(--bg-secondary);
+  border-top: 2px solid var(--border-color);
+}
+
+.btn-icono {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.mensaje-vacio {
+  background-color: var(--bg-primary);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.mensaje-vacio-icon {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.mensaje-vacio-texto {
+  font-family: var(--font-subtitle);
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+.acciones-generales {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+  .base-datos-header-top {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .acciones-generales {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .ot-card-acciones {
+    justify-content: flex-end;
+  }
+}
