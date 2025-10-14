@@ -3,6 +3,7 @@ import Index from './components/Index';
 import CrearOT from './components/CrearOT';
 import BaseDatos from './components/BaseDatos';
 import DetalleOT from './components/DetalleOT';
+import PWAInstall from './components/PWAInstall';
 import './styles/global.css';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
 
   return (
     <div className="app-container">
+      <PWAInstall />
       {renderView()}
     </div>
   );

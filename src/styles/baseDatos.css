@@ -76,90 +76,6 @@
   border-color: var(--color-primary);
 }
 
-.ots-lista-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.ot-card {
-  background-color: var(--bg-primary);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-md);
-  overflow: hidden;
-  transition: all 0.3s ease;
-  border-left: 4px solid var(--color-primary);
-}
-
-.ot-card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
-}
-
-.ot-card-header {
-  background-color: var(--bg-secondary);
-  padding: var(--spacing-md);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.ot-card-numero {
-  font-family: var(--font-subtitle);
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.ot-card-fecha {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-.ot-card-body {
-  padding: var(--spacing-md);
-}
-
-.ot-info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-}
-
-.ot-info-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.ot-info-label {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.ot-info-valor {
-  font-family: var(--font-text);
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.ot-card-acciones {
-  display: flex;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md);
-  background-color: var(--bg-secondary);
-  border-top: 2px solid var(--border-color);
-}
-
-.btn-icono {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-}
-
 .mensaje-vacio {
   background-color: var(--bg-primary);
   padding: var(--spacing-xl);
@@ -178,6 +94,149 @@
   font-size: 1.25rem;
   color: var(--text-secondary);
   margin-bottom: var(--spacing-md);
+}
+
+.tabla-container {
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  overflow-x: auto;
+}
+
+.tabla-ots {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.tabla-ots thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--text-white);
+}
+
+.tabla-ots th {
+  padding: var(--spacing-sm);
+  text-align: left;
+  font-family: var(--font-subtitle);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.tabla-ots tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.tabla-ots tbody tr:hover {
+  background-color: var(--bg-secondary);
+  transform: scale(1.01);
+}
+
+.tabla-ots td {
+  padding: var(--spacing-sm);
+  vertical-align: middle;
+}
+
+.ot-numero-cell {
+  font-weight: 700;
+}
+
+.vehiculo-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.vehiculo-info strong {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.vehiculo-info span {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.patente-badge {
+  background-color: var(--bg-tertiary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  border: 2px solid var(--border-color);
+}
+
+.servicio-badge {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.acciones-cell {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.btn-icono {
+  padding: 0.4rem 0.6rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background-color: transparent;
+}
+
+.btn-ver {
+  color: #3b82f6;
+}
+
+.btn-ver:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+  transform: scale(1.1);
+}
+
+.btn-editar {
+  color: #f59e0b;
+}
+
+.btn-editar:hover {
+  background-color: rgba(245, 158, 11, 0.1);
+  transform: scale(1.1);
+}
+
+.btn-eliminar {
+  color: #ef4444;
+}
+
+.btn-eliminar:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  transform: scale(1.1);
+}
+
+@media (max-width: 1024px) {
+  .tabla-ots {
+    font-size: 0.8rem;
+  }
+  
+  .tabla-ots th,
+  .tabla-ots td {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .acciones-cell {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
 }
 
 .acciones-generales {

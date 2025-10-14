@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import FirmaDigital from './FirmaDigital';
-import Encuesta from './Encuesta';
 import '../styles/formularioCliente.css';
 
 function FormularioCliente({ otsCreadas, navigateTo }) {
@@ -63,18 +62,25 @@ function FormularioCliente({ otsCreadas, navigateTo }) {
   const handleEnviar = () => {
     if (!validarFormulario()) return;
     
+    // Simular envío de correo con las OTs
+    const resumenOTs = otsCreadas.map(ot => 
+      `OT ${ot.codigoOT}: ${ot.datosVehiculo.tipo} ${ot.datosVehiculo.marca} ${ot.datosVehiculo.modelo}`
+    ).join('\n');
+    
+    alert(`✓ OT(s) enviada(s) exitosamente a: ${datosCliente.correo}\n\n` +
+          `Resumen:\n${resumenOTs}\n\n` +
+          `La encuesta de satisfacción será enviada posteriormente por correo o WhatsApp.`);
+    
     console.log('Datos del cliente:', datosCliente);
     console.log('OTs creadas:', otsCreadas);
     
-    setMostrarEncuesta(true);
+    // Redirigir directamente al inicio después de enviar
+    navigateTo('index');
   };
 
   if (mostrarEncuesta) {
-    return <Encuesta 
-      datosCliente={datosCliente} 
-      otsCreadas={otsCreadas}
-      navigateTo={navigateTo}
-    />;
+    // Ya no se muestra la encuesta aquí
+    return null;
   }
 
   return (
@@ -173,7 +179,7 @@ function FormularioCliente({ otsCreadas, navigateTo }) {
           className="btn btn-success btn-full"
           onClick={handleEnviar}
         >
-          Enviar y Continuar con Encuesta →
+          ✓ Enviar OT al Cliente
         </button>
       </div>
     </div>

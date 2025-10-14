@@ -32,10 +32,14 @@ function BaseDatos({ navigateTo }) {
     const filtradas = ots.filter(ot => {
       return (
         ot.numeroOT?.toString().includes(termino) ||
+        ot.codigoOT?.toLowerCase().includes(termino) ||
+        ot.datosEmpresa?.nombreEmpresa?.toLowerCase().includes(termino) ||
         ot.datosVehiculo?.patente?.toLowerCase().includes(termino) ||
         ot.datosVehiculo?.marca?.toLowerCase().includes(termino) ||
         ot.datosVehiculo?.modelo?.toLowerCase().includes(termino) ||
-        ot.datosGPS?.imei?.toLowerCase().includes(termino)
+        ot.datosGPS?.nombreTecnico?.toLowerCase().includes(termino) ||
+        ot.datosGPS?.imeiIn?.toLowerCase().includes(termino) ||
+        ot.datosGPS?.imeiOut?.toLowerCase().includes(termino)
       );
     });
 
@@ -121,7 +125,7 @@ function BaseDatos({ navigateTo }) {
         <input
           type="text"
           className="busqueda-input"
-          placeholder="🔍 Buscar por N° OT, patente, marca, modelo o IMEI..."
+          placeholder="🔍 Buscar por N° OT, empresa, patente, marca, modelo, técnico o IMEI..."
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
         />
@@ -143,72 +147,76 @@ function BaseDatos({ navigateTo }) {
           )}
         </div>
       ) : (
-        <div className="ots-lista-container">
-          {otsFiltradas.map((ot) => (
-            <div key={ot.id} className="ot-card">
-              <div className="ot-card-header">
-                <div>
-                  <div className="ot-card-numero">
-                    OT N° {String(ot.numeroOT).padStart(4, '0')}
-                  </div>
-                  <div className="ot-card-fecha">
-                    {formatearFecha(ot.fechaCreacion)}
-                  </div>
-                </div>
-                <span className="badge badge-success">✓</span>
-              </div>
-
-              <div className="ot-card-body">
-                <div className="ot-info-grid">
-                  <div className="ot-info-item">
-                    <span className="ot-info-label">Vehículo</span>
-                    <span className="ot-info-valor">
-                      {ot.datosVehiculo?.marca} {ot.datosVehiculo?.modelo}
+        <div className="tabla-container">
+          <table className="tabla-ots">
+            <thead>
+              <tr>
+                <th>N° OT</th>
+                <th>Fecha</th>
+                <th>Empresa</th>
+                <th>Vehículo</th>
+                <th>Patente</th>
+                <th>Técnico</th>
+                <th>Servicio</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {otsFiltradas.map((ot) => (
+                <tr key={ot.id}>
+                  <td className="ot-numero-cell">
+                    <span className="badge badge-info">
+                      {ot.codigoOT || `OT${String(ot.numeroOT).padStart(4, '0')}`}
                     </span>
-                  </div>
-                  <div className="ot-info-item">
-                    <span className="ot-info-label">Patente</span>
-                    <span className="ot-info-valor">
-                      {ot.datosVehiculo?.patente || 'N/A'}
+                  </td>
+                  <td>{formatearFecha(ot.fechaCreacion)}</td>
+                  <td>{ot.datosEmpresa?.nombreEmpresa || 'N/A'}</td>
+                  <td>
+                    <div className="vehiculo-info">
+                      <strong>{ot.datosVehiculo?.marca || 'N/A'}</strong>
+                      <span>{ot.datosVehiculo?.modelo || 'N/A'}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span className="patente-badge">
+                      {ot.datosVehiculo?.patente || 'Sin Patente'}
                     </span>
-                  </div>
-                  <div className="ot-info-item">
-                    <span className="ot-info-label">GPS Modelo</span>
-                    <span className="ot-info-valor">
-                      {ot.datosGPS?.marca} {ot.datosGPS?.modelo}
+                  </td>
+                  <td>{ot.datosGPS?.nombreTecnico || 'N/A'}</td>
+                  <td>
+                    <span className="servicio-badge">
+                      {ot.datosGPS?.tipoServicio || 'N/A'}
                     </span>
-                  </div>
-                  <div className="ot-info-item">
-                    <span className="ot-info-label">IMEI</span>
-                    <span className="ot-info-valor">
-                      {ot.datosGPS?.imei || 'N/A'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="ot-card-acciones">
-                <button 
-                  className="btn btn-primary btn-icono"
-                  onClick={() => navigateTo('detalle-ot', ot.id, false)}
-                >
-                  👁️ Ver
-                </button>
-                <button 
-                  className="btn btn-secondary btn-icono"
-                  onClick={() => navigateTo('detalle-ot', ot.id, true)}
-                >
-                  ✏️ Editar
-                </button>
-                <button 
-                  className="btn btn-danger btn-icono"
-                  onClick={() => handleEliminar(ot.id, ot.numeroOT)}
-                >
-                  🗑️ Eliminar
-                </button>
-              </div>
-            </div>
-          ))}
+                  </td>
+                  <td>
+                    <div className="acciones-cell">
+                      <button 
+                        className="btn-icono btn-ver"
+                        onClick={() => navigateTo('detalle-ot', ot.id, false)}
+                        title="Ver"
+                      >
+                        👁️
+                      </button>
+                      <button 
+                        className="btn-icono btn-editar"
+                        onClick={() => navigateTo('detalle-ot', ot.id, true)}
+                        title="Editar"
+                      >
+                        ✏️
+                      </button>
+                      <button 
+                        className="btn-icono btn-eliminar"
+                        onClick={() => handleEliminar(ot.id, ot.numeroOT)}
+                        title="Eliminar"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

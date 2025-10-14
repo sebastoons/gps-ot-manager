@@ -22,11 +22,13 @@ function DatosVehiculo({ datos, onChange }) {
   ];
 
   const marcasPopulares = [
-    'Toyota', 'Chevrolet', 'Nissan', 'Ford', 'Hyundai', 
-    'Kia', 'Mazda', 'Mitsubishi', 'Suzuki', 'Volkswagen',
-    'Peugeot', 'Renault', 'Fiat', 'Jeep', 'Honda',
-    'Subaru', 'Mercedes-Benz', 'BMW', 'Audi', 'Otra'
-  ];
+    'Audi', 'BMW', 'BYD', 'Changan', 'Chery', 'Chevrolet', 'Chrysler', 
+    'Citroën', 'Dodge', 'Fiat', 'Ford', 'Foton', 'Great Wall', 'Honda', 
+    'Hyundai', 'Isuzu', 'JAC', 'Jeep', 'Kia', 'Mahindra', 'Mazda', 
+    'Mercedes-Benz', 'MG', 'Mitsubishi', 'Nissan', 'Peugeot', 'RAM', 
+    'Renault', 'Ssangyong', 'Subaru', 'Suzuki', 'Toyota', 'Volkswagen', 
+    'Volvo', 'Otra'
+  ].sort();
 
   return (
     <div>
@@ -99,16 +101,29 @@ function DatosVehiculo({ datos, onChange }) {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Kilometraje</label>
+          <label className="form-label">Patente</label>
           <input
-            type="number"
+            type="text"
             className="form-input"
-            placeholder="Ej: 45000"
-            min="0"
-            value={datos.kilometraje || ''}
-            onChange={(e) => handleChange('kilometraje', e.target.value)}
+            placeholder="Ej: ABCD12"
+            maxLength="6"
+            style={{ textTransform: 'uppercase' }}
+            value={datos.patente || ''}
+            onChange={(e) => handleChange('patente', e.target.value.toUpperCase())}
           />
         </div>
+      </div>
+
+      <div className="form-group">
+        <label className="form-label">Kilometraje</label>
+        <input
+          type="number"
+          className="form-input"
+          placeholder="Ej: 45000"
+          min="0"
+          value={datos.kilometraje || ''}
+          onChange={(e) => handleChange('kilometraje', e.target.value)}
+        />
       </div>
 
       <div className="form-group">

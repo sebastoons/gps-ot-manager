@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import CheckList from './CheckList';
 import DatosGPS from './DatosGPS';
-import DatosTecnicos from './DatosTecnicos';
 import DatosVehiculo from './DatosVehiculo';
+import DatosEmpresa from './DatosEmpresa';
 import '../styles/detalleOT.css';
 import { obtenerOTPorId, actualizarOT } from '../utils/storage';
 
@@ -68,7 +68,7 @@ function DetalleOT({ navigateTo, otId, editMode }) {
       <div className="detalle-ot-header">
         <div className="detalle-ot-header-top">
           <h1 className="detalle-ot-title">
-            OT{String(ot.numeroOT).padStart(4, '0')}
+            {datosActuales.codigoOT || `OT${String(ot.numeroOT).padStart(4, '0')}`}
           </h1>
           <button 
             className="btn btn-volver"
@@ -95,31 +95,21 @@ function DetalleOT({ navigateTo, otId, editMode }) {
         <div>
           <div className="detalle-seccion">
             <h2 className="detalle-seccion-title">
-              ✅ CheckList del Vehículo
+              🏢 Datos de la Empresa
             </h2>
-            <CheckList 
-              datos={datosActuales.checklist}
-              onChange={(nuevosDatos) => setDatosEditados({ ...datosActuales, checklist: nuevosDatos })}
+            <DatosEmpresa 
+              datos={datosActuales.datosEmpresa}
+              onChange={(nuevosDatos) => setDatosEditados({ ...datosActuales, datosEmpresa: nuevosDatos })}
             />
           </div>
 
           <div className="detalle-seccion">
             <h2 className="detalle-seccion-title">
-              📡 Datos del GPS
+              📡 Datos del Servicio GPS
             </h2>
             <DatosGPS 
               datos={datosActuales.datosGPS}
               onChange={(nuevosDatos) => setDatosEditados({ ...datosActuales, datosGPS: nuevosDatos })}
-            />
-          </div>
-
-          <div className="detalle-seccion">
-            <h2 className="detalle-seccion-title">
-              🔧 Datos Técnicos de Instalación
-            </h2>
-            <DatosTecnicos 
-              datos={datosActuales.datosTecnicos}
-              onChange={(nuevosDatos) => setDatosEditados({ ...datosActuales, datosTecnicos: nuevosDatos })}
             />
           </div>
 
@@ -132,107 +122,86 @@ function DetalleOT({ navigateTo, otId, editMode }) {
               onChange={(nuevosDatos) => setDatosEditados({ ...datosActuales, datosVehiculo: nuevosDatos })}
             />
           </div>
+
+          <div className="detalle-seccion">
+            <h2 className="detalle-seccion-title">
+              ✅ CheckList del Vehículo
+            </h2>
+            <CheckList 
+              datos={datosActuales.checklist}
+              onChange={(nuevosDatos) => setDatosEditados({ ...datosActuales, checklist: nuevosDatos })}
+            />
+          </div>
         </div>
       ) : (
         <div>
           <div className="detalle-seccion">
             <h2 className="detalle-seccion-title">
-              ✅ CheckList del Vehículo
+              🏢 Datos de la Empresa
             </h2>
-            <div className="checklist-detalle">
-              {Object.entries(datosActuales.checklist || {}).map(([key, value]) => (
-                value.checked && (
-                  <div key={key} className="checklist-detalle-item checked">
-                    <span className="checklist-detalle-icon">✓</span>
-                    <div className="checklist-detalle-content">
-                      <div className="checklist-detalle-label">{key}</div>
-                      {value.observaciones && (
-                        <div className="checklist-detalle-obs">{value.observaciones}</div>
-                      )}
-                    </div>
-                  </div>
-                )
-              ))}
+            <div className="detalle-grid">
+              <div className="detalle-item">
+                <span className="detalle-label">Empresa</span>
+                <span className="detalle-valor">{datosActuales.datosEmpresa?.nombreEmpresa || 'N/A'}</span>
+              </div>
+              <div className="detalle-item">
+                <span className="detalle-label">Fecha</span>
+                <span className="detalle-valor">{datosActuales.datosEmpresa?.fecha || 'N/A'}</span>
+              </div>
+              <div className="detalle-item">
+                <span className="detalle-label">Contacto</span>
+                <span className="detalle-valor">{datosActuales.datosEmpresa?.nombreContacto || 'N/A'}</span>
+              </div>
+              <div className="detalle-item">
+                <span className="detalle-label">Región</span>
+                <span className="detalle-valor">{datosActuales.datosEmpresa?.region || 'N/A'}</span>
+              </div>
+              <div className="detalle-item">
+                <span className="detalle-label">Ciudad</span>
+                <span className="detalle-valor">{datosActuales.datosEmpresa?.ciudad || 'N/A'}</span>
+              </div>
+              <div className="detalle-item">
+                <span className="detalle-label">Comuna</span>
+                <span className="detalle-valor">{datosActuales.datosEmpresa?.comuna || 'N/A'}</span>
+              </div>
             </div>
           </div>
 
           <div className="detalle-seccion">
             <h2 className="detalle-seccion-title">
-              📡 Datos del GPS
+              📡 Datos del Servicio GPS
             </h2>
             <div className="detalle-grid">
               <div className="detalle-item">
-                <span className="detalle-label">Marca</span>
-                <span className="detalle-valor">{datosActuales.datosGPS?.marca || 'N/A'}</span>
+                <span className="detalle-label">Técnico</span>
+                <span className="detalle-valor">{datosActuales.datosGPS?.nombreTecnico || 'N/A'}</span>
               </div>
               <div className="detalle-item">
-                <span className="detalle-label">Modelo</span>
-                <span className="detalle-valor">{datosActuales.datosGPS?.modelo || 'N/A'}</span>
+                <span className="detalle-label">Tipo de Servicio</span>
+                <span className="detalle-valor">{datosActuales.datosGPS?.tipoServicio || 'N/A'}</span>
               </div>
               <div className="detalle-item">
-                <span className="detalle-label">IMEI</span>
-                <span className="detalle-valor">{datosActuales.datosGPS?.imei || 'N/A'}</span>
+                <span className="detalle-label">PPU IN</span>
+                <span className="detalle-valor">{datosActuales.datosGPS?.ppuIn || 'N/A'}</span>
               </div>
               <div className="detalle-item">
-                <span className="detalle-label">Número de SIM</span>
-                <span className="detalle-valor">{datosActuales.datosGPS?.numeroSim || 'N/A'}</span>
+                <span className="detalle-label">PPU OUT</span>
+                <span className="detalle-valor">{datosActuales.datosGPS?.ppuOut || 'N/A'}</span>
               </div>
               <div className="detalle-item">
-                <span className="detalle-label">Operador</span>
-                <span className="detalle-valor">{datosActuales.datosGPS?.operador || 'N/A'}</span>
+                <span className="detalle-label">IMEI IN</span>
+                <span className="detalle-valor">{datosActuales.datosGPS?.imeiIn || 'N/A'}</span>
               </div>
               <div className="detalle-item">
-                <span className="detalle-label">Plan de Datos</span>
-                <span className="detalle-valor">{datosActuales.datosGPS?.planDatos || 'N/A'}</span>
-              </div>
-              <div className="detalle-item">
-                <span className="detalle-label">Estado</span>
-                <span className="detalle-valor">{datosActuales.datosGPS?.estadoGPS || 'N/A'}</span>
+                <span className="detalle-label">IMEI OUT</span>
+                <span className="detalle-valor">{datosActuales.datosGPS?.imeiOut || 'N/A'}</span>
               </div>
             </div>
-            {datosActuales.datosGPS?.observaciones && (
-              <div className="detalle-item" style={{ marginTop: 'var(--spacing-md)' }}>
-                <span className="detalle-label">Observaciones</span>
-                <span className="detalle-valor">{datosActuales.datosGPS.observaciones}</span>
-              </div>
-            )}
-          </div>
-
-          <div className="detalle-seccion">
-            <h2 className="detalle-seccion-title">
-              🔧 Datos Técnicos de Instalación
-            </h2>
-            <div className="detalle-grid">
-              <div className="detalle-item">
-                <span className="detalle-label">Ubicación de Instalación</span>
-                <span className="detalle-valor">{datosActuales.datosTecnicos?.ubicacionInstalacion || 'N/A'}</span>
-              </div>
-              <div className="detalle-item">
-                <span className="detalle-label">Tipo de Instalación</span>
-                <span className="detalle-valor">{datosActuales.datosTecnicos?.tipoInstalacion || 'N/A'}</span>
-              </div>
-              <div className="detalle-item">
-                <span className="detalle-label">Voltaje</span>
-                <span className="detalle-valor">{datosActuales.datosTecnicos?.voltaje || 'N/A'}</span>
-              </div>
-              <div className="detalle-item">
-                <span className="detalle-label">Amperaje</span>
-                <span className="detalle-valor">{datosActuales.datosTecnicos?.amperaje || 'N/A'}</span>
-              </div>
-              <div className="detalle-item">
-                <span className="detalle-label">Tiempo de Instalación</span>
-                <span className="detalle-valor">{datosActuales.datosTecnicos?.tiempoInstalacion ? `${datosActuales.datosTecnicos.tiempoInstalacion} min` : 'N/A'}</span>
-              </div>
-              <div className="detalle-item">
-                <span className="detalle-label">Técnico Responsable</span>
-                <span className="detalle-valor">{datosActuales.datosTecnicos?.tecnicoResponsable || 'N/A'}</span>
-              </div>
-            </div>
-            {datosActuales.datosTecnicos?.accesorios && datosActuales.datosTecnicos.accesorios.length > 0 && (
+            {datosActuales.datosGPS?.accesoriosInstalados && datosActuales.datosGPS.accesoriosInstalados.length > 0 && (
               <div className="detalle-item" style={{ marginTop: 'var(--spacing-md)' }}>
                 <span className="detalle-label">Accesorios Instalados</span>
                 <div className="accesorios-lista">
-                  {datosActuales.datosTecnicos.accesorios.map((acc, index) => (
+                  {datosActuales.datosGPS.accesoriosInstalados.map((acc, index) => (
                     <span key={index} className="accesorio-badge">{acc}</span>
                   ))}
                 </div>
@@ -245,6 +214,10 @@ function DetalleOT({ navigateTo, otId, editMode }) {
               🚗 Datos del Vehículo
             </h2>
             <div className="detalle-grid">
+              <div className="detalle-item">
+                <span className="detalle-label">Tipo</span>
+                <span className="detalle-valor">{datosActuales.datosVehiculo?.tipo || 'N/A'}</span>
+              </div>
               <div className="detalle-item">
                 <span className="detalle-label">Marca</span>
                 <span className="detalle-valor">{datosActuales.datosVehiculo?.marca || 'N/A'}</span>
@@ -259,23 +232,15 @@ function DetalleOT({ navigateTo, otId, editMode }) {
               </div>
               <div className="detalle-item">
                 <span className="detalle-label">Patente</span>
-                <span className="detalle-valor">{datosActuales.datosVehiculo?.patente || 'N/A'}</span>
+                <span className="detalle-valor">{datosActuales.datosVehiculo?.patente || 'Sin Patente'}</span>
               </div>
               <div className="detalle-item">
                 <span className="detalle-label">Color</span>
                 <span className="detalle-valor">{datosActuales.datosVehiculo?.color || 'N/A'}</span>
               </div>
               <div className="detalle-item">
-                <span className="detalle-label">Tipo</span>
-                <span className="detalle-valor">{datosActuales.datosVehiculo?.tipo || 'N/A'}</span>
-              </div>
-              <div className="detalle-item">
                 <span className="detalle-label">Kilometraje</span>
                 <span className="detalle-valor">{datosActuales.datosVehiculo?.kilometraje ? `${datosActuales.datosVehiculo.kilometraje} km` : 'N/A'}</span>
-              </div>
-              <div className="detalle-item">
-                <span className="detalle-label">Propietario</span>
-                <span className="detalle-valor">{datosActuales.datosVehiculo?.propietario || 'N/A'}</span>
               </div>
             </div>
             {datosActuales.datosVehiculo?.observaciones && (
@@ -284,6 +249,40 @@ function DetalleOT({ navigateTo, otId, editMode }) {
                 <span className="detalle-valor">{datosActuales.datosVehiculo.observaciones}</span>
               </div>
             )}
+          </div>
+
+          <div className="detalle-seccion">
+            <h2 className="detalle-seccion-title">
+              ✅ CheckList del Vehículo
+            </h2>
+            <div className="checklist-detalle">
+              {Object.entries(datosActuales.checklist || {}).map(([key, value]) => {
+                const itemsLabels = {
+                  luces: 'Luces 💡',
+                  radio: 'Radio 📻',
+                  tablero: 'Tablero 🎛️',
+                  checkEngine: 'Check Engine ⚠️',
+                  bateria: 'Batería 🔋'
+                };
+                
+                return value.estado && (
+                  <div key={key} className={`checklist-detalle-item ${value.estado}`}>
+                    <span className="checklist-detalle-icon">
+                      {value.estado === 'bueno' ? '✓' : '⚠'}
+                    </span>
+                    <div className="checklist-detalle-content">
+                      <div className="checklist-detalle-label">{itemsLabels[key] || key}</div>
+                      {value.detalle && (
+                        <div className="checklist-detalle-obs">{value.detalle}</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+              {Object.keys(datosActuales.checklist || {}).length === 0 && (
+                <p className="detalle-valor">No se registró checklist</p>
+              )}
+            </div>
           </div>
         </div>
       )}

@@ -5,67 +5,67 @@ function DatosEmpresa({ datos, onChange }) {
   const regionesDatos = {
     "Región Metropolitana": {
       ciudades: ["Santiago", "San Bernardo", "Puente Alto", "Maipú"],
-      comunas: ["Santiago Centro", "Providencia", "Las Condes", "Vitacura", "Lo Barnechea", "Ñuñoa", "La Reina", "Peñalolén", "Macul", "La Florida", "San Joaquín", "San Miguel", "La Cisterna", "El Bosque", "La Granja", "San Ramón", "La Pintana", "Pedro Aguirre Cerda", "Lo Espejo", "Estación Central", "Cerrillos", "Maipú", "Cerro Navia", "Lo Prado", "Pudahuel", "Renca", "Quilicura", "Huechuraba", "Recoleta", "Conchalí", "Independencia", "San Bernardo", "Buin", "Paine", "Calera de Tango", "Puente Alto", "Pirque", "San José de Maipo", "Colina", "Lampa", "Til Til", "Melipilla", "Alhué", "Curacaví", "María Pinto", "San Pedro", "Talagante", "El Monte", "Isla de Maipo", "Padre Hurtado", "Peñaflor"]
+      comunas: ["Alhué", "Buin", "Calera de Tango", "Cerrillos", "Cerro Navia", "Colina", "Conchalí", "Curacaví", "El Bosque", "El Monte", "Estación Central", "Huechuraba", "Independencia", "Isla de Maipo", "La Cisterna", "La Florida", "La Granja", "La Pintana", "La Reina", "Lampa", "Las Condes", "Lo Barnechea", "Lo Espejo", "Lo Prado", "Macul", "Maipú", "María Pinto", "Melipilla", "Ñuñoa", "Padre Hurtado", "Paine", "Pedro Aguirre Cerda", "Peñaflor", "Peñalolén", "Pirque", "Providencia", "Pudahuel", "Puente Alto", "Quilicura", "Recoleta", "Renca", "San Bernardo", "San Joaquín", "San José de Maipo", "San Miguel", "San Pedro", "San Ramón", "Santiago Centro", "Talagante", "Til Til", "Vitacura"]
     },
     "Región de Valparaíso": {
       ciudades: ["Valparaíso", "Viña del Mar", "Quilpué", "Villa Alemana", "San Antonio", "Quillota", "La Calera", "San Felipe", "Los Andes"],
-      comunas: ["Valparaíso", "Viña del Mar", "Concón", "Quilpué", "Villa Alemana", "Casablanca", "Quintero", "Puchuncaví", "San Antonio", "Cartagena", "El Tabo", "El Quisco", "Algarrobo", "Santo Domingo", "Quillota", "La Calera", "Hijuelas", "La Cruz", "Nogales", "San Felipe", "Los Andes", "Calle Larga", "Rinconada", "San Esteban"]
+      comunas: ["Algarrobo", "Calle Larga", "Cartagena", "Casablanca", "Concón", "El Quisco", "El Tabo", "Hijuelas", "La Calera", "La Cruz", "Los Andes", "Nogales", "Puchuncaví", "Quilpué", "Quillota", "Quintero", "Rinconada", "San Antonio", "San Esteban", "San Felipe", "Santo Domingo", "Valparaíso", "Villa Alemana", "Viña del Mar"]
     },
     "Región de O'Higgins": {
       ciudades: ["Rancagua", "San Fernando", "Rengo"],
-      comunas: ["Rancagua", "Machalí", "Graneros", "San Fernando", "Rengo", "Requínoa", "Olivar", "Doñihue", "Coltauco", "Coinco", "Malloa", "Quinta de Tilcoco", "San Vicente", "Pichidegua", "Peumo", "Las Cabras", "Chimbarongo", "Nancagua", "Placilla", "Santa Cruz", "Lolol", "Chépica", "Palmilla", "Peralillo"]
+      comunas: ["Chépica", "Chimbarongo", "Coinco", "Coltauco", "Doñihue", "Graneros", "Las Cabras", "Lolol", "Machalí", "Malloa", "Nancagua", "Olivar", "Palmilla", "Peralillo", "Peumo", "Pichidegua", "Placilla", "Quinta de Tilcoco", "Rancagua", "Rengo", "Requínoa", "San Fernando", "San Vicente", "Santa Cruz"]
     },
     "Región del Maule": {
       ciudades: ["Talca", "Curicó", "Linares", "Constitución", "Cauquenes", "Parral", "Molina"],
-      comunas: ["Talca", "Curicó", "Linares", "Constitución", "Cauquenes", "Parral", "Molina", "San Javier", "Villa Alegre", "Yerbas Buenas", "San Clemente", "Pelarco", "Río Claro", "Pencahue", "Maule", "Empedrado", "Curepto", "Hualañé", "Licantén", "Vichuquén", "Teno", "Rauco", "Romeral", "Sagrada Familia"]
+      comunas: ["Cauquenes", "Chanco", "Colbún", "Constitución", "Curepto", "Curicó", "Empedrado", "Hualañé", "Licantén", "Linares", "Longaví", "Maule", "Molina", "Parral", "Pelarco", "Pelluhue", "Pencahue", "Rauco", "Retiro", "Río Claro", "Romeral", "Sagrada Familia", "San Clemente", "San Javier", "San Rafael", "Talca", "Teno", "Vichuquén", "Villa Alegre", "Yerbas Buenas"]
     },
     "Región de Ñuble": {
       ciudades: ["Chillán", "San Carlos", "Bulnes"],
-      comunas: ["Chillán", "Chillán Viejo", "Bulnes", "San Carlos", "Quirihue", "Cobquecura", "Coelemu", "Ninhue", "Portezuelo", "Ránquil", "Treguaco", "El Carmen", "Pemuco", "Pinto", "Quillón", "San Fabián", "San Ignacio", "San Nicolás", "Yungay", "Coihueco"]
+      comunas: ["Bulnes", "Chillán", "Chillán Viejo", "Cobquecura", "Coelemu", "Coihueco", "El Carmen", "Ninhue", "Ñiquén", "Pemuco", "Pinto", "Portezuelo", "Quillón", "Quirihue", "Ránquil", "San Carlos", "San Fabián", "San Ignacio", "San Nicolás", "Treguaco", "Yungay"]
     },
     "Región del Biobío": {
       ciudades: ["Concepción", "Talcahuano", "Los Ángeles", "Chiguayante", "Coronel", "Lebu"],
-      comunas: ["Concepción", "Talcahuano", "Hualpén", "Chiguayante", "San Pedro de la Paz", "Penco", "Tomé", "Coronel", "Lota", "Santa Juana", "Hualqui", "Los Ángeles", "Cabrero", "Yumbel", "Tucapel", "Antuco", "Quilleco", "Santa Bárbara", "Quilaco", "Mulchén", "Negrete", "Nacimiento", "Laja", "San Rosendo", "Lebu", "Arauco", "Curanilahue", "Los Álamos", "Cañete", "Contulmo", "Tirúa"]
+      comunas: ["Alto Biobío", "Antuco", "Arauco", "Cabrero", "Cañete", "Chiguayante", "Concepción", "Contulmo", "Coronel", "Curanilahue", "Florida", "Hualpén", "Hualqui", "Laja", "Lebu", "Los Álamos", "Los Ángeles", "Lota", "Mulchén", "Nacimiento", "Negrete", "Penco", "Quilaco", "Quilleco", "San Pedro de la Paz", "San Rosendo", "Santa Bárbara", "Santa Juana", "Talcahuano", "Tirúa", "Tomé", "Tucapel", "Yumbel"]
     },
     "Región de La Araucanía": {
       ciudades: ["Temuco", "Villarrica", "Pucón", "Angol", "Victoria"],
-      comunas: ["Temuco", "Padre Las Casas", "Villarrica", "Pucón", "Loncoche", "Pitrufquén", "Gorbea", "Lautaro", "Perquenco", "Galvarino", "Victoria", "Traiguén", "Curacautín", "Lonquimay", "Angol", "Renaico", "Collipulli", "Los Sauces", "Purén", "Ercilla"]
+      comunas: ["Angol", "Carahue", "Cholchol", "Collipulli", "Cunco", "Curacautín", "Curarrehue", "Ercilla", "Freire", "Galvarino", "Gorbea", "Lautaro", "Loncoche", "Lonquimay", "Los Sauces", "Lumaco", "Melipeuco", "Nueva Imperial", "Padre Las Casas", "Perquenco", "Pitrufquén", "Pucón", "Purén", "Renaico", "Saavedra", "Temuco", "Teodoro Schmidt", "Toltén", "Traiguén", "Victoria", "Vilcún", "Villarrica"]
     },
     "Región de Los Ríos": {
       ciudades: ["Valdivia", "La Unión"],
-      comunas: ["Valdivia", "Mariquina", "Lanco", "Los Lagos", "Futrono", "La Unión", "Corral", "Máfil", "Panguipulli", "Río Bueno", "Lago Ranco", "Paillaco"]
+      comunas: ["Corral", "Futrono", "La Unión", "Lago Ranco", "Lanco", "Los Lagos", "Máfil", "Mariquina", "Paillaco", "Panguipulli", "Río Bueno", "Valdivia"]
     },
     "Región de Los Lagos": {
       ciudades: ["Puerto Montt", "Puerto Varas", "Osorno", "Castro", "Ancud"],
-      comunas: ["Puerto Montt", "Puerto Varas", "Osorno", "Castro", "Ancud", "Quellón", "Chonchi", "Dalcahue", "Calbuco", "Maullín", "Los Muermos", "Fresia", "Frutillar", "Llanquihue", "Puerto Octay", "Purranque", "Río Negro", "San Pablo", "San Juan de la Costa"]
+      comunas: ["Ancud", "Calbuco", "Castro", "Chaitén", "Chonchi", "Cochamó", "Curaco de Vélez", "Dalcahue", "Fresia", "Frutillar", "Futaleufú", "Hualaihué", "Llanquihue", "Los Muermos", "Maullín", "Osorno", "Palena", "Puerto Montt", "Puerto Octay", "Puerto Varas", "Puqueldón", "Purranque", "Puyehue", "Queil", "Quellón", "Quemchi", "Quinchao", "Río Negro", "San Juan de la Costa", "San Pablo"]
     },
     "Región de Aysén": {
       ciudades: ["Coyhaique", "Puerto Aysén"],
-      comunas: ["Coyhaique", "Puerto Aysén", "Chile Chico", "Cochrane", "Puerto Cisnes", "Puerto Ibáñez", "Río Ibáñez", "Tortel", "Villa O'Higgins", "Guaitecas", "Lago Verde"]
+      comunas: ["Aysén", "Chile Chico", "Cisnes", "Cochrane", "Coyhaique", "Guaitecas", "Lago Verde", "O'Higgins", "Río Ibáñez", "Tortel"]
     },
     "Región de Magallanes": {
       ciudades: ["Punta Arenas", "Puerto Natales", "Porvenir"],
-      comunas: ["Punta Arenas", "Puerto Natales", "Porvenir", "Puerto Williams", "Cabo de Hornos", "Primavera", "Timaukel", "San Gregorio", "Laguna Blanca", "Río Verde", "Torres del Paine"]
+      comunas: ["Antártica", "Cabo de Hornos", "Laguna Blanca", "Natales", "Porvenir", "Primavera", "Punta Arenas", "Río Verde", "San Gregorio", "Timaukel", "Torres del Paine"]
     },
     "Región de Arica y Parinacota": {
       ciudades: ["Arica"],
-      comunas: ["Arica", "Camarones", "Putre", "General Lagos"]
+      comunas: ["Arica", "Camarones", "General Lagos", "Putre"]
     },
     "Región de Tarapacá": {
       ciudades: ["Iquique", "Alto Hospicio"],
-      comunas: ["Iquique", "Alto Hospicio", "Pozo Almonte", "Pica", "Huara", "Camiña", "Colchane"]
+      comunas: ["Alto Hospicio", "Camiña", "Colchane", "Huara", "Iquique", "Pica", "Pozo Almonte"]
     },
     "Región de Antofagasta": {
       ciudades: ["Antofagasta", "Calama", "Tocopilla"],
-      comunas: ["Antofagasta", "Mejillones", "Sierra Gorda", "Taltal", "Calama", "Ollagüe", "San Pedro de Atacama", "Tocopilla", "María Elena"]
+      comunas: ["Antofagasta", "Calama", "María Elena", "Mejillones", "Ollagüe", "San Pedro de Atacama", "Sierra Gorda", "Taltal", "Tocopilla"]
     },
     "Región de Atacama": {
       ciudades: ["Copiapó", "Vallenar", "Caldera"],
-      comunas: ["Copiapó", "Caldera", "Tierra Amarilla", "Chañaral", "Diego de Almagro", "Vallenar", "Freirina", "Huasco", "Alto del Carmen"]
+      comunas: ["Alto del Carmen", "Caldera", "Chañaral", "Copiapó", "Diego de Almagro", "Freirina", "Huasco", "Tierra Amarilla", "Vallenar"]
     },
     "Región de Coquimbo": {
       ciudades: ["La Serena", "Coquimbo", "Ovalle", "Illapel"],
-      comunas: ["La Serena", "Coquimbo", "Andacollo", "La Higuera", "Paiguano", "Vicuña", "Ovalle", "Combarbalá", "Monte Patria", "Punitaqui", "Río Hurtado", "Illapel", "Canela", "Los Vilos", "Salamanca"]
+      comunas: ["Andacollo", "Canela", "Combarbalá", "Coquimbo", "Illapel", "La Higuera", "La Serena", "Los Vilos", "Monte Patria", "Ovalle", "Paiguano", "Punitaqui", "Río Hurtado", "Salamanca", "Vicuña"]
     }
   };
 
