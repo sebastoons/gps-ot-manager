@@ -5,7 +5,7 @@
 }
 
 .crear-ot-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #438de5, #56b9f4, #438de5);
   color: var(--text-white);
   padding: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
@@ -29,25 +29,26 @@
 .crear-ot-header-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-md);
+  align-items: baseline;
+  margin-bottom: 5px;
   position: relative;
   z-index: 1;
 }
 
 .crear-ot-title {
   font-family: var(--font-title);
-  font-size: 1.75rem;
-  margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 1.1em;
+  margin: 5px;
+  text-shadow: 3px 3px 5px rgba(0, 0, 0, 50%);
+  text-transform: uppercase;
 }
 
 .btn-volver {
   background-color: rgba(255, 255, 255, 0.15);
   color: var(--text-white);
-  padding: 0.625rem 1.25rem;
+  padding: 5px 15px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  font-size: 0.9rem;
+  font-size: 0.6em;
   backdrop-filter: blur(10px);
 }
 
@@ -71,13 +72,12 @@
 .ot-numero-badge {
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
-  padding: 0.5rem 1.5rem;
+  padding: 5px 10px;
   border-radius: 30px;
-  font-size: 1.25rem;
-  letter-spacing: 2px;
+  font-size: 0.7em;
+  letter-spacing: 1px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  animation: glow 2s ease-in-out infinite;
 }
 
 @keyframes glow {
@@ -115,9 +115,9 @@
 }
 
 .form-section-header {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #438de5, #56b9f4, #438de5);
   color: var(--text-white);
-  padding: var(--spacing-md);
+  padding: 5px 10px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -143,7 +143,7 @@
 }
 
 .form-section-header:hover {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #463fc3, #6c31d1, #463fc3);
 }
 
 .form-section-header-content {
@@ -155,20 +155,22 @@
 }
 
 .form-section-icon {
-  font-size: 1.75rem;
+  font-size: 1.25em;
   filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .form-section-title {
   font-family: var(--font-subtitle);
-  font-size: 1.25rem;
+  font-size: 0.9em;
   font-weight: 600;
   margin: 0;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  color: white;
 }
 
 .form-section-toggle {
-  font-size: 1.5rem;
+  font-size: 1em;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 1;
@@ -179,7 +181,7 @@
 }
 
 .form-section-body {
-  padding: var(--spacing-lg);
+  padding: 30px;
   max-height: 3000px;
   overflow: hidden;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -194,8 +196,8 @@
 .form-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
+  gap: 5px;
+  margin-bottom: 5px;
 }
 
 .form-actions {
@@ -205,8 +207,7 @@
   backdrop-filter: blur(20px);
   padding: var(--spacing-md);
   border-top: 3px solid transparent;
-  border-image: linear-gradient(90deg, #6366f1, #8b5cf6) 1;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 3px 4px 20px rgba(0, 0, 0, 0.15);
   margin-top: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
   z-index: 50;

@@ -5,7 +5,7 @@
   justify-content: center;
   min-height: 100vh;
   padding: var(--spacing-md);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #23599a, #2786bf, #23599a);
 }
 
 .index-header {
@@ -18,9 +18,10 @@
   font-family: var(--font-title);
   font-size: 1.7em;
   margin-bottom: var(--spacing-sm);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 3px 4px 5px rgb(0 0 0 / 68%);
   text-transform: uppercase;
   font-weight: bold;
+  color: #ffffff;
 }
 
 .index-subtitle {
@@ -61,7 +62,7 @@
 }
 
 .index-menu-icon {
-  font-size: 3rem;
+  font-size: 2em;
   margin-bottom: var(--spacing-sm);
   display: block;
 }

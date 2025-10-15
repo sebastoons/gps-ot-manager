@@ -29,17 +29,15 @@ function DatosGPS({ datos, onChange }) {
   };
 
   const accesoriosDisponibles = [
-    'Antena GPS Externa',
-    'Micrófono',
-    'Botón de Pánico',
-    'Sensor de Combustible',
-    'Sensor de Temperatura',
-    'Cámara',
-    'Relay de Corte de Motor',
-    'Lector RFID',
-    'Sensor de Puerta',
-    'Parlante',
-    'Batería Auxiliar'
+    'Inmovilizador',
+    'Edata',
+    'Dallas',
+    'Buzzer',
+    'Boton SOS',
+    'Sensor T°',
+    'Sensor Puerta',
+    'Camara',
+    'Cipia'
   ];
 
   const tiposServicio = [
@@ -54,7 +52,7 @@ function DatosGPS({ datos, onChange }) {
     <div>
       <div className="form-row">
         <div className="form-group">
-          <label className="form-label required-field">Nombre del Técnico</label>
+          <label className="form-label required-field">Técnico</label>
           <input
             type="text"
             className="form-input"
@@ -65,7 +63,7 @@ function DatosGPS({ datos, onChange }) {
         </div>
 
         <div className="form-group">
-          <label className="form-label required-field">Tipo de Servicio</label>
+          <label className="form-label required-field">Servicio</label>
           <select
             className="form-select"
             value={datos.tipoServicio || ''}
@@ -80,7 +78,7 @@ function DatosGPS({ datos, onChange }) {
       </div>
 
       <div className="form-group">
-        <label className="form-label">Accesorios Instalados</label>
+        <label className="form-label">Accesorios</label>
         <div className="accesorios-dropdown">
           <button
             type="button"

@@ -22,12 +22,12 @@ function DatosVehiculo({ datos, onChange }) {
   ];
 
   const marcasPopulares = [
-    'Audi', 'BMW', 'BYD', 'Changan', 'Chery', 'Chevrolet', 'Chrysler', 
-    'Citroën', 'Dodge', 'Fiat', 'Ford', 'Foton', 'Great Wall', 'Honda', 
-    'Hyundai', 'Isuzu', 'JAC', 'Jeep', 'Kia', 'Mahindra', 'Mazda', 
-    'Mercedes-Benz', 'MG', 'Mitsubishi', 'Nissan', 'Peugeot', 'RAM', 
-    'Renault', 'Ssangyong', 'Subaru', 'Suzuki', 'Toyota', 'Volkswagen', 
-    'Volvo', 'Otra'
+    'Audi', 'Alfa Romeo', 'BMW', 'BYD', 'Changan', 'Chery', 'Chevrolet', 'Chrysler', 
+    'Citroën', 'Cupra', 'DFSK','Dodge', 'Dongfeng', 'DS', 'Fiat', 'Ford', 'Foton', 'Freightlinner', 'Great Wall', 
+    'Haval', 'Honda', 'Hyundai', 'International', 'Isuzu', 'JAC', 'Jaecco', 'Jeep', 'Kia', 'Land Rover', 'Lexus', 'Mack', 'Mahindra', 
+    'Maxus', 'Mazda', 'Mercedes Benz', 'MG', 'Mitsubishi', 'Nissan', 'Omoda', 'Opel', 'Peugeot', 'RAM', 
+    'Renault', 'Scania', 'Seat', 'Skoda','Ssangyong', 'Subaru', 'Suzuki', 'Tesla', 'Toyota', 'Volkswagen', 
+    'Volvo',
   ].sort();
 
   return (

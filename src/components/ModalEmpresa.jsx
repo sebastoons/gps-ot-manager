@@ -36,9 +36,6 @@ function ModalEmpresa({ onSeleccionar, onCancelar }) {
       <div className="modal-empresa-content">
         <div className="modal-empresa-header">
           <h2 className="modal-empresa-title">Seleccionar Empresa</h2>
-          <p className="modal-empresa-subtitle">
-            Elige la empresa para esta orden de trabajo
-          </p>
         </div>
 
         <div className="empresas-grid">

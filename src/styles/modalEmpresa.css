@@ -16,7 +16,7 @@
 .modal-empresa-content {
   background-color: var(--bg-primary);
   border-radius: var(--border-radius);
-  padding: 20px;
+  padding: 40px;
   max-width: 400px;
   width: 100%;
   max-height: 70vh;
@@ -38,26 +38,28 @@
 
 .modal-empresa-title {
   font-family: var(--font-title);
-  font-size: 1.3em;
+  font-size: 1.1em;
   color: var(--text-primary);
   margin-bottom: var(--spacing-xs);
+  text-transform: uppercase;
 }
 
 .modal-empresa-subtitle {
   font-family: var(--font-subtitle);
   color: var(--text-secondary);
-  font-size: 0.8em;
+  font-size: 0.75em;
+  text-transform: uppercase;
 }
 
 .empresas-grid {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
+  gap: 8px;
+  margin-bottom: 20px;
 }
 
 .empresa-option {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #061a31, #095b8c, #061a31);
   color: var(--text-white);
   padding: 5px;
   border-radius: var(--border-radius);
@@ -75,14 +77,15 @@
 }
 
 .empresa-option.selected {
-  border-color: #10b981;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-color: #003f89;
+  background: linear-gradient(135deg, #005ecd, #0094ee, #005ecd);
 }
 
 .empresa-nombre {
   font-family: var(--font-subtitle);
-  font-size: 0.95em;
-  font-weight: 700;
+  font-size: 0.85em;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .empresa-prefijo {
@@ -91,7 +94,7 @@
 }
 
 .otra-empresa-input {
-  margin-top: var(--spacing-sm);
+  margin-top: 0;
   animation: slideDown 0.3s ease;
 }
 
@@ -109,7 +112,7 @@
 .modal-empresa-acciones {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: 10px;
 }
 
 @media (min-width: 768px) {

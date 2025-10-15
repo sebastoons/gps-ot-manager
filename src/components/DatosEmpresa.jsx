@@ -167,11 +167,6 @@ function DatosEmpresa({ datos, onChange }) {
               <option key={ciudad} value={ciudad}>{ciudad}</option>
             ))}
           </select>
-          {!datos.region && (
-            <small style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-              Primero selecciona una región
-            </small>
-          )}
         </div>
 
         <div className="form-group">
@@ -187,11 +182,6 @@ function DatosEmpresa({ datos, onChange }) {
               <option key={comuna} value={comuna}>{comuna}</option>
             ))}
           </select>
-          {!datos.region && (
-            <small style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-              Primero selecciona una región
-            </small>
-          )}
         </div>
       </div>
     </div>

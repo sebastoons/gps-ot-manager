@@ -75,14 +75,14 @@ h1, .title-large {
   font-size: 2rem;
   font-weight: 400;
   letter-spacing: 0.5px;
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 h2, .subtitle {
   font-family: var(--font-subtitle);
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #000000;
 }
 
 h3, .subtitle-small {
@@ -94,6 +94,10 @@ h3, .subtitle-small {
 
 p, span, label, input, textarea, select, button {
   font-family: var(--font-text);
+  text-transform: uppercase;
+  font-size: 0.65em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+  color: #787878;
 }
 
 /* Container principal */
@@ -102,6 +106,7 @@ p, span, label, input, textarea, select, button {
   margin: 0 auto;
   padding: var(--spacing-sm);
   min-height: 100vh;
+  background: white;
 }
 
 /* Botones modernos con efectos */
@@ -155,7 +160,7 @@ p, span, label, input, textarea, select, button {
 }
 
 .btn-success {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #52a179, #00704d, #52a179);
   color: var(--text-white);
 }
 
@@ -216,44 +221,47 @@ p, span, label, input, textarea, select, button {
 
 /* Formularios modernos */
 .form-group {
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 2px;
 }
 
 .form-label {
   display: block;
   font-weight: 700;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: 6px;
   color: var(--text-primary);
-  font-size: 0.95rem;
+  font-size: 0.65em;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  text-align: center;
 }
 
 .form-input,
 .form-select,
 .form-textarea {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 7px 15px;
   border: 2px solid var(--border-color);
   border-radius: var(--border-radius);
-  font-size: 1rem;
+  font-size: 0.6em;
   font-family: var(--font-text);
   transition: all 0.3s ease;
   background-color: var(--bg-primary);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  color: #6d6d6d;
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: var(--color-primary);
+  border-color: #438de5;
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
   transform: translateY(-2px);
 }
 
 .form-textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 10px;
 }
 
 /* Dropdown de accesorios */
@@ -263,7 +271,7 @@ p, span, label, input, textarea, select, button {
 
 .accesorios-dropdown-toggle {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 5px 1rem;
   border: 2px solid var(--border-color);
   border-radius: var(--border-radius);
   background-color: var(--bg-primary);
@@ -272,7 +280,7 @@ p, span, label, input, textarea, select, button {
   justify-content: space-between;
   align-items: center;
   font-family: var(--font-text);
-  font-size: 1rem;
+  font-size: 1em;
   transition: all 0.3s ease;
 }
 
@@ -283,8 +291,8 @@ p, span, label, input, textarea, select, button {
 
 .dropdown-arrow {
   transition: transform 0.3s ease;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
+  font-size: 0.65rem;
+  color: #7494c2;
 }
 
 .dropdown-arrow.open {
@@ -318,7 +326,7 @@ p, span, label, input, textarea, select, button {
 }
 
 .accesorio-item {
-  padding: 0.875rem 1rem;
+  padding: 5px 1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -342,20 +350,20 @@ p, span, label, input, textarea, select, button {
 }
 
 .accesorio-check {
-  width: 24px;
-  height: 24px;
+  width: 15px;
+  height: 15px;
   border: 2px solid var(--border-color);
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
+  font-size: 0.7em;
   transition: all 0.2s ease;
 }
 
 .accesorio-item.selected .accesorio-check {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-  border-color: var(--color-primary);
+  background: linear-gradient(135deg, #129be2, #1095d9);
+  border-color: #037ebd;
   color: white;
 }
 

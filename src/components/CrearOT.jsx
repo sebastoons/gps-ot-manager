@@ -154,7 +154,7 @@ function CrearOT({ navigateTo, empresaData }) {
             ← Volver
           </button>
         </div>
-        <div className="ot-numero">
+        <div className="ot-numero" style={{ color: '#f69a00' }}>
           <span>Orden de Trabajo N°</span>
           <span className="ot-numero-badge">{codigoOT}</span>
         </div>
@@ -253,7 +253,7 @@ function CrearOT({ navigateTo, empresaData }) {
             className="btn btn-success btn-full"
             onClick={handleFinalizarOT}
           >
-            ✓ Finalizar Orden de Trabajo
+            Finalizar Orden de Trabajo
           </button>
         </div>
       </div>
@@ -279,7 +279,7 @@ function CrearOT({ navigateTo, empresaData }) {
                 className="btn btn-secondary btn-full"
                 onClick={handleNoCrearOtraBT}
               >
-                ✓ Finalizar y Obtener Firma
+                Finalizar y Obtener Firma
               </button>
             </div>
           </div>

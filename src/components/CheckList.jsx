@@ -3,11 +3,11 @@ import '../styles/checkList.css';
 
 function CheckList({ datos, onChange }) {
   const itemsChecklist = [
-    { id: 'luces', label: 'Luces', icon: '💡' },
-    { id: 'radio', label: 'Radio', icon: '📻' },
-    { id: 'tablero', label: 'Tablero', icon: '🎛️' },
-    { id: 'checkEngine', label: 'Check Engine', icon: '⚠️' },
-    { id: 'bateria', label: 'Batería', icon: '🔋' }
+    { id: 'luces', label: 'Luces'},
+    { id: 'radio', label: 'Radio'},
+    { id: 'tablero', label: 'Tablero'},
+    { id: 'checkEngine', label: 'Check Engine'},
+    { id: 'bateria', label: 'Batería'}
   ];
 
   const handleEstadoChange = (itemId, estado) => {
@@ -89,19 +89,19 @@ function CheckList({ datos, onChange }) {
 
       <div className="checklist-resumen">
         <div className="checklist-resumen-texto">
-          Resumen del CheckList
+          Resumen CheckList
         </div>
         <div className="checklist-resumen-numeros">
           <div className="checklist-resumen-item">
-            <span className="checklist-resumen-numero" style={{ color: '#10b981' }}>{resumen.buenos}</span>
-            <span className="checklist-resumen-label">En Buen Estado</span>
+            <span className="checklist-resumen-numero" style={{ color: '#00d759' }}>{resumen.buenos}</span>
+            <span className="checklist-resumen-label">Buen Estado</span>
           </div>
           <div className="checklist-resumen-item">
-            <span className="checklist-resumen-numero" style={{ color: '#f59e0b' }}>{resumen.conDetalles}</span>
-            <span className="checklist-resumen-label">Con Detalles</span>
+            <span className="checklist-resumen-numero" style={{ color: '#f69a00' }}>{resumen.conDetalles}</span>
+            <span className="checklist-resumen-label">Detalles</span>
           </div>
           <div className="checklist-resumen-item">
-            <span className="checklist-resumen-numero">{resumen.total}</span>
+            <span className="checklist-resumen-numero" style={{ color: '#818181' }}>{resumen.total}</span>
             <span className="checklist-resumen-label">Total</span>
           </div>
         </div>
