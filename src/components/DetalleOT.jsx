@@ -3,6 +3,7 @@ import CheckList from './CheckList';
 import DatosGPS from './DatosGPS';
 import DatosVehiculo from './DatosVehiculo';
 import DatosEmpresa from './DatosEmpresa';
+import { generarPDFOT } from '../utils/pdfService';
 import '../styles/detalleOT.css';
 import { obtenerOTPorId, actualizarOT } from '../utils/storage';
 
@@ -50,6 +51,16 @@ function DetalleOT({ navigateTo, otId, editMode }) {
     if (window.confirm('¿Desea cancelar los cambios?')) {
       setDatosEditados(ot);
       setModoEdicion(false);
+    }
+  };
+
+  const handleDescargarPDF = () => {
+    try {
+      generarPDFOT(ot);
+      alert('✅ PDF descargado exitosamente');
+    } catch (error) {
+      console.error('Error al generar PDF:', error);
+      alert('❌ Error al generar el PDF. Por favor intente nuevamente.');
     }
   };
 
@@ -284,6 +295,53 @@ function DetalleOT({ navigateTo, otId, editMode }) {
               )}
             </div>
           </div>
+
+          {/* Datos del Cliente y Firma */}
+          {datosActuales.datosCliente && (
+            <div className="detalle-seccion">
+              <h2 className="detalle-seccion-title">
+                👤 Datos del Cliente
+              </h2>
+              <div className="detalle-grid">
+                <div className="detalle-item">
+                  <span className="detalle-label">Nombre</span>
+                  <span className="detalle-valor">{datosActuales.datosCliente.nombre}</span>
+                </div>
+                <div className="detalle-item">
+                  <span className="detalle-label">RUT</span>
+                  <span className="detalle-valor">{datosActuales.datosCliente.rut}</span>
+                </div>
+                <div className="detalle-item">
+                  <span className="detalle-label">Contacto</span>
+                  <span className="detalle-valor">{datosActuales.datosCliente.contacto}</span>
+                </div>
+              </div>
+              
+              {datosActuales.datosCliente.firma && (
+                <div style={{ marginTop: 'var(--spacing-md)' }}>
+                  <span className="detalle-label">Firma del Cliente</span>
+                  <div style={{ 
+                    marginTop: 'var(--spacing-sm)', 
+                    padding: 'var(--spacing-sm)', 
+                    border: '2px solid var(--border-color)', 
+                    borderRadius: 'var(--border-radius)',
+                    backgroundColor: 'var(--bg-secondary)',
+                    display: 'inline-block'
+                  }}>
+                    <img 
+                      src={datosActuales.datosCliente.firma} 
+                      alt="Firma del cliente" 
+                      style={{ 
+                        maxWidth: '300px', 
+                        height: 'auto',
+                        display: 'block'
+                      }} 
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -310,6 +368,12 @@ function DetalleOT({ navigateTo, otId, editMode }) {
               onClick={() => navigateTo('base-datos')}
             >
               ← Volver al Listado
+            </button>
+            <button 
+              className="btn btn-info"
+              onClick={handleDescargarPDF}
+            >
+              📥 Descargar PDF
             </button>
             <button 
               className="btn btn-primary"

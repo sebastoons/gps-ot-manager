@@ -6,11 +6,9 @@ function FormularioCliente({ otsCreadas, navigateTo }) {
   const [datosCliente, setDatosCliente] = useState({
     nombre: '',
     rut: '',
-    correo: '',
+    contacto: '',
     firma: null
   });
-
-  const [mostrarEncuesta, setMostrarEncuesta] = useState(false);
 
   const handleChange = (campo, valor) => {
     setDatosCliente({
@@ -44,12 +42,8 @@ function FormularioCliente({ otsCreadas, navigateTo }) {
       alert('⚠️ Por favor ingrese el RUT del cliente');
       return false;
     }
-    if (!datosCliente.correo.trim()) {
-      alert('⚠️ Por favor ingrese el correo del cliente');
-      return false;
-    }
-    if (!datosCliente.correo.includes('@')) {
-      alert('⚠️ Por favor ingrese un correo válido');
+    if (!datosCliente.contacto.trim()) {
+      alert('⚠️ Por favor ingrese teléfono o email del cliente');
       return false;
     }
     if (!datosCliente.firma) {
@@ -59,29 +53,37 @@ function FormularioCliente({ otsCreadas, navigateTo }) {
     return true;
   };
 
-  const handleEnviar = () => {
+  const handleTerminar = () => {
     if (!validarFormulario()) return;
+
+    // Guardar datos del cliente en cada OT
+    const todasLasOTs = JSON.parse(localStorage.getItem('gps_ots') || '[]');
     
-    // Simular envío de correo con las OTs
-    const resumenOTs = otsCreadas.map(ot => 
-      `OT ${ot.codigoOT}: ${ot.datosVehiculo.tipo} ${ot.datosVehiculo.marca} ${ot.datosVehiculo.modelo}`
-    ).join('\n');
+    otsCreadas.forEach(otCreada => {
+      const index = todasLasOTs.findIndex(ot => ot.id === otCreada.id);
+      if (index !== -1) {
+        todasLasOTs[index].datosCliente = {
+          nombre: datosCliente.nombre,
+          rut: datosCliente.rut,
+          contacto: datosCliente.contacto,
+          firma: datosCliente.firma,
+          fechaFirma: new Date().toISOString()
+        };
+      }
+    });
     
-    alert(`✓ OT(s) enviada(s) exitosamente a: ${datosCliente.correo}\n\n` +
-          `Resumen:\n${resumenOTs}\n\n` +
-          `La encuesta de satisfacción será enviada posteriormente por correo o WhatsApp.`);
-    
-    console.log('Datos del cliente:', datosCliente);
-    console.log('OTs creadas:', otsCreadas);
-    
-    // Redirigir directamente al inicio después de enviar
+    localStorage.setItem('gps_ots', JSON.stringify(todasLasOTs));
+
+    // Mensaje de éxito
+    alert(
+      `✅ ¡Proceso completado!\n\n` +
+      `Se guardaron ${otsCreadas.length} OT(s) con la firma del cliente.\n\n` +
+      `Puede encontrarlas en la Base de Datos para descargar el PDF.`
+    );
+
+    // Volver al inicio
     navigateTo('index');
   };
-
-  if (mostrarEncuesta) {
-    // Ya no se muestra la encuesta aquí
-    return null;
-  }
 
   return (
     <div className="formulario-cliente-container">
@@ -143,16 +145,16 @@ function FormularioCliente({ otsCreadas, navigateTo }) {
         </div>
 
         <div className="form-group">
-          <label className="form-label required-field">Correo Electrónico</label>
+          <label className="form-label required-field">Teléfono o Email</label>
           <input
-            type="email"
+            type="text"
             className="form-input"
-            placeholder="cliente@ejemplo.com"
-            value={datosCliente.correo}
-            onChange={(e) => handleChange('correo', e.target.value)}
+            placeholder="+56 9 1234 5678 o correo@ejemplo.com"
+            value={datosCliente.contacto}
+            onChange={(e) => handleChange('contacto', e.target.value)}
           />
           <small style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-            Se enviará un resumen de las OTs a este correo
+            Puedes ingresar teléfono o correo electrónico
           </small>
         </div>
       </div>
@@ -177,9 +179,9 @@ function FormularioCliente({ otsCreadas, navigateTo }) {
         </button>
         <button 
           className="btn btn-success btn-full"
-          onClick={handleEnviar}
+          onClick={handleTerminar}
         >
-          ✓ Enviar OT al Cliente
+          ✓ Terminar y Guardar
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import '../styles/baseDatos.css';
 import { obtenerTodasLasOTs, eliminarOT, exportarOTsJSON, obtenerEstadisticas, limpiarOTsAntiguas } from '../utils/storage';
+import { generarPDFOT } from '../utils/pdfService';
 
 function BaseDatos({ navigateTo }) {
   const [ots, setOts] = useState([]);
@@ -63,6 +64,15 @@ function BaseDatos({ navigateTo }) {
       limpiarOTsAntiguas();
       alert('✓ OTs antiguas eliminadas');
       cargarOTs();
+    }
+  };
+
+  const handleDescargarPDF = (ot) => {
+    try {
+      generarPDFOT(ot);
+    } catch (error) {
+      console.error('Error al generar PDF:', error);
+      alert('❌ Error al generar el PDF. Por favor intente nuevamente.');
     }
   };
 
@@ -190,6 +200,13 @@ function BaseDatos({ navigateTo }) {
                   </td>
                   <td>
                     <div className="acciones-cell">
+                      <button 
+                        className="btn-icono btn-descargar"
+                        onClick={() => handleDescargarPDF(ot)}
+                        title="Descargar PDF"
+                      >
+                        📥
+                      </button>
                       <button 
                         className="btn-icono btn-ver"
                         onClick={() => navigateTo('detalle-ot', ot.id, false)}
