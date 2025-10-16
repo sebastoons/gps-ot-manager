@@ -7,6 +7,8 @@ function BaseDatos({ navigateTo }) {
   const [ots, setOts] = useState([]);
   const [otsFiltradas, setOtsFiltradas] = useState([]);
   const [busqueda, setBusqueda] = useState('');
+  const [empresaFiltro, setEmpresaFiltro] = useState('todas');
+  const [empresasDisponibles, setEmpresasDisponibles] = useState([]);
   const [estadisticas, setEstadisticas] = useState({ total: 0, ultimaSemana: 0, ultimoMes: 0 });
 
   useEffect(() => {
@@ -15,34 +17,54 @@ function BaseDatos({ navigateTo }) {
 
   useEffect(() => {
     filtrarOTs();
-  }, [busqueda, ots]);
+  }, [busqueda, empresaFiltro, ots]);
 
   const cargarOTs = () => {
     const otsGuardadas = obtenerTodasLasOTs();
     setOts(otsGuardadas);
     setEstadisticas(obtenerEstadisticas());
+    
+    const empresasUnicas = [...new Set(otsGuardadas.map(ot => ot.prefijo))];
+    const empresasConNombre = empresasUnicas.map(prefijo => {
+      return {
+        prefijo: prefijo,
+        nombre: getNombreEmpresa(prefijo)
+      };
+    });
+    setEmpresasDisponibles(empresasConNombre);
+  };
+
+  const getNombreEmpresa = (prefijo) => {
+    const mapaEmpresas = {
+      'LWE': 'LW - Entel',
+      'U': 'UGPS'
+    };
+    return mapaEmpresas[prefijo] || prefijo;
   };
 
   const filtrarOTs = () => {
-    if (!busqueda.trim()) {
-      setOtsFiltradas(ots);
-      return;
+    let filtradas = ots;
+
+    if (empresaFiltro !== 'todas') {
+      filtradas = filtradas.filter(ot => ot.prefijo === empresaFiltro);
     }
 
-    const termino = busqueda.toLowerCase();
-    const filtradas = ots.filter(ot => {
-      return (
-        ot.numeroOT?.toString().includes(termino) ||
-        ot.codigoOT?.toLowerCase().includes(termino) ||
-        ot.datosEmpresa?.nombreEmpresa?.toLowerCase().includes(termino) ||
-        ot.datosVehiculo?.patente?.toLowerCase().includes(termino) ||
-        ot.datosVehiculo?.marca?.toLowerCase().includes(termino) ||
-        ot.datosVehiculo?.modelo?.toLowerCase().includes(termino) ||
-        ot.datosGPS?.nombreTecnico?.toLowerCase().includes(termino) ||
-        ot.datosGPS?.imeiIn?.toLowerCase().includes(termino) ||
-        ot.datosGPS?.imeiOut?.toLowerCase().includes(termino)
-      );
-    });
+    if (busqueda.trim()) {
+      const termino = busqueda.toLowerCase();
+      filtradas = filtradas.filter(ot => {
+        return (
+          ot.numeroOT?.toString().includes(termino) ||
+          ot.codigoOT?.toLowerCase().includes(termino) ||
+          ot.datosEmpresa?.nombreEmpresa?.toLowerCase().includes(termino) ||
+          ot.datosVehiculo?.patente?.toLowerCase().includes(termino) ||
+          ot.datosVehiculo?.marca?.toLowerCase().includes(termino) ||
+          ot.datosVehiculo?.modelo?.toLowerCase().includes(termino) ||
+          ot.datosGPS?.nombreTecnico?.toLowerCase().includes(termino) ||
+          ot.datosGPS?.imeiIn?.toLowerCase().includes(termino) ||
+          ot.datosGPS?.imeiOut?.toLowerCase().includes(termino)
+        );
+      });
+    }
 
     setOtsFiltradas(filtradas);
   };
@@ -67,12 +89,24 @@ function BaseDatos({ navigateTo }) {
     }
   };
 
+  // ✅ NUEVO: Previsualizar PDF
+  const handlePrevisualizarPDF = (ot) => {
+    try {
+      generarPDFOT(ot, true); // true = previsualizar
+    } catch (error) {
+      console.error('Error al previsualizar PDF:', error);
+      alert('❌ Error al generar la previsualización. Verifique que jsPDF esté instalado correctamente.');
+    }
+  };
+
+  // ✅ MEJORADO: Descargar PDF con mejor manejo de errores
   const handleDescargarPDF = (ot) => {
     try {
-      generarPDFOT(ot);
+      generarPDFOT(ot, false); // false = descargar
+      alert('✅ PDF descargado exitosamente');
     } catch (error) {
       console.error('Error al generar PDF:', error);
-      alert('❌ Error al generar el PDF. Por favor intente nuevamente.');
+      alert('❌ Error al generar el PDF. Verifique que jsPDF esté instalado:\n\nnpm install jspdf jspdf-autotable');
     }
   };
 
@@ -131,23 +165,43 @@ function BaseDatos({ navigateTo }) {
         </button>
       </div>
 
-      <div className="busqueda-container">
-        <input
-          type="text"
-          className="busqueda-input"
-          placeholder="🔍 Buscar por N° OT, empresa, patente, marca, modelo, técnico o IMEI..."
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
-        />
+      <div className="filtros-container">
+        <div className="filtro-empresa">
+          <label className="filtro-label">Empresa GPS:</label>
+          <select 
+            className="filtro-select"
+            value={empresaFiltro}
+            onChange={(e) => setEmpresaFiltro(e.target.value)}
+          >
+            <option value="todas">Todas las Empresas</option>
+            {empresasDisponibles.map((empresa) => (
+              <option key={empresa.prefijo} value={empresa.prefijo}>
+                {empresa.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="busqueda-input-container">
+          <input
+            type="text"
+            className="busqueda-input"
+            placeholder="🔍 Buscar por N° OT, empresa, patente, marca, modelo, técnico o IMEI..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
+        </div>
       </div>
 
       {otsFiltradas.length === 0 ? (
         <div className="mensaje-vacio">
           <div className="mensaje-vacio-icon">📋</div>
           <div className="mensaje-vacio-texto">
-            {busqueda ? 'No se encontraron OTs con ese criterio de búsqueda' : 'No hay órdenes de trabajo registradas'}
+            {busqueda || empresaFiltro !== 'todas' 
+              ? 'No se encontraron OTs con ese criterio de búsqueda' 
+              : 'No hay órdenes de trabajo registradas'}
           </div>
-          {!busqueda && (
+          {!busqueda && empresaFiltro === 'todas' && (
             <button 
               className="btn btn-primary"
               onClick={() => navigateTo('crear-ot')}
@@ -162,8 +216,9 @@ function BaseDatos({ navigateTo }) {
             <thead>
               <tr>
                 <th>N° OT</th>
+                <th>Empresa GPS</th>
                 <th>Fecha</th>
-                <th>Empresa</th>
+                <th>Cliente</th>
                 <th>Vehículo</th>
                 <th>Patente</th>
                 <th>Técnico</th>
@@ -177,6 +232,11 @@ function BaseDatos({ navigateTo }) {
                   <td className="ot-numero-cell">
                     <span className="badge badge-info">
                       {ot.codigoOT || `OT${String(ot.numeroOT).padStart(4, '0')}`}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="empresa-badge">
+                      {getNombreEmpresa(ot.prefijo)}
                     </span>
                   </td>
                   <td>{formatearFecha(ot.fechaCreacion)}</td>
@@ -200,6 +260,14 @@ function BaseDatos({ navigateTo }) {
                   </td>
                   <td>
                     <div className="acciones-cell">
+                      {/* ✅ NUEVO: Botón Previsualizar */}
+                      <button 
+                        className="btn-icono btn-preview"
+                        onClick={() => handlePrevisualizarPDF(ot)}
+                        title="Previsualizar PDF"
+                      >
+                        👁️
+                      </button>
                       <button 
                         className="btn-icono btn-descargar"
                         onClick={() => handleDescargarPDF(ot)}
@@ -210,9 +278,9 @@ function BaseDatos({ navigateTo }) {
                       <button 
                         className="btn-icono btn-ver"
                         onClick={() => navigateTo('detalle-ot', ot.id, false)}
-                        title="Ver"
+                        title="Ver Detalles"
                       >
-                        👁️
+                        📄
                       </button>
                       <button 
                         className="btn-icono btn-editar"

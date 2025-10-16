@@ -14,12 +14,9 @@ function CrearOT({ navigateTo, empresaData }) {
   const [mostrarModalOtraBT, setMostrarModalOtraBT] = useState(false);
   const [mostrarFormularioCliente, setMostrarFormularioCliente] = useState(false);
   const [datosEmpresaGuardados, setDatosEmpresaGuardados] = useState({});
-  const [seccionesAbiertas, setSeccionesAbiertas] = useState({
-    datosEmpresa: true,
-    datosGPS: false,
-    datosVehiculo: false,
-    checklist: false
-  });
+  
+  // NUEVA LÓGICA: Solo una sección abierta a la vez
+  const [seccionAbierta, setSeccionAbierta] = useState('datosEmpresa');
 
   const [datosOT, setDatosOT] = useState({
     datosEmpresa: {},
@@ -36,11 +33,9 @@ function CrearOT({ navigateTo, empresaData }) {
     }
   }, [empresaData]);
 
+  // NUEVA FUNCIÓN: Abrir/cerrar secciones (solo una abierta)
   const toggleSeccion = (seccion) => {
-    setSeccionesAbiertas(prev => ({
-      ...prev,
-      [seccion]: !prev[seccion]
-    }));
+    setSeccionAbierta(seccionAbierta === seccion ? '' : seccion);
   };
 
   const validarCamposObligatorios = () => {
@@ -98,39 +93,13 @@ function CrearOT({ navigateTo, empresaData }) {
       datosVehiculo: {}
     });
     setMostrarModalOtraBT(false);
-    setSeccionesAbiertas({
-      datosEmpresa: false,
-      datosGPS: true,
-      datosVehiculo: false,
-      checklist: false
-    });
+    setSeccionAbierta('datosGPS'); // Abrir GPS para nueva OT
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNoCrearOtraBT = () => {
     setMostrarModalOtraBT(false);
     setMostrarFormularioCliente(true);
-  };
-
-  const calcularProgreso = () => {
-    let camposCompletos = 0;
-    let camposTotales = 13;
-
-    if (datosOT.datosEmpresa.nombreEmpresa?.trim()) camposCompletos++;
-    if (datosOT.datosEmpresa.fecha?.trim()) camposCompletos++;
-    if (datosOT.datosEmpresa.nombreContacto?.trim()) camposCompletos++;
-    if (datosOT.datosEmpresa.region?.trim()) camposCompletos++;
-    if (datosOT.datosEmpresa.ciudad?.trim()) camposCompletos++;
-    if (datosOT.datosEmpresa.comuna?.trim()) camposCompletos++;
-    if (datosOT.datosGPS.nombreTecnico?.trim()) camposCompletos++;
-    if (datosOT.datosGPS.tipoServicio?.trim()) camposCompletos++;
-    if (datosOT.datosVehiculo.tipo?.trim()) camposCompletos++;
-    if (datosOT.datosVehiculo.marca?.trim()) camposCompletos++;
-    if (datosOT.datosVehiculo.modelo?.trim()) camposCompletos++;
-    if (datosOT.datosVehiculo.ano?.trim()) camposCompletos++;
-    if (datosOT.datosVehiculo.color?.trim()) camposCompletos++;
-
-    return Math.round((camposCompletos / camposTotales) * 100);
   };
 
   if (mostrarFormularioCliente) {
@@ -161,6 +130,7 @@ function CrearOT({ navigateTo, empresaData }) {
       </div>
 
       <form className="crear-ot-form">
+        {/* SECCIÓN 1: DATOS EMPRESA */}
         <div className="form-section">
           <div 
             className="form-section-header"
@@ -170,11 +140,11 @@ function CrearOT({ navigateTo, empresaData }) {
               <span className="form-section-icon">🏢</span>
               <h2 className="form-section-title">Datos de la Empresa</h2>
             </div>
-            <span className={`form-section-toggle ${!seccionesAbiertas.datosEmpresa ? 'collapsed' : ''}`}>
+            <span className={`form-section-toggle ${seccionAbierta !== 'datosEmpresa' ? 'collapsed' : ''}`}>
               ▼
             </span>
           </div>
-          <div className={`form-section-body ${!seccionesAbiertas.datosEmpresa ? 'collapsed' : ''}`}>
+          <div className={`form-section-body ${seccionAbierta !== 'datosEmpresa' ? 'collapsed' : ''}`}>
             <DatosEmpresa 
               datos={datosOT.datosEmpresa}
               onChange={(nuevosDatos) => setDatosOT({ ...datosOT, datosEmpresa: nuevosDatos })}
@@ -182,6 +152,7 @@ function CrearOT({ navigateTo, empresaData }) {
           </div>
         </div>
 
+        {/* SECCIÓN 2: DATOS GPS */}
         <div className="form-section">
           <div 
             className="form-section-header"
@@ -191,11 +162,11 @@ function CrearOT({ navigateTo, empresaData }) {
               <span className="form-section-icon">📡</span>
               <h2 className="form-section-title">Datos del Servicio GPS</h2>
             </div>
-            <span className={`form-section-toggle ${!seccionesAbiertas.datosGPS ? 'collapsed' : ''}`}>
+            <span className={`form-section-toggle ${seccionAbierta !== 'datosGPS' ? 'collapsed' : ''}`}>
               ▼
             </span>
           </div>
-          <div className={`form-section-body ${!seccionesAbiertas.datosGPS ? 'collapsed' : ''}`}>
+          <div className={`form-section-body ${seccionAbierta !== 'datosGPS' ? 'collapsed' : ''}`}>
             <DatosGPS 
               datos={datosOT.datosGPS}
               onChange={(nuevosDatos) => setDatosOT({ ...datosOT, datosGPS: nuevosDatos })}
@@ -203,6 +174,7 @@ function CrearOT({ navigateTo, empresaData }) {
           </div>
         </div>
 
+        {/* SECCIÓN 3: DATOS VEHÍCULO */}
         <div className="form-section">
           <div 
             className="form-section-header"
@@ -212,11 +184,11 @@ function CrearOT({ navigateTo, empresaData }) {
               <span className="form-section-icon">🚗</span>
               <h2 className="form-section-title">Datos del Vehículo</h2>
             </div>
-            <span className={`form-section-toggle ${!seccionesAbiertas.datosVehiculo ? 'collapsed' : ''}`}>
+            <span className={`form-section-toggle ${seccionAbierta !== 'datosVehiculo' ? 'collapsed' : ''}`}>
               ▼
             </span>
           </div>
-          <div className={`form-section-body ${!seccionesAbiertas.datosVehiculo ? 'collapsed' : ''}`}>
+          <div className={`form-section-body ${seccionAbierta !== 'datosVehiculo' ? 'collapsed' : ''}`}>
             <DatosVehiculo 
               datos={datosOT.datosVehiculo}
               onChange={(nuevosDatos) => setDatosOT({ ...datosOT, datosVehiculo: nuevosDatos })}
@@ -224,6 +196,7 @@ function CrearOT({ navigateTo, empresaData }) {
           </div>
         </div>
 
+        {/* SECCIÓN 4: CHECKLIST */}
         <div className="form-section">
           <div 
             className="form-section-header"
@@ -233,11 +206,11 @@ function CrearOT({ navigateTo, empresaData }) {
               <span className="form-section-icon">✅</span>
               <h2 className="form-section-title">CheckList del Vehículo</h2>
             </div>
-            <span className={`form-section-toggle ${!seccionesAbiertas.checklist ? 'collapsed' : ''}`}>
+            <span className={`form-section-toggle ${seccionAbierta !== 'checklist' ? 'collapsed' : ''}`}>
               ▼
             </span>
           </div>
-          <div className={`form-section-body ${!seccionesAbiertas.checklist ? 'collapsed' : ''}`}>
+          <div className={`form-section-body ${seccionAbierta !== 'checklist' ? 'collapsed' : ''}`}>
             <CheckList 
               datos={datosOT.checklist}
               onChange={(nuevosDatos) => setDatosOT({ ...datosOT, checklist: nuevosDatos })}
