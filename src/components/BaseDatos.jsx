@@ -89,24 +89,24 @@ function BaseDatos({ navigateTo }) {
     }
   };
 
-  // ✅ NUEVO: Previsualizar PDF
+  // ✅ CORRECTO - Previsualizar PDF
   const handlePrevisualizarPDF = (ot) => {
     try {
       generarPDFOT(ot, true); // true = previsualizar
     } catch (error) {
       console.error('Error al previsualizar PDF:', error);
-      alert('❌ Error al generar la previsualización. Verifique que jsPDF esté instalado correctamente.');
+      alert('❌ Error al generar la previsualización del PDF.');
     }
   };
 
-  // ✅ MEJORADO: Descargar PDF con mejor manejo de errores
+  // ✅ CORRECTO - Descargar PDF
   const handleDescargarPDF = (ot) => {
     try {
       generarPDFOT(ot, false); // false = descargar
       alert('✅ PDF descargado exitosamente');
     } catch (error) {
       console.error('Error al generar PDF:', error);
-      alert('❌ Error al generar el PDF. Verifique que jsPDF esté instalado:\n\nnpm install jspdf jspdf-autotable');
+      alert('❌ Error al generar el PDF.');
     }
   };
 

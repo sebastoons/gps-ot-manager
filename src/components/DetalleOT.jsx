@@ -54,9 +54,10 @@ function DetalleOT({ navigateTo, otId, editMode }) {
     }
   };
 
+  // ✅ CORRECTO - Descargar PDF desde DetalleOT
   const handleDescargarPDF = () => {
     try {
-      generarPDFOT(ot);
+      generarPDFOT(ot, false); // false = descargar
       alert('✅ PDF descargado exitosamente');
     } catch (error) {
       console.error('Error al generar PDF:', error);

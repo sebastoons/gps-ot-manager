@@ -8,6 +8,10 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    open: true
+    open: true,
+    hmr: {
+      overlay: false, // ✅ Oculta overlay de errores
+      clientPort: 3000 // ✅ Fuerza puerto del WebSocket
+    }
   }
 })

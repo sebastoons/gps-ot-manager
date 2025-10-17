@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Formulario Cliente CSS</title>
-<style>
+
 .formulario-cliente-container {
   max-width: 100%;
   padding: var(--spacing-md);
@@ -282,23 +277,3 @@
   animation-delay: 0.3s;
   opacity: 0;
 }
-</style>
-</head>
-<body>
-<div style="padding: 20px; background: linear-gradient(135deg, #23599a, #2786bf, #23599a); min-height: 100vh;">
-  <h1 style="color: white; text-align: center; margin-bottom: 20px;">Vista Previa - Formulario Cliente</h1>
-  <div style="background: white; padding: 20px; border-radius: 12px;">
-    <h2 style="color: #438de5;">✅ Estilos Actualizados</h2>
-    <p>El formulario de cliente ahora incluye:</p>
-    <ul>
-      <li>✅ Gradientes azules consistentes con CrearOT</li>
-      <li>✅ Efectos glassmorphism y backdrop-filter</li>
-      <li>✅ Animaciones de entrada secuenciales</li>
-      <li>✅ Canvas de firma con borde azul y fondo gradiente</li>
-      <li>✅ Botones con efectos hover modernos</li>
-      <li>✅ Responsive design mejorado</li>
-    </ul>
-  </div>
-</div>
-</body>
-</html>

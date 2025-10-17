@@ -1,4 +1,3 @@
-// src/utils/pdfService.js - VERSION SIN AUTOTABLE
 import { jsPDF } from 'jspdf';
 
 export const generarPDFOT = (ot, preview = false) => {
@@ -41,7 +40,7 @@ export const generarPDFOT = (ot, preview = false) => {
       doc.text(label, margin + 2, yPos);
       doc.setFont('helvetica', 'normal');
       const valorTexto = valor || 'N/A';
-      doc.text(valorTexto.toString(), margin + 55, yPos);
+      doc.text(String(valorTexto), margin + 55, yPos);
       yPos += 6;
     };
 
@@ -51,7 +50,6 @@ export const generarPDFOT = (ot, preview = false) => {
       yPos += 5;
     };
 
-    // ENCABEZADO
     doc.setFillColor(...azulPrimario);
     doc.rect(0, 0, pageWidth, 45, 'F');
     doc.setTextColor(255, 255, 255);
@@ -67,7 +65,6 @@ export const generarPDFOT = (ot, preview = false) => {
     doc.text(codigoOT, pageWidth / 2, 38, { align: 'center' });
     yPos = 55;
 
-    // FECHA
     doc.setTextColor(...textoOscuro);
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
@@ -78,11 +75,10 @@ export const generarPDFOT = (ot, preview = false) => {
       hour: '2-digit',
       minute: '2-digit'
     });
-    doc.text(`Fecha de Creacion: ${fechaCreacion}`, margin, yPos);
+    doc.text(`Fecha: ${fechaCreacion}`, margin, yPos);
     yPos += 8;
     agregarLinea();
 
-    // EMPRESA
     agregarSeccion('DATOS DE LA EMPRESA');
     agregarFila('Empresa:', ot.datosEmpresa?.nombreEmpresa);
     agregarFila('Fecha:', ot.datosEmpresa?.fecha);
@@ -93,32 +89,30 @@ export const generarPDFOT = (ot, preview = false) => {
     yPos += 3;
     agregarLinea();
 
-    // GPS
     agregarSeccion('DATOS DEL SERVICIO GPS');
     agregarFila('Tecnico:', ot.datosGPS?.nombreTecnico);
-    agregarFila('Tipo de Servicio:', ot.datosGPS?.tipoServicio);
+    agregarFila('Servicio:', ot.datosGPS?.tipoServicio);
     agregarFila('PPU IN:', ot.datosGPS?.ppuIn);
     agregarFila('PPU OUT:', ot.datosGPS?.ppuOut);
     agregarFila('IMEI IN:', ot.datosGPS?.imeiIn);
     agregarFila('IMEI OUT:', ot.datosGPS?.imeiOut);
 
-    if (ot.datosGPS?.accesoriosInstalados && ot.datosGPS.accesoriosInstalados.length > 0) {
+    if (ot.datosGPS?.accesoriosInstalados?.length > 0) {
       yPos += 3;
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(9);
-      doc.text('Accesorios Instalados:', margin + 2, yPos);
+      doc.text('Accesorios:', margin + 2, yPos);
       yPos += 5;
       doc.setFont('helvetica', 'normal');
-      ot.datosGPS.accesoriosInstalados.forEach((accesorio) => {
+      ot.datosGPS.accesoriosInstalados.forEach((acc) => {
         verificarEspacio(5);
-        doc.text(`- ${accesorio}`, margin + 7, yPos);
+        doc.text(`- ${acc}`, margin + 7, yPos);
         yPos += 5;
       });
     }
     yPos += 3;
     agregarLinea();
 
-    // VEHICULO
     agregarSeccion('DATOS DEL VEHICULO');
     agregarFila('Tipo:', ot.datosVehiculo?.tipo);
     agregarFila('Marca:', ot.datosVehiculo?.marca);
@@ -137,8 +131,8 @@ export const generarPDFOT = (ot, preview = false) => {
       doc.text('Observaciones:', margin + 2, yPos);
       yPos += 5;
       doc.setFont('helvetica', 'normal');
-      const observaciones = doc.splitTextToSize(ot.datosVehiculo.observaciones, pageWidth - margin * 2 - 4);
-      observaciones.forEach(linea => {
+      const obs = doc.splitTextToSize(ot.datosVehiculo.observaciones, pageWidth - margin * 2 - 4);
+      obs.forEach(linea => {
         verificarEspacio(5);
         doc.text(linea, margin + 2, yPos);
         yPos += 5;
@@ -147,10 +141,9 @@ export const generarPDFOT = (ot, preview = false) => {
     yPos += 3;
     agregarLinea();
 
-    // CHECKLIST
     if (ot.checklist && Object.keys(ot.checklist).length > 0) {
       agregarSeccion('CHECKLIST DEL VEHICULO');
-      const itemsLabels = {
+      const labels = {
         luces: 'Luces',
         radio: 'Radio',
         tablero: 'Tablero',
@@ -164,15 +157,15 @@ export const generarPDFOT = (ot, preview = false) => {
           const estado = value.estado === 'bueno' ? 'OK' : 'Ver detalle';
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(9);
-          doc.text(`${icono} ${itemsLabels[key]}:`, margin + 2, yPos);
+          doc.text(`${icono} ${labels[key]}:`, margin + 2, yPos);
           doc.setFont('helvetica', 'normal');
           doc.text(estado, margin + 55, yPos);
           yPos += 5;
           if (value.detalle) {
             doc.setFont('helvetica', 'italic');
             doc.setFontSize(8);
-            const detalleLineas = doc.splitTextToSize(`> ${value.detalle}`, pageWidth - margin * 2 - 10);
-            detalleLineas.forEach(linea => {
+            const det = doc.splitTextToSize(`> ${value.detalle}`, pageWidth - margin * 2 - 10);
+            det.forEach(linea => {
               verificarEspacio(4);
               doc.text(linea, margin + 7, yPos);
               yPos += 4;
@@ -186,7 +179,6 @@ export const generarPDFOT = (ot, preview = false) => {
       agregarLinea();
     }
 
-    // CLIENTE
     if (ot.datosCliente) {
       agregarSeccion('DATOS DEL CLIENTE');
       agregarFila('Nombre:', ot.datosCliente.nombre);
@@ -197,13 +189,13 @@ export const generarPDFOT = (ot, preview = false) => {
         verificarEspacio(40);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(10);
-        doc.text('Firma del Cliente:', margin + 2, yPos);
+        doc.text('Firma:', margin + 2, yPos);
         yPos += 5;
         try {
           doc.addImage(ot.datosCliente.firma, 'PNG', margin + 2, yPos, 80, 30);
           yPos += 35;
         } catch (error) {
-          console.error('Error al agregar firma:', error);
+          console.error('Error firma:', error);
           doc.setFont('helvetica', 'italic');
           doc.setFontSize(9);
           doc.text('(Firma no disponible)', margin + 2, yPos);
@@ -212,7 +204,6 @@ export const generarPDFOT = (ot, preview = false) => {
       }
     }
 
-    // PIE DE PAGINA
     const totalPages = doc.internal.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
       doc.setPage(i);
@@ -223,19 +214,19 @@ export const generarPDFOT = (ot, preview = false) => {
       doc.text('(c) 2025 GPS OT Manager', pageWidth / 2, pageHeight - 5, { align: 'center' });
     }
 
-    // GUARDAR O PREVISUALIZAR
     const nombreArchivo = `${codigoOT}.pdf`;
     if (preview) {
-      const blob = doc.output('blob');
-      const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
+      const pdfBlob = doc.output('blob');
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      window.open(pdfUrl, '_blank');
+      setTimeout(() => URL.revokeObjectURL(pdfUrl), 100);
     } else {
       doc.save(nombreArchivo);
     }
     return true;
   } catch (error) {
-    console.error('Error al generar PDF:', error);
-    console.error('Stack:', error.stack);
+    console.error('Error PDF:', error);
+    alert(`Error: ${error.message}`);
     throw error;
   }
 };
