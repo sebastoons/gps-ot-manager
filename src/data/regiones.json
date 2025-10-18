@@ -1,0 +1,16 @@
+{
+  "regionesDatos": {
+    "Región Metropolitana": {
+      "ciudades": ["Santiago", "San Bernardo", "Puente Alto", "Maipú"],
+      "comunas": ["Cerrillos", "Cerro Navia", "Conchalí", "El Bosque", "Estación Central", "Huechuraba", "Independencia", "La Cisterna", "La Florida", "La Granja", "La Pintana", "La Reina", "Las Condes", "Lo Barnechea", "Lo Espejo", "Lo Prado", "Macul", "Maipú", "Ñuñoa", "Padre Hurtado", "Peñalolén", "Providencia", "Pudahuel", "Puente Alto", "Quilicura", "Recoleta", "Renca", "San Joaquín", "San Miguel", "San Ramón", "Santiago Centro", "Vitacura"]
+    },
+    "Región de Valparaíso": {
+      "ciudades": ["Valparaíso", "Viña del Mar", "Quilpué", "Villa Alemana"],
+      "comunas": ["Cartagena", "Concón", "Quilpué", "Quillota", "Valparaíso", "Villa Alemana", "Viña del Mar"]
+    },
+    "Región del Biobío": {
+      "ciudades": ["Concepción", "Talcahuano", "Los Ángeles"],
+      "comunas": ["Chiguayante", "Concepción", "Coronel", "Hualpén", "Los Ángeles", "Talcahuano", "Tomé"]
+    }
+  }
+}

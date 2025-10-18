@@ -1,99 +1,45 @@
-import { useState, useEffect } from 'react';
+// src/components/CrearOT.jsx - VERSIÓN OPTIMIZADA
+import { useState } from 'react';
 import DatosEmpresa from './DatosEmpresa';
 import CheckList from './CheckList';
 import DatosGPS from './DatosGPS';
 import DatosVehiculo from './DatosVehiculo';
 import FormularioCliente from './FormularioCliente';
+import SeccionFormulario from './SeccionFormulario';
+import ModalConfirmacionOT from './ModalConfirmacionOT';
+import HeaderCrearOT from './HeaderCrearOT';
+import { useCrearOT } from '../hooks/useCrearOT';
+import { validarCamposObligatorios } from '../utils/validaciones';
 import '../styles/crearOT.css';
-import { guardarOT, obtenerNumeroOTActual } from '../utils/storage';
 
 function CrearOT({ navigateTo, empresaData }) {
-  const [numeroOT, setNumeroOT] = useState(1);
-  const [codigoOT, setCodigoOT] = useState('');
-  const [otsCreadas, setOtsCreadas] = useState([]);
   const [mostrarModalOtraBT, setMostrarModalOtraBT] = useState(false);
   const [mostrarFormularioCliente, setMostrarFormularioCliente] = useState(false);
-  const [datosEmpresaGuardados, setDatosEmpresaGuardados] = useState({});
-  
-  // NUEVA LÓGICA: Solo una sección abierta a la vez
-  const [seccionAbierta, setSeccionAbierta] = useState('datosEmpresa');
 
-  const [datosOT, setDatosOT] = useState({
-    datosEmpresa: {},
-    checklist: {},
-    datosGPS: {},
-    datosVehiculo: {}
-  });
-
-  useEffect(() => {
-    if (empresaData) {
-      const numeroActual = obtenerNumeroOTActual(empresaData.prefijo);
-      setNumeroOT(numeroActual);
-      setCodigoOT(`${empresaData.prefijo}${String(numeroActual).padStart(4, '0')}`);
-    }
-  }, [empresaData]);
-
-  // NUEVA FUNCIÓN: Abrir/cerrar secciones (solo una abierta)
-  const toggleSeccion = (seccion) => {
-    setSeccionAbierta(seccionAbierta === seccion ? '' : seccion);
-  };
-
-  const validarCamposObligatorios = () => {
-    const errores = [];
-    
-    if (!datosOT.datosEmpresa.nombreEmpresa?.trim()) errores.push('Nombre de la Empresa');
-    if (!datosOT.datosEmpresa.fecha?.trim()) errores.push('Fecha');
-    if (!datosOT.datosEmpresa.nombreContacto?.trim()) errores.push('Nombre del Contacto');
-    if (!datosOT.datosEmpresa.region?.trim()) errores.push('Región');
-    if (!datosOT.datosEmpresa.ciudad?.trim()) errores.push('Ciudad');
-    if (!datosOT.datosEmpresa.comuna?.trim()) errores.push('Comuna');
-    
-    if (!datosOT.datosGPS.nombreTecnico?.trim()) errores.push('Nombre del Técnico');
-    if (!datosOT.datosGPS.tipoServicio?.trim()) errores.push('Tipo de Servicio');
-    
-    if (!datosOT.datosVehiculo.tipo?.trim()) errores.push('Tipo de Vehículo');
-    if (!datosOT.datosVehiculo.marca?.trim()) errores.push('Marca del Vehículo');
-    if (!datosOT.datosVehiculo.modelo?.trim()) errores.push('Modelo del Vehículo');
-    if (!datosOT.datosVehiculo.ano?.trim()) errores.push('Año del Vehículo');
-    if (!datosOT.datosVehiculo.color?.trim()) errores.push('Color del Vehículo');
-    
-    return errores;
-  };
+  const {
+    codigoOT,
+    otsCreadas,
+    datosOT,
+    seccionAbierta,
+    toggleSeccion,
+    actualizarDatos,
+    finalizarOT,
+    crearNuevaOT
+  } = useCrearOT(empresaData);
 
   const handleFinalizarOT = () => {
-    const errores = validarCamposObligatorios();
-    
-    if (errores.length > 0) {
-      alert(`⚠️ Faltan los siguientes campos obligatorios:\n\n${errores.join('\n')}`);
-      return;
-    }
-
-    if (otsCreadas.length === 0) {
-      setDatosEmpresaGuardados(datosOT.datosEmpresa);
-    }
-
-    const otGuardada = guardarOT(datosOT, empresaData.prefijo);
+    const otGuardada = finalizarOT(validarCamposObligatorios);
     
     if (otGuardada) {
-      setOtsCreadas([...otsCreadas, otGuardada]);
       setMostrarModalOtraBT(true);
-    } else {
+    } else if (!otGuardada && otGuardada !== null) {
       alert('❌ Error al guardar la OT. Intenta nuevamente.');
     }
   };
 
   const handleCrearOtraBT = () => {
-    const nuevoNumero = obtenerNumeroOTActual(empresaData.prefijo);
-    setNumeroOT(nuevoNumero);
-    setCodigoOT(`${empresaData.prefijo}${String(nuevoNumero).padStart(4, '0')}`);
-    setDatosOT({
-      datosEmpresa: datosEmpresaGuardados,
-      checklist: {},
-      datosGPS: {},
-      datosVehiculo: {}
-    });
+    crearNuevaOT();
     setMostrarModalOtraBT(false);
-    setSeccionAbierta('datosGPS'); // Abrir GPS para nueva OT
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -102,6 +48,7 @@ function CrearOT({ navigateTo, empresaData }) {
     setMostrarFormularioCliente(true);
   };
 
+  // Si se muestra el formulario de cliente, renderizarlo
   if (mostrarFormularioCliente) {
     return (
       <FormularioCliente 
@@ -111,114 +58,79 @@ function CrearOT({ navigateTo, empresaData }) {
     );
   }
 
+  // Configuración de secciones
+  const secciones = [
+    {
+      id: 'datosEmpresa',
+      icono: '🏢',
+      titulo: 'Datos de la Empresa',
+      componente: (
+        <DatosEmpresa 
+          datos={datosOT.datosEmpresa}
+          onChange={(datos) => actualizarDatos('datosEmpresa', datos)}
+        />
+      )
+    },
+    {
+      id: 'datosGPS',
+      icono: '📡',
+      titulo: 'Datos del Servicio GPS',
+      componente: (
+        <DatosGPS 
+          datos={datosOT.datosGPS}
+          onChange={(datos) => actualizarDatos('datosGPS', datos)}
+        />
+      )
+    },
+    {
+      id: 'datosVehiculo',
+      icono: '🚗',
+      titulo: 'Datos del Vehículo',
+      componente: (
+        <DatosVehiculo 
+          datos={datosOT.datosVehiculo}
+          onChange={(datos) => actualizarDatos('datosVehiculo', datos)}
+        />
+      )
+    },
+    {
+      id: 'checklist',
+      icono: '✅',
+      titulo: 'CheckList del Vehículo',
+      componente: (
+        <CheckList 
+          datos={datosOT.checklist}
+          onChange={(datos) => actualizarDatos('checklist', datos)}
+        />
+      )
+    }
+  ];
+
   return (
     <div className="crear-ot-container">
-      <div className="crear-ot-header">
-        <div className="crear-ot-header-top">
-          <h1 className="crear-ot-title">Crear Orden de Trabajo</h1>
-          <button 
-            className="btn btn-volver"
-            onClick={() => navigateTo('index')}
-          >
-            ← Volver
-          </button>
-        </div>
-        <div className="ot-numero" style={{ color: '#f69a00' }}>
-          <span>Orden de Trabajo N°</span>
-          <span className="ot-numero-badge">{codigoOT}</span>
-        </div>
-      </div>
+      {/* Header */}
+      <HeaderCrearOT 
+        codigoOT={codigoOT}
+        onVolver={() => navigateTo('index')}
+      />
 
+      {/* Formulario por secciones */}
       <form className="crear-ot-form">
-        {/* SECCIÓN 1: DATOS EMPRESA */}
-        <div className="form-section">
-          <div 
-            className="form-section-header"
-            onClick={() => toggleSeccion('datosEmpresa')}
+        {secciones.map((seccion) => (
+          <SeccionFormulario
+            key={seccion.id}
+            id={seccion.id}
+            icono={seccion.icono}
+            titulo={seccion.titulo}
+            estaAbierta={seccionAbierta === seccion.id}
+            onToggle={toggleSeccion}
           >
-            <div className="form-section-header-content">
-              <span className="form-section-icon">🏢</span>
-              <h2 className="form-section-title">Datos de la Empresa</h2>
-            </div>
-            <span className={`form-section-toggle ${seccionAbierta !== 'datosEmpresa' ? 'collapsed' : ''}`}>
-              ▼
-            </span>
-          </div>
-          <div className={`form-section-body ${seccionAbierta !== 'datosEmpresa' ? 'collapsed' : ''}`}>
-            <DatosEmpresa 
-              datos={datosOT.datosEmpresa}
-              onChange={(nuevosDatos) => setDatosOT({ ...datosOT, datosEmpresa: nuevosDatos })}
-            />
-          </div>
-        </div>
-
-        {/* SECCIÓN 2: DATOS GPS */}
-        <div className="form-section">
-          <div 
-            className="form-section-header"
-            onClick={() => toggleSeccion('datosGPS')}
-          >
-            <div className="form-section-header-content">
-              <span className="form-section-icon">📡</span>
-              <h2 className="form-section-title">Datos del Servicio GPS</h2>
-            </div>
-            <span className={`form-section-toggle ${seccionAbierta !== 'datosGPS' ? 'collapsed' : ''}`}>
-              ▼
-            </span>
-          </div>
-          <div className={`form-section-body ${seccionAbierta !== 'datosGPS' ? 'collapsed' : ''}`}>
-            <DatosGPS 
-              datos={datosOT.datosGPS}
-              onChange={(nuevosDatos) => setDatosOT({ ...datosOT, datosGPS: nuevosDatos })}
-            />
-          </div>
-        </div>
-
-        {/* SECCIÓN 3: DATOS VEHÍCULO */}
-        <div className="form-section">
-          <div 
-            className="form-section-header"
-            onClick={() => toggleSeccion('datosVehiculo')}
-          >
-            <div className="form-section-header-content">
-              <span className="form-section-icon">🚗</span>
-              <h2 className="form-section-title">Datos del Vehículo</h2>
-            </div>
-            <span className={`form-section-toggle ${seccionAbierta !== 'datosVehiculo' ? 'collapsed' : ''}`}>
-              ▼
-            </span>
-          </div>
-          <div className={`form-section-body ${seccionAbierta !== 'datosVehiculo' ? 'collapsed' : ''}`}>
-            <DatosVehiculo 
-              datos={datosOT.datosVehiculo}
-              onChange={(nuevosDatos) => setDatosOT({ ...datosOT, datosVehiculo: nuevosDatos })}
-            />
-          </div>
-        </div>
-
-        {/* SECCIÓN 4: CHECKLIST */}
-        <div className="form-section">
-          <div 
-            className="form-section-header"
-            onClick={() => toggleSeccion('checklist')}
-          >
-            <div className="form-section-header-content">
-              <span className="form-section-icon">✅</span>
-              <h2 className="form-section-title">CheckList del Vehículo</h2>
-            </div>
-            <span className={`form-section-toggle ${seccionAbierta !== 'checklist' ? 'collapsed' : ''}`}>
-              ▼
-            </span>
-          </div>
-          <div className={`form-section-body ${seccionAbierta !== 'checklist' ? 'collapsed' : ''}`}>
-            <CheckList 
-              datos={datosOT.checklist}
-              onChange={(nuevosDatos) => setDatosOT({ ...datosOT, checklist: nuevosDatos })}
-            />
-          </div>
-        </div>
+            {seccion.componente}
+          </SeccionFormulario>
+        ))}
       </form>
 
+      {/* Botón de Finalizar */}
       <div className="form-actions">
         <div className="form-actions-buttons">
           <button 
@@ -231,33 +143,13 @@ function CrearOT({ navigateTo, empresaData }) {
         </div>
       </div>
 
-      {mostrarModalOtraBT && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <div className="modal-icon">✅</div>
-              <h2 className="modal-title">¡OT Guardada Exitosamente!</h2>
-              <p className="modal-description">
-                La Orden de Trabajo {otsCreadas[otsCreadas.length - 1]?.codigoOT} ha sido registrada correctamente.
-              </p>
-            </div>
-            <div className="modal-actions">
-              <button 
-                className="btn btn-primary btn-full"
-                onClick={handleCrearOtraBT}
-              >
-                ➕ Crear Otra OT
-              </button>
-              <button 
-                className="btn btn-secondary btn-full"
-                onClick={handleNoCrearOtraBT}
-              >
-                Finalizar y Obtener Firma
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal de confirmación */}
+      <ModalConfirmacionOT
+        mostrar={mostrarModalOtraBT}
+        ultimaOTCreada={otsCreadas[otsCreadas.length - 1]}
+        onCrearOtra={handleCrearOtraBT}
+        onFinalizar={handleNoCrearOtraBT}
+      />
     </div>
   );
 }
