@@ -7,7 +7,8 @@ function CheckList({ datos, onChange }) {
     { id: 'radio', label: 'Radio'},
     { id: 'tablero', label: 'Tablero'},
     { id: 'checkEngine', label: 'Check Engine'},
-    { id: 'bateria', label: 'Batería'}
+    { id: 'bateria', label: 'Batería'},
+    { id: 'plasticosEstetica', label: 'Plásticos y Estética'}
   ];
 
   const handleEstadoChange = (itemId, estado) => {

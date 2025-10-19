@@ -1,4 +1,4 @@
-// src/components/BaseDatos.jsx - VERSIÓN CORREGIDA
+// src/components/BaseDatos.jsx - VERSIÓN COMPLETA CORREGIDA
 import { useState, useEffect, useCallback } from 'react';
 import '../styles/baseDatos.css';
 import { 
@@ -20,7 +20,6 @@ function BaseDatos({ navigateTo }) {
   const [empresasDisponibles, setEmpresasDisponibles] = useState([]);
   const [estadisticas, setEstadisticas] = useState({ total: 0, ultimaSemana: 0, ultimoMes: 0 });
 
-  // Hook personalizado para filtros
   const { 
     otsFiltradas, 
     busqueda, 
@@ -29,17 +28,16 @@ function BaseDatos({ navigateTo }) {
     setEmpresaFiltro 
   } = useFiltrosOT(ots);
 
-  // Cargar OTs solo una vez al montar el componente
   useEffect(() => {
     cargarOTs();
-  }, []); // Sin dependencias
+  }, []);
 
   const cargarOTs = useCallback(() => {
     const otsGuardadas = obtenerTodasLasOTs();
     setOts(otsGuardadas);
     setEstadisticas(obtenerEstadisticas());
     setEmpresasDisponibles(obtenerEmpresasUnicas(otsGuardadas));
-  }, []); // Sin dependencias
+  }, []);
 
   const handleEliminar = useCallback((id, numeroOT) => {
     if (window.confirm(`¿Está seguro de eliminar la OT${String(numeroOT).padStart(4, '0')}?`)) {
@@ -122,7 +120,7 @@ function BaseDatos({ navigateTo }) {
         empresasDisponibles={empresasDisponibles}
       />
 
-      {/* Tabla o Mensaje Vacío */}
+      {/* Tabla Simplificada */}
       {otsFiltradas.length === 0 ? (
         <div className="mensaje-vacio">
           <div className="mensaje-vacio-icon">📋</div>
@@ -146,12 +144,10 @@ function BaseDatos({ navigateTo }) {
             <thead>
               <tr>
                 <th>N° OT</th>
-                <th>Empresa GPS</th>
+                <th>Empresa</th>
                 <th>Fecha</th>
                 <th>Cliente</th>
-                <th>Vehículo</th>
-                <th>Patente</th>
-                <th>Técnico</th>
+                <th>PPU</th>
                 <th>Servicio</th>
                 <th>Acciones</th>
               </tr>
@@ -163,7 +159,6 @@ function BaseDatos({ navigateTo }) {
                   ot={ot}
                   onPrevisualizar={handlePrevisualizarPDF}
                   onDescargar={handleDescargarPDF}
-                  onVer={(id) => navigateTo('detalle-ot', id, false)}
                   onEditar={(id) => navigateTo('detalle-ot', id, true)}
                   onEliminar={handleEliminar}
                   getNombreEmpresa={getNombreEmpresa}

@@ -1,9 +1,8 @@
-// src/components/FilaTablaOT.jsx
+// src/components/FilaTablaOT.jsx - CON PREVISUALIZAR, SIN VER DETALLES
 function FilaTablaOT({ 
   ot, 
-  onPrevisualizar, 
+  onPrevisualizar,
   onDescargar, 
-  onVer, 
   onEditar, 
   onEliminar,
   getNombreEmpresa,
@@ -12,29 +11,18 @@ function FilaTablaOT({
   return (
     <tr>
       <td className="ot-numero-cell">
-        <span className="badge badge-info">
-          {ot.codigoOT || `OT${String(ot.numeroOT).padStart(4, '0')}`}
-        </span>
+        {ot.codigoOT || `OT${String(ot.numeroOT).padStart(4, '0')}`}
       </td>
       <td>
         <span className="empresa-badge">
           {getNombreEmpresa(ot.prefijo)}
         </span>
       </td>
-      <td>{formatearFecha(ot.fechaCreacion)}</td>
+      <td className="fecha-cell">{formatearFecha(ot.fechaCreacion)}</td>
       <td>{ot.datosEmpresa?.nombreEmpresa || 'N/A'}</td>
-      <td>
-        <div className="vehiculo-info">
-          <strong>{ot.datosVehiculo?.marca || 'N/A'}</strong>
-          <span>{ot.datosVehiculo?.modelo || 'N/A'}</span>
-        </div>
+      <td className="ppu-cell">
+        {ot.datosVehiculo?.patente || 'Sin PPU'}
       </td>
-      <td>
-        <span className="patente-badge">
-          {ot.datosVehiculo?.patente || 'Sin Patente'}
-        </span>
-      </td>
-      <td>{ot.datosGPS?.nombreTecnico || 'N/A'}</td>
       <td>
         <span className="servicio-badge">
           {ot.datosGPS?.tipoServicio || 'N/A'}
@@ -55,13 +43,6 @@ function FilaTablaOT({
             title="Descargar PDF"
           >
             📥
-          </button>
-          <button 
-            className="btn-icono btn-ver"
-            onClick={() => onVer(ot.id)}
-            title="Ver Detalles"
-          >
-            📄
           </button>
           <button 
             className="btn-icono btn-editar"

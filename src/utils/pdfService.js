@@ -9,10 +9,12 @@ export const generarPDFOT = (ot, preview = false) => {
     let yPos = 15;
 
     // Colores
-    const azulPrimario = [67, 141, 229];
+    const azulPrimario = [38, 126, 184]; // #267eb8
     const textoOscuro = [15, 23, 42];
     const grisClaro = [248, 250, 252];
-    const grisMedio = [156, 163, 175];
+    const grisMedio = [100, 116, 139];
+    const verde = [16, 185, 129];
+    const naranja = [245, 158, 11];
 
     // Mapeo de logos según prefijo
     const logosEmpresas = {
@@ -20,32 +22,22 @@ export const generarPDFOT = (ot, preview = false) => {
       'U': '/logos/ugps.png'
     };
 
-    const verificarEspacio = (espacioNecesario) => {
-      if (yPos + espacioNecesario > pageHeight - 15) {
-        doc.addPage();
-        yPos = 15;
-        return true;
-      }
-      return false;
-    };
-
-    // ========== HEADER COMPACTO CON LOGO ==========
-    doc.setFillColor(...azulPrimario);
+    // ========== HEADER BLANCO CON LOGO ==========
+    doc.setFillColor(255, 255, 255);
     doc.rect(0, 0, pageWidth, 35, 'F');
 
     // Intentar cargar el logo
     const logoPath = logosEmpresas[ot.prefijo];
     if (logoPath) {
       try {
-        // Agregar logo (ajusta el tamaño según tu logo)
-        doc.addImage(logoPath, 'PNG', margin, 9, 40, 15);
+        doc.addImage(logoPath, 'PNG', margin, 9, 45, 15);
       } catch (error) {
         console.warn('No se pudo cargar el logo:', error);
       }
     }
 
-    // Título y código OT
-    doc.setTextColor(255, 255, 255);
+    // Título y código OT en azul
+    doc.setTextColor(...azulPrimario);
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
     doc.text('ORDEN DE TRABAJO', pageWidth / 2, 15, { align: 'center' });
@@ -54,9 +46,10 @@ export const generarPDFOT = (ot, preview = false) => {
     doc.setFontSize(14);
     doc.text(codigoOT, pageWidth / 2, 23, { align: 'center' });
     
-    // Fecha
+    // Fecha en gris
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...grisMedio);
     const fechaCreacion = new Date(ot.fechaCreacion).toLocaleDateString('es-CL', {
       day: '2-digit',
       month: '2-digit',
@@ -69,13 +62,13 @@ export const generarPDFOT = (ot, preview = false) => {
     yPos = 42;
 
     // ========== FUNCIÓN PARA SECCIONES COMPACTAS ==========
-    const agregarSeccionCompacta = (titulo, icono = '') => {
+    const agregarSeccionCompacta = (titulo) => {
       doc.setFillColor(...grisClaro);
       doc.rect(margin, yPos - 3, pageWidth - margin * 2, 6, 'F');
-      doc.setTextColor(...textoOscuro);
+      doc.setTextColor(...azulPrimario);
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
-      doc.text(`${icono} ${titulo}`, margin + 2, yPos);
+      doc.text(titulo, margin + 2, yPos);
       yPos += 7;
     };
 
@@ -109,15 +102,15 @@ export const generarPDFOT = (ot, preview = false) => {
     };
 
     // ========== DATOS DE LA EMPRESA ==========
-    agregarSeccionCompacta('DATOS DE LA EMPRESA', '🏢');
+    agregarSeccionCompacta('DATOS DE LA EMPRESA');
     agregarFilaDosColumnas('EMPRESA', ot.datosEmpresa?.nombreEmpresa, 'FECHA', ot.datosEmpresa?.fecha);
-    agregarFilaDosColumnas('CONTACTO', ot.datosEmpresa?.nombreContacto, 'REGIÓN', ot.datosEmpresa?.region);
+    agregarFilaDosColumnas('CONTACTO', ot.datosEmpresa?.nombreContacto, 'REGION', ot.datosEmpresa?.region);
     agregarFilaDosColumnas('CIUDAD', ot.datosEmpresa?.ciudad, 'COMUNA', ot.datosEmpresa?.comuna);
     yPos += 2;
 
     // ========== DATOS DEL SERVICIO GPS ==========
-    agregarSeccionCompacta('SERVICIO GPS', '📡');
-    agregarFilaDosColumnas('TÉCNICO', ot.datosGPS?.nombreTecnico, 'SERVICIO', ot.datosGPS?.tipoServicio);
+    agregarSeccionCompacta('SERVICIO GPS');
+    agregarFilaDosColumnas('TECNICO', ot.datosGPS?.nombreTecnico, 'SERVICIO', ot.datosGPS?.tipoServicio);
     agregarFilaDosColumnas('PPU IN', ot.datosGPS?.ppuIn, 'PPU OUT', ot.datosGPS?.ppuOut);
     agregarFilaDosColumnas('IMEI IN', ot.datosGPS?.imeiIn, 'IMEI OUT', ot.datosGPS?.imeiOut);
 
@@ -142,7 +135,7 @@ export const generarPDFOT = (ot, preview = false) => {
     yPos += 2;
 
     // ========== DATOS DEL VEHÍCULO ==========
-    agregarSeccionCompacta('VEHÍCULO', '🚗');
+    agregarSeccionCompacta('VEHICULO');
     agregarFilaDosColumnas('TIPO', ot.datosVehiculo?.tipo, 'MARCA', ot.datosVehiculo?.marca);
     agregarFilaDosColumnas('MODELO', ot.datosVehiculo?.modelo, 'AÑO', ot.datosVehiculo?.ano);
     agregarFilaDosColumnas('COLOR', ot.datosVehiculo?.color, 'PATENTE', ot.datosVehiculo?.patente || 'Sin Patente');
@@ -170,53 +163,66 @@ export const generarPDFOT = (ot, preview = false) => {
     }
     yPos += 2;
 
-    // ========== CHECKLIST COMPACTO ==========
+    // ========== CHECKLIST MEJORADO ==========
     if (ot.checklist && Object.keys(ot.checklist).length > 0) {
-      agregarSeccionCompacta('CHECKLIST', '✅');
+      agregarSeccionCompacta('CHECKLIST DEL VEHICULO');
       const labels = {
         luces: 'Luces',
         radio: 'Radio',
         tablero: 'Tablero',
         checkEngine: 'Check Engine',
-        bateria: 'Batería'
+        bateria: 'Bateria',
+        plasticosEstetica: 'Plasticos y Estetica'
       };
 
-      // Mostrar en dos columnas
       const items = Object.entries(ot.checklist).filter(([_, value]) => value.estado);
-      for (let i = 0; i < items.length; i += 2) {
-        const [key1, value1] = items[i];
-        const icono1 = value1.estado === 'bueno' ? '✓' : '⚠';
-        const texto1 = `${icono1} ${labels[key1]}`;
+      
+      // Contar buenos y con detalles
+      const itemsBuenos = items.filter(([_, v]) => v.estado === 'bueno').length;
+      const itemsConDetalles = items.filter(([_, v]) => v.estado === 'detalle').length;
+      
+      // Mostrar resumen
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(...verde);
+      doc.text(`Estado OK: ${itemsBuenos}`, margin + 2, yPos);
+      doc.setTextColor(...naranja);
+      doc.text(`Con Observaciones: ${itemsConDetalles}`, margin + 50, yPos);
+      yPos += 5;
+
+      // Mostrar items
+      for (let i = 0; i < items.length; i++) {
+        const [key, value] = items[i];
         
-        let texto2 = '';
-        if (items[i + 1]) {
-          const [key2, value2] = items[i + 1];
-          const icono2 = value2.estado === 'bueno' ? '✓' : '⚠';
-          texto2 = `${icono2} ${labels[key2]}`;
+        // Símbolo según estado
+        if (value.estado === 'bueno') {
+          doc.setTextColor(...verde);
+          doc.setFont('helvetica', 'bold');
+          doc.text('OK', margin + 2, yPos);
+        } else {
+          doc.setTextColor(...naranja);
+          doc.setFont('helvetica', 'bold');
+          doc.text('!', margin + 2, yPos);
         }
         
-        const colWidth = (pageWidth - margin * 2) / 2;
+        // Nombre del item
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7);
         doc.setTextColor(...textoOscuro);
-        doc.text(texto1, margin + 2, yPos);
-        if (texto2) {
-          doc.text(texto2, margin + colWidth + 2, yPos);
-        }
+        doc.setFontSize(7);
+        doc.text(labels[key], margin + 10, yPos);
         yPos += 4;
         
-        // Detalles si existen
-        if (value1.detalle) {
+        // Detalle si existe
+        if (value.detalle) {
           doc.setFont('helvetica', 'italic');
           doc.setFontSize(6);
-          doc.text(`> ${value1.detalle}`, margin + 4, yPos);
-          yPos += 3;
-        }
-        if (items[i + 1] && items[i + 1][1].detalle) {
-          doc.setFont('helvetica', 'italic');
-          doc.setFontSize(6);
-          doc.text(`> ${items[i + 1][1].detalle}`, margin + colWidth + 4, yPos);
-          yPos += 3;
+          doc.setTextColor(...grisMedio);
+          const detalleTexto = doc.splitTextToSize(`- ${value.detalle}`, pageWidth - margin * 2 - 12);
+          detalleTexto.forEach(linea => {
+            doc.text(linea, margin + 12, yPos);
+            yPos += 3;
+          });
+          yPos += 1;
         }
       }
       yPos += 2;
@@ -224,7 +230,7 @@ export const generarPDFOT = (ot, preview = false) => {
 
     // ========== DATOS DEL CLIENTE Y FIRMA ==========
     if (ot.datosCliente) {
-      agregarSeccionCompacta('CLIENTE', '👤');
+      agregarSeccionCompacta('CLIENTE');
       agregarFilaDosColumnas('NOMBRE', ot.datosCliente.nombre, 'RUT', ot.datosCliente.rut);
       agregarFilaDosColumnas('CONTACTO', ot.datosCliente.contacto, '', '');
       yPos += 2;
@@ -238,10 +244,7 @@ export const generarPDFOT = (ot, preview = false) => {
         yPos += 2;
         
         try {
-          // Firma más pequeña
           doc.addImage(ot.datosCliente.firma, 'PNG', margin + 2, yPos, 50, 20);
-          
-          // Línea debajo de la firma
           doc.setDrawColor(...grisMedio);
           doc.line(margin + 2, yPos + 21, margin + 52, yPos + 21);
           doc.setFontSize(6);
@@ -262,8 +265,8 @@ export const generarPDFOT = (ot, preview = false) => {
     doc.setFontSize(6);
     doc.setTextColor(...grisMedio);
     doc.setFont('helvetica', 'normal');
-    doc.text('© 2025 GPS OT Manager - Sistema de Gestión de Órdenes de Trabajo', pageWidth / 2, pageHeight - 8, { align: 'center' });
-    doc.text(`Página 1 de 1`, pageWidth / 2, pageHeight - 4, { align: 'center' });
+    doc.text('2025 GPS OT Manager - Sistema de Gestion de Ordenes de Trabajo', pageWidth / 2, pageHeight - 8, { align: 'center' });
+    doc.text('Pagina 1 de 1', pageWidth / 2, pageHeight - 4, { align: 'center' });
 
     // ========== GUARDAR O PREVISUALIZAR ==========
     const nombreArchivo = `${codigoOT}.pdf`;

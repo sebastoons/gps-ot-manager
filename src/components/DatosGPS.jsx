@@ -48,18 +48,26 @@ function DatosGPS({ datos, onChange }) {
     'Visita Fallida'
   ];
 
+  // Lista de técnicos predefinidos
+  const tecnicos = [
+    'Sebastian Parra'
+  ];
+
   return (
     <div>
       <div className="form-row">
         <div className="form-group">
           <label className="form-label required-field">Técnico</label>
-          <input
-            type="text"
-            className="form-input"
-            placeholder="Nombre completo del técnico"
+          <select
+            className="form-select"
             value={datos.nombreTecnico || ''}
             onChange={(e) => handleChange('nombreTecnico', e.target.value)}
-          />
+          >
+            <option value="">Seleccionar técnico</option>
+            {tecnicos.map(tecnico => (
+              <option key={tecnico} value={tecnico}>{tecnico}</option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">

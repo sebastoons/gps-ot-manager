@@ -1,12 +1,30 @@
+import { useEffect } from 'react';
 import '../styles/global.css';
 
-function DatosVehiculo({ datos, onChange }) {
+function DatosVehiculo({ datos, onChange, ppuIn }) {
   const handleChange = (campo, valor) => {
     onChange({
       ...datos,
       [campo]: valor
     });
   };
+
+  // Auto-completar patente con PPU IN cuando cambia
+  useEffect(() => {
+    if (ppuIn && ppuIn.trim() !== '') {
+      // Actualizar patente con el valor completo de ppuIn
+      onChange({
+        ...datos,
+        patente: ppuIn.toUpperCase()
+      });
+    } else if (!ppuIn || ppuIn.trim() === '') {
+      // Si ppuIn está vacío, limpiar también la patente
+      onChange({
+        ...datos,
+        patente: ''
+      });
+    }
+  }, [ppuIn]);
 
   const tiposVehiculo = [
     'Auto',
@@ -29,6 +47,34 @@ function DatosVehiculo({ datos, onChange }) {
     'Renault', 'Scania', 'Seat', 'Skoda','Ssangyong', 'Subaru', 'Suzuki', 'Tesla', 'Toyota', 'Volkswagen', 
     'Volvo',
   ].sort();
+
+  // Generar años del 1990 al 2030
+  const años = [];
+  for (let año = 2030; año >= 1990; año--) {
+    años.push(año);
+  }
+
+  // Colores ordenados alfabéticamente
+  const colores = [
+    'Amarillo',
+    'Azul',
+    'Beige',
+    'Blanco',
+    'Café',
+    'Gris',
+    'Morado',
+    'Naranja',
+    'Negro',
+    'Plata',
+    'Rojo',
+    'Rosa',
+    'Verde'
+  ];
+
+  const handlePatenteChange = (valor) => {
+    patenteAutocompletadaRef.current = false;
+    handleChange('patente', valor.toUpperCase());
+  };
 
   return (
     <div>
@@ -76,28 +122,32 @@ function DatosVehiculo({ datos, onChange }) {
 
         <div className="form-group">
           <label className="form-label required-field">Año</label>
-          <input
-            type="number"
-            className="form-input"
-            placeholder="Ej: 2023"
-            min="1900"
-            max={new Date().getFullYear() + 1}
+          <select
+            className="form-select"
             value={datos.ano || ''}
             onChange={(e) => handleChange('ano', e.target.value)}
-          />
+          >
+            <option value="">Seleccionar año</option>
+            {años.map(año => (
+              <option key={año} value={año}>{año}</option>
+            ))}
+          </select>
         </div>
       </div>
 
       <div className="form-row">
         <div className="form-group">
           <label className="form-label required-field">Color</label>
-          <input
-            type="text"
-            className="form-input"
-            placeholder="Ej: Blanco, Negro, Rojo"
+          <select
+            className="form-select"
             value={datos.color || ''}
             onChange={(e) => handleChange('color', e.target.value)}
-          />
+          >
+            <option value="">Seleccionar color</option>
+            {colores.map(color => (
+              <option key={color} value={color}>{color}</option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">
@@ -105,12 +155,17 @@ function DatosVehiculo({ datos, onChange }) {
           <input
             type="text"
             className="form-input"
-            placeholder="Ej: ABCD12"
+            placeholder="Auto-completado desde PPU IN"
             maxLength="6"
             style={{ textTransform: 'uppercase' }}
             value={datos.patente || ''}
-            onChange={(e) => handleChange('patente', e.target.value.toUpperCase())}
+            onChange={(e) => handlePatenteChange(e.target.value)}
           />
+          {ppuIn && ppuIn.trim() !== '' && (
+            <small style={{ color: '#438de5', fontSize: '0.55em', marginTop: '2px', display: 'block' }}>
+              ✓ Copiado desde PPU IN: {ppuIn}
+            </small>
+          )}
         </div>
       </div>
 

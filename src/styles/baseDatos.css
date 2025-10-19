@@ -1,5 +1,5 @@
 /* ========================================
-   BASE DE DATOS - ESTILOS
+   BASE DE DATOS - ESTILOS SIMPLIFICADOS
    ======================================== */
 
 .base-datos-container {
@@ -11,21 +11,12 @@
 .base-datos-header {
   background: linear-gradient(135deg, #438de5, #56b9f4, #438de5);
   color: var(--text-white);
-  padding: 30px;
+  padding: 20px;
   border-radius: var(--border-radius-lg);
   margin-bottom: 20px;
   box-shadow: var(--shadow-xl), 0 0 40px rgba(67, 141, 229, 0.4);
   position: relative;
   overflow: hidden;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
 }
 
 .base-datos-header-top {
@@ -39,7 +30,7 @@
 
 .base-datos-title {
   font-family: var(--font-title);
-  font-size: 1.2em;
+  font-size: 1.1em;
   text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);
   text-transform: uppercase;
   color: #f6f6f6;
@@ -86,12 +77,12 @@
 
 .estadistica-numero {
   font-family: var(--font-title);
-  font-size: 1.5em;
+  font-size: 1.2em;
   background: linear-gradient(135deg, #438de5, #56b9f4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
 }
 
 .estadistica-label {
@@ -115,7 +106,7 @@
   border: 1px solid rgba(255, 255, 255, 0.5);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: 10px;
 }
 
 .filtro-empresa {
@@ -142,23 +133,12 @@
   background-color: var(--bg-primary);
   cursor: pointer;
   transition: all 0.3s ease;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23438de5' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 12px;
-  padding-right: 2.5rem;
-  appearance: none;
 }
 
 .filtro-select:focus {
   outline: none;
   border-color: #438de5;
   box-shadow: 0 0 0 4px rgba(67, 141, 229, 0.1);
-  transform: translateY(-2px);
-}
-
-.filtro-select:hover {
-  border-color: #438de5;
 }
 
 .busqueda-input-container {
@@ -179,11 +159,10 @@
   outline: none;
   border-color: #438de5;
   box-shadow: 0 0 0 4px rgba(67, 141, 229, 0.1);
-  transform: translateY(-2px);
 }
 
 /* ========================================
-   TABLA DE OTs
+   TABLA SIMPLIFICADA
    ======================================== */
 
 .mensaje-vacio {
@@ -199,7 +178,6 @@
 .mensaje-vacio-icon {
   font-size: 4rem;
   margin-bottom: var(--spacing-md);
-  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .mensaje-vacio-texto {
@@ -221,115 +199,114 @@
 .tabla-ots {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.7rem;
 }
 
 .tabla-ots thead {
-  background: linear-gradient(135deg, #438de5, #56b9f4);
-  color: var(--text-white);
+  background: #438de5;
+  color: white;
 }
 
 .tabla-ots th {
-  padding: var(--spacing-sm);
+  padding: 8px 4px;
   text-align: center;
   font-family: var(--font-subtitle);
   font-weight: 600;
   text-transform: uppercase;
-  font-size: 0.85rem;
-  letter-spacing: 0.5px;
+  font-size: 0.65rem;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 
 .tabla-ots tbody tr {
-  border-bottom: 1px solid var(--border-color);
-  transition: all 0.2s ease;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s ease;
 }
 
 .tabla-ots tbody tr:hover {
-  background-color: var(--bg-secondary);
-  transform: scale(1.01);
+  background-color: #f8fafc;
 }
 
 .tabla-ots td {
-  padding: var(--spacing-sm);
+  padding: 6px 4px;
   vertical-align: middle;
+  text-align: center;
+  font-size: 0.65rem;
 }
 
 .ot-numero-cell {
   font-weight: 700;
+  color: #438de5;
+  font-size: 0.6rem;
+  max-width: 60px;
 }
 
-.vehiculo-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.fecha-cell {
+  font-size: 0.55rem;
+  white-space: nowrap;
 }
 
-.vehiculo-info strong {
-  color: var(--text-primary);
-  font-size: 0.95rem;
-}
-
-.vehiculo-info span {
-  color: var(--text-secondary);
-  font-size: 0.85rem;
+.ppu-cell {
+  font-size: 0.6rem;
+  font-weight: 600;
 }
 
 /* ========================================
-   BADGES Y ETIQUETAS
+   BADGES SIMPLIFICADOS
    ======================================== */
 
-.patente-badge {
-  background-color: var(--bg-tertiary);
-  padding: 0.25rem 0.75rem;
-  border-radius: 6px;
-  font-weight: 700;
-  font-size: 0.85rem;
+.badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.6rem;
   text-transform: uppercase;
-  border: 2px solid var(--border-color);
 }
 
-.servicio-badge {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+.badge-info {
+  background-color: #438de5;
   color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 6px;
-  font-weight: 700;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  display: inline-block;
 }
 
 .empresa-badge {
-  background: linear-gradient(135deg, #438de5, #56b9f4);
+  background-color: #10b981;
   color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 6px;
-  font-weight: 700;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  display: inline-block;
-  box-shadow: 0 2px 8px rgba(67, 141, 229, 0.3);
+  font-size: 0.8em;
+}
+
+.servicio-badge {
+  background-color: #f59e0b;
+  color: white;
 }
 
 /* ========================================
-   BOTONES DE ACCIÓN
+   BOTONES DE ACCIÓN COMPACTOS
    ======================================== */
 
 .acciones-cell {
   display: flex;
-  gap: 0.5rem;
+  gap: 2px;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .btn-icono {
-  padding: 0.4rem 0.6rem;
+  padding: 4px 6px;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: all 0.2s ease;
   background-color: transparent;
+}
+
+.btn-preview {
+  color: #6366f1;
+}
+
+.btn-preview:hover {
+  background-color: rgba(99, 102, 241, 0.1);
 }
 
 .btn-descargar {
@@ -338,7 +315,6 @@
 
 .btn-descargar:hover {
   background-color: rgba(16, 185, 129, 0.1);
-  transform: scale(1.1);
 }
 
 .btn-ver {
@@ -347,7 +323,6 @@
 
 .btn-ver:hover {
   background-color: rgba(59, 130, 246, 0.1);
-  transform: scale(1.1);
 }
 
 .btn-editar {
@@ -356,7 +331,6 @@
 
 .btn-editar:hover {
   background-color: rgba(245, 158, 11, 0.1);
-  transform: scale(1.1);
 }
 
 .btn-eliminar {
@@ -365,7 +339,6 @@
 
 .btn-eliminar:hover {
   background-color: rgba(239, 68, 68, 0.1);
-  transform: scale(1.1);
 }
 
 .acciones-generales {
@@ -406,61 +379,47 @@
   .busqueda-input-container {
     flex: 1;
   }
-}
 
-@media (max-width: 1200px) {
   .tabla-ots {
     font-size: 0.75rem;
   }
   
-  .tabla-ots th,
+  .tabla-ots th {
+    font-size: 0.7rem;
+  }
+  
   .tabla-ots td {
-    padding: 0.4rem 0.2rem;
+    padding: 8px 6px;
+    font-size: 0.7rem;
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 767px) {
   .tabla-ots {
-    font-size: 0.8rem;
+    font-size: 0.6rem;
   }
   
   .tabla-ots th,
   .tabla-ots td {
-    padding: 0.5rem 0.25rem;
+    padding: 1px 2px;
+    font-size: 0.7em;
+    text-transform: uppercase;
   }
   
-  .acciones-cell {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.25rem;
+  .ot-numero-cell {
+    font-size: 0.55rem;
   }
   
-  .btn-icono {
-    padding: 0.5rem;
-    font-size: 1.1rem;
+  .fecha-cell {
+    font-size: 0.5rem;
   }
-}
-
-/* Botón de Previsualización PDF */
-.btn-preview {
-  color: #6366f1;
-}
-
-.btn-preview:hover {
-  background-color: rgba(99, 102, 241, 0.1);
-  transform: scale(1.1);
-}
-
-/* Mejorar grid de acciones para 5 botones */
-@media (max-width: 1024px) {
-  .acciones-cell {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.25rem;
+  
+  .ppu-cell {
+    font-size: 0.55rem;
   }
   
   .btn-icono {
-    padding: 0.5rem;
-    font-size: 1.1rem;
+    font-size: 0.8rem;
+    padding: 3px 4px;
   }
 }

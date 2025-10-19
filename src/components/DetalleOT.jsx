@@ -23,7 +23,7 @@ function DetalleOT({ navigateTo, otId, editMode }) {
         navigateTo('base-datos');
       }
     }
-  }, [otId]);
+  }, [otId, navigateTo]);
 
   const formatearFecha = (fecha) => {
     const date = new Date(fecha);
@@ -54,10 +54,9 @@ function DetalleOT({ navigateTo, otId, editMode }) {
     }
   };
 
-  // ✅ CORRECTO - Descargar PDF desde DetalleOT
   const handleDescargarPDF = () => {
     try {
-      generarPDFOT(ot, false); // false = descargar
+      generarPDFOT(ot, false);
       alert('✅ PDF descargado exitosamente');
     } catch (error) {
       console.error('Error al generar PDF:', error);
@@ -132,6 +131,7 @@ function DetalleOT({ navigateTo, otId, editMode }) {
             <DatosVehiculo 
               datos={datosActuales.datosVehiculo}
               onChange={(nuevosDatos) => setDatosEditados({ ...datosActuales, datosVehiculo: nuevosDatos })}
+              ppuIn={datosActuales.datosGPS?.ppuIn}
             />
           </div>
 
@@ -268,30 +268,32 @@ function DetalleOT({ navigateTo, otId, editMode }) {
               ✅ CheckList del Vehículo
             </h2>
             <div className="checklist-detalle">
-              {Object.entries(datosActuales.checklist || {}).map(([key, value]) => {
-                const itemsLabels = {
-                  luces: 'Luces 💡',
-                  radio: 'Radio 📻',
-                  tablero: 'Tablero 🎛️',
-                  checkEngine: 'Check Engine ⚠️',
-                  bateria: 'Batería 🔋'
-                };
-                
-                return value.estado && (
-                  <div key={key} className={`checklist-detalle-item ${value.estado}`}>
-                    <span className="checklist-detalle-icon">
-                      {value.estado === 'bueno' ? '✓' : '⚠'}
-                    </span>
-                    <div className="checklist-detalle-content">
-                      <div className="checklist-detalle-label">{itemsLabels[key] || key}</div>
-                      {value.detalle && (
-                        <div className="checklist-detalle-obs">{value.detalle}</div>
-                      )}
+              {datosActuales.checklist && Object.keys(datosActuales.checklist).length > 0 ? (
+                Object.entries(datosActuales.checklist).map(([key, value]) => {
+                  const itemsLabels = {
+                    luces: 'Luces 💡',
+                    radio: 'Radio 📻',
+                    tablero: 'Tablero 🎛️',
+                    checkEngine: 'Check Engine ⚠️',
+                    bateria: 'Batería 🔋',
+                    plasticosEstetica: 'Plásticos y Estética ✨'
+                  };
+                  
+                  return value && value.estado ? (
+                    <div key={key} className={`checklist-detalle-item ${value.estado}`}>
+                      <span className="checklist-detalle-icon">
+                        {value.estado === 'bueno' ? '✓' : '⚠'}
+                      </span>
+                      <div className="checklist-detalle-content">
+                        <div className="checklist-detalle-label">{itemsLabels[key] || key}</div>
+                        {value.detalle && (
+                          <div className="checklist-detalle-obs">{value.detalle}</div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-              {Object.keys(datosActuales.checklist || {}).length === 0 && (
+                  ) : null;
+                })
+              ) : (
                 <p className="detalle-valor">No se registró checklist</p>
               )}
             </div>

@@ -1,4 +1,4 @@
-// src/components/CrearOT.jsx - VERSIÓN OPTIMIZADA
+// src/components/CrearOT.jsx - VERSIÓN COMPLETA Y OPTIMIZADA
 import { useState } from 'react';
 import DatosEmpresa from './DatosEmpresa';
 import CheckList from './CheckList';
@@ -90,6 +90,7 @@ function CrearOT({ navigateTo, empresaData }) {
         <DatosVehiculo 
           datos={datosOT.datosVehiculo}
           onChange={(datos) => actualizarDatos('datosVehiculo', datos)}
+          ppuIn={datosOT.datosGPS?.ppuIn}
         />
       )
     },
