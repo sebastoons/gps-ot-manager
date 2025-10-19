@@ -88,7 +88,6 @@ function FormularioCliente({ otsCreadas, navigateTo }) {
   return (
     <div className="formulario-cliente-container">
       <div className="formulario-cliente-header">
-        <div className="formulario-cliente-icon">📋</div>
         <h1 className="formulario-cliente-title">Datos del Cliente</h1>
         <p className="formulario-cliente-subtitle">
           Complete la información y obtenga la firma del cliente
@@ -97,7 +96,7 @@ function FormularioCliente({ otsCreadas, navigateTo }) {
 
       <div className="ots-resumen">
         <h3 className="ots-resumen-title">
-          📝 Órdenes de Trabajo Realizadas ({otsCreadas.length})
+          📝 OT Realizadas ({otsCreadas.length})
         </h3>
         <div className="ots-lista">
           {otsCreadas.map((ot, index) => (
@@ -154,7 +153,6 @@ function FormularioCliente({ otsCreadas, navigateTo }) {
             onChange={(e) => handleChange('contacto', e.target.value)}
           />
           <small style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-            Puedes ingresar teléfono o correo electrónico
           </small>
         </div>
       </div>
@@ -175,13 +173,13 @@ function FormularioCliente({ otsCreadas, navigateTo }) {
             }
           }}
         >
-          ← Cancelar
+          Cancelar
         </button>
         <button 
           className="btn btn-success btn-full"
           onClick={handleTerminar}
         >
-          ✓ Terminar y Guardar
+          Terminar y Guardar
         </button>
       </div>
     </div>

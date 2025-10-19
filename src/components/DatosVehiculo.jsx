@@ -163,7 +163,6 @@ function DatosVehiculo({ datos, onChange, ppuIn }) {
           />
           {ppuIn && ppuIn.trim() !== '' && (
             <small style={{ color: '#438de5', fontSize: '0.55em', marginTop: '2px', display: 'block' }}>
-              ✓ Copiado desde PPU IN: {ppuIn}
             </small>
           )}
         </div>

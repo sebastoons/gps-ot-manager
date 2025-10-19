@@ -10,24 +10,13 @@
 .formulario-cliente-header {
   background: linear-gradient(135deg, #438de5, #56b9f4, #438de5);
   color: var(--text-white);
-  padding: var(--spacing-lg);
+  padding: 45px;
   border-radius: var(--border-radius-lg);
   margin-bottom: var(--spacing-lg);
   text-align: center;
   box-shadow: var(--shadow-xl), 0 0 40px rgba(67, 141, 229, 0.4);
   position: relative;
   overflow: hidden;
-}
-
-.formulario-cliente-header::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-  animation: pulse 4s ease-in-out infinite;
 }
 
 @keyframes pulse {
@@ -45,7 +34,7 @@
 
 .formulario-cliente-title {
   font-family: var(--font-title);
-  font-size: 2rem;
+  font-size: 1.4em;
   margin-bottom: var(--spacing-xs);
   text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
   text-transform: uppercase;
@@ -55,7 +44,7 @@
 
 .formulario-cliente-subtitle {
   font-family: var(--font-subtitle);
-  font-size: 1.1rem;
+  font-size: 0.85em;
   opacity: 0.95;
   position: relative;
   z-index: 1;
@@ -64,7 +53,7 @@
 .ots-resumen {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  padding: var(--spacing-md);
+  padding: 25px;
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
   margin-bottom: var(--spacing-lg);
@@ -79,25 +68,26 @@
 
 .ots-resumen-title {
   font-family: var(--font-subtitle);
-  font-size: 1.25rem;
+  font-size: 0.8em;
   color: var(--text-primary);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 15px;
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
+  text-transform: uppercase;
 }
 
 .ots-lista {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: 9px;
 }
 
 .ot-item {
   background: linear-gradient(90deg, rgba(67, 141, 229, 0.05) 0%, transparent 100%);
-  padding: var(--spacing-sm);
+  padding: 6px;
   border-radius: var(--border-radius);
-  border-left: 4px solid #438de5;
+  border-left: 4px solid #2776b3;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -112,12 +102,14 @@
 .ot-item-numero {
   font-family: var(--font-subtitle);
   font-weight: 600;
-  color: #438de5;
+  color: #2774b2;
+  font-size: 0.7em;
 }
 
 .ot-item-vehiculo {
-  font-size: 0.9rem;
+  font-size: 0.55em;
   color: var(--text-secondary);
+  text-transform: uppercase;
 }
 
 .formulario-cliente-form {
@@ -142,12 +134,13 @@
 
 .firma-section-title {
   font-family: var(--font-subtitle);
-  font-size: 1.25rem;
+  font-size: 0.9em;
   color: var(--text-primary);
   margin-bottom: var(--spacing-md);
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
+  text-transform: uppercase;
 }
 
 .firma-canvas-container {
@@ -190,9 +183,10 @@
 .btn-limpiar-firma {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   color: var(--text-white);
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  padding: 6px 10px;
+  font-size: 0.75em;
   box-shadow: var(--shadow-md);
+  text-transform: uppercase;
 }
 
 .btn-limpiar-firma:hover {

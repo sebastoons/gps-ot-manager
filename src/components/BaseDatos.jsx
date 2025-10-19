@@ -87,7 +87,7 @@ function BaseDatos({ navigateTo }) {
             className="btn btn-volver"
             onClick={() => navigateTo('index')}
           >
-            ← Volver
+            Volver
           </button>
         </div>
       </div>

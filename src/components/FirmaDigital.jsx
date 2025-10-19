@@ -96,7 +96,7 @@ function FirmaDigital({ onFirmaChange }) {
         />
         {firmaVacia && (
           <div className="firma-placeholder">
-            ✍️ Firme aquí con su dedo o lápiz
+           Firme aquí con su dedo o lápiz
           </div>
         )}
       </div>
@@ -107,7 +107,7 @@ function FirmaDigital({ onFirmaChange }) {
           className="btn btn-limpiar-firma"
           onClick={limpiarFirma}
         >
-          🗑️ Limpiar Firma
+          Limpiar Firma
         </button>
       </div>
     </div>
