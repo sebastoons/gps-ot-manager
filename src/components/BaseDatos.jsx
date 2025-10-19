@@ -1,5 +1,5 @@
-// src/components/BaseDatos.jsx - VERSIÓN OPTIMIZADA
-import { useState, useEffect } from 'react';
+// src/components/BaseDatos.jsx - VERSIÓN CORREGIDA
+import { useState, useEffect, useCallback } from 'react';
 import '../styles/baseDatos.css';
 import { 
   obtenerTodasLasOTs, 
@@ -29,18 +29,19 @@ function BaseDatos({ navigateTo }) {
     setEmpresaFiltro 
   } = useFiltrosOT(ots);
 
+  // Cargar OTs solo una vez al montar el componente
   useEffect(() => {
     cargarOTs();
-  }, []);
+  }, []); // Sin dependencias
 
-  const cargarOTs = () => {
+  const cargarOTs = useCallback(() => {
     const otsGuardadas = obtenerTodasLasOTs();
     setOts(otsGuardadas);
     setEstadisticas(obtenerEstadisticas());
     setEmpresasDisponibles(obtenerEmpresasUnicas(otsGuardadas));
-  };
+  }, []); // Sin dependencias
 
-  const handleEliminar = (id, numeroOT) => {
+  const handleEliminar = useCallback((id, numeroOT) => {
     if (window.confirm(`¿Está seguro de eliminar la OT${String(numeroOT).padStart(4, '0')}?`)) {
       if (eliminarOT(id)) {
         alert('✓ OT eliminada correctamente');
@@ -49,26 +50,26 @@ function BaseDatos({ navigateTo }) {
         alert('❌ Error al eliminar la OT');
       }
     }
-  };
+  }, [cargarOTs]);
 
-  const handleLimpiarAntiguas = () => {
+  const handleLimpiarAntiguas = useCallback(() => {
     if (window.confirm('¿Desea limpiar todas las OTs con más de 2 meses de antigüedad?')) {
       limpiarOTsAntiguas();
       alert('✓ OTs antiguas eliminadas');
       cargarOTs();
     }
-  };
+  }, [cargarOTs]);
 
-  const handlePrevisualizarPDF = (ot) => {
+  const handlePrevisualizarPDF = useCallback((ot) => {
     try {
       generarPDFOT(ot, true);
     } catch (error) {
       console.error('Error al previsualizar PDF:', error);
       alert('❌ Error al generar la previsualización del PDF.');
     }
-  };
+  }, []);
 
-  const handleDescargarPDF = (ot) => {
+  const handleDescargarPDF = useCallback((ot) => {
     try {
       generarPDFOT(ot, false);
       alert('✅ PDF descargado exitosamente');
@@ -76,7 +77,7 @@ function BaseDatos({ navigateTo }) {
       console.error('Error al generar PDF:', error);
       alert('❌ Error al generar el PDF.');
     }
-  };
+  }, []);
 
   return (
     <div className="base-datos-container">

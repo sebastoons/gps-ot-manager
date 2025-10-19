@@ -10,8 +10,12 @@ export default defineConfig({
     port: 3000,
     open: true,
     hmr: {
-      overlay: false, // ✅ Oculta overlay de errores
-      clientPort: 3000 // ✅ Fuerza puerto del WebSocket
+      overlay: true, // Mostrar errores para debugging
+      clientPort: 3000
     }
+  },
+  // Agregar configuración para evitar re-renders innecesarios
+  esbuild: {
+    logOverride: { 'this-is-undefined-in-esm': 'silent' }
   }
 })

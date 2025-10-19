@@ -1,17 +1,13 @@
 // src/hooks/useFiltrosOT.js
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 
 export const useFiltrosOT = (ots) => {
-  const [otsFiltradas, setOtsFiltradas] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [empresaFiltro, setEmpresaFiltro] = useState('todas');
 
-  useEffect(() => {
-    filtrarOTs();
-  }, [busqueda, empresaFiltro, ots]);
-
-  const filtrarOTs = () => {
-    let filtradas = ots;
+  // Usar useMemo en lugar de useEffect para evitar ciclos infinitos
+  const otsFiltradas = useMemo(() => {
+    let filtradas = [...ots];
 
     // Filtrar por empresa
     if (empresaFiltro !== 'todas') {
@@ -36,8 +32,8 @@ export const useFiltrosOT = (ots) => {
       });
     }
 
-    setOtsFiltradas(filtradas);
-  };
+    return filtradas;
+  }, [ots, busqueda, empresaFiltro]); // Dependencias claras
 
   return {
     otsFiltradas,

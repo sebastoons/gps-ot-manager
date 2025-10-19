@@ -9,11 +9,15 @@ const urlsToCache = [
 
 // Instalación del Service Worker
 self.addEventListener('install', (event) => {
+  console.log('SW: Instalando...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('Cache abierto');
+        console.log('SW: Cache abierto');
         return cache.addAll(urlsToCache);
+      })
+      .catch((error) => {
+        console.error('SW: Error al instalar:', error);
       })
   );
   self.skipWaiting();
@@ -21,12 +25,13 @@ self.addEventListener('install', (event) => {
 
 // Activación del Service Worker
 self.addEventListener('activate', (event) => {
+  console.log('SW: Activando...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
-            console.log('Eliminando cache antiguo:', cacheName);
+            console.log('SW: Eliminando cache antiguo:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -38,22 +43,24 @@ self.addEventListener('activate', (event) => {
 
 // Interceptar peticiones
 self.addEventListener('fetch', (event) => {
+  // NO cachear peticiones a localhost durante desarrollo
+  if (event.request.url.includes('localhost')) {
+    return;
+  }
+  
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        // Cache hit - devolver respuesta
         if (response) {
           return response;
         }
 
         return fetch(event.request).then(
           (response) => {
-            // Verificar si recibimos una respuesta válida
             if (!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
 
-            // Clonar la respuesta
             const responseToCache = response.clone();
 
             caches.open(CACHE_NAME)
@@ -65,8 +72,8 @@ self.addEventListener('fetch', (event) => {
           }
         );
       })
-      .catch(() => {
-        // Si falla, devolver página offline si está disponible
+      .catch((error) => {
+        console.error('SW: Error en fetch:', error);
         return caches.match('/index.html');
       })
   );
