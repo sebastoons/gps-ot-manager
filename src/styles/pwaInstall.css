@@ -1,18 +1,19 @@
 .pwa-install-banner {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  bottom: 10px;
+  left: 35px;
+  right: 35px;
+  background: linear-gradient(135deg, #443355, #6453b3, #443355);
   color: white;
-  padding: 1rem;
+  padding: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 8px;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
   z-index: 9999;
   animation: slideUp 0.4s ease;
+  border-radius: 15px;
 }
 
 @keyframes slideUp {
@@ -43,13 +44,16 @@
 }
 
 .pwa-banner-text strong {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  text-align: center;
+  font-family: 'Changa';
 }
 
 .pwa-banner-text span {
-  font-size: 0.85rem;
+  font-size: 0.55em;
   opacity: 0.9;
+  color: #dbdbdb;
 }
 
 .pwa-banner-actions {
@@ -60,17 +64,18 @@
 
 .btn-install {
   background: white;
-  color: #667eea;
-  padding: 0.625rem 1.25rem;
+  color: #0080de;
+  padding: 4px;
   border: none;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 0.9rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.75em;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   font-family: var(--font-text);
   text-transform: uppercase;
+  max-width: 80%;
 }
 
 .btn-install:hover {
@@ -86,14 +91,14 @@
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: none;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 0.9em;
   transition: all 0.3s ease;
 }
 

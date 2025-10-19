@@ -22,7 +22,7 @@ function ModalConfirmacionOT({
             className="btn btn-primary btn-full"
             onClick={onCrearOtra}
           >
-            ➕ Crear Otra OT
+            Crear Otra OT
           </button>
           <button 
             className="btn btn-secondary btn-full"

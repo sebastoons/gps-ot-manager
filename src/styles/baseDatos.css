@@ -11,23 +11,12 @@
 .base-datos-header {
   background: linear-gradient(135deg, #438de5, #56b9f4, #438de5);
   color: var(--text-white);
-  padding: var(--spacing-lg);
+  padding: 30px;
   border-radius: var(--border-radius-lg);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 20px;
   box-shadow: var(--shadow-xl), 0 0 40px rgba(67, 141, 229, 0.4);
   position: relative;
   overflow: hidden;
-}
-
-.base-datos-header::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-  animation: pulse 4s ease-in-out infinite;
 }
 
 @keyframes pulse {
@@ -50,17 +39,18 @@
 
 .base-datos-title {
   font-family: var(--font-title);
-  font-size: 1.75rem;
-  text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+  font-size: 1.2em;
+  text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);
   text-transform: uppercase;
+  color: #f6f6f6;
 }
 
 .btn-volver {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: #277bb7;
   color: var(--text-white);
-  padding: 0.5rem 1rem;
+  padding: 7px 10px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  font-size: 0.9rem;
+  font-size: 0.6em;
   backdrop-filter: blur(10px);
 }
 
@@ -80,7 +70,7 @@
 .estadistica-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  padding: var(--spacing-md);
+  padding: 10px;
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
   text-align: center;
@@ -96,17 +86,17 @@
 
 .estadistica-numero {
   font-family: var(--font-title);
-  font-size: 2.5rem;
+  font-size: 1.5em;
   background: linear-gradient(135deg, #438de5, #56b9f4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: 5px;
 }
 
 .estadistica-label {
   font-family: var(--font-subtitle);
-  font-size: 0.95rem;
+  font-size: 0.8em;
   color: var(--text-secondary);
   text-transform: uppercase;
 }
@@ -136,18 +126,18 @@
 
 .filtro-label {
   font-family: var(--font-subtitle);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
-  font-size: 0.95rem;
+  font-size: 0.9em;
   text-transform: uppercase;
 }
 
 .filtro-select {
   width: 100%;
-  padding: var(--spacing-sm);
+  padding: 6px;
   border: 2px solid var(--border-color);
-  border-radius: var(--border-radius);
-  font-size: 1rem;
+  border-radius: 10px;
+  font-size: 0.65em;
   font-family: var(--font-text);
   background-color: var(--bg-primary);
   cursor: pointer;
@@ -177,10 +167,10 @@
 
 .busqueda-input {
   width: 100%;
-  padding: var(--spacing-sm);
+  padding: 6px;
   border: 2px solid var(--border-color);
   border-radius: var(--border-radius);
-  font-size: 1rem;
+  font-size: 0.65em;
   font-family: var(--font-text);
   transition: all 0.3s ease;
 }
@@ -241,7 +231,7 @@
 
 .tabla-ots th {
   padding: var(--spacing-sm);
-  text-align: left;
+  text-align: center;
   font-family: var(--font-subtitle);
   font-weight: 600;
   text-transform: uppercase;

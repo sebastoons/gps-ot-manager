@@ -5,68 +5,57 @@ export const generarPDFOT = (ot, preview = false) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 15;
-    let yPos = 20;
+    const margin = 12;
+    let yPos = 15;
 
+    // Colores
     const azulPrimario = [67, 141, 229];
     const textoOscuro = [15, 23, 42];
     const grisClaro = [248, 250, 252];
+    const grisMedio = [156, 163, 175];
+
+    // Mapeo de logos según prefijo
+    const logosEmpresas = {
+      'LWE': '/logos/lw-entel.png',
+      'U': '/logos/ugps.png'
+    };
 
     const verificarEspacio = (espacioNecesario) => {
-      if (yPos + espacioNecesario > pageHeight - 20) {
+      if (yPos + espacioNecesario > pageHeight - 15) {
         doc.addPage();
-        yPos = 20;
+        yPos = 15;
         return true;
       }
       return false;
     };
 
-    const agregarSeccion = (titulo) => {
-      verificarEspacio(15);
-      doc.setFillColor(...grisClaro);
-      doc.rect(margin - 2, yPos - 5, pageWidth - margin * 2 + 4, 8, 'F');
-      doc.setTextColor(...textoOscuro);
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'bold');
-      doc.text(titulo, margin, yPos);
-      yPos += 10;
-    };
-
-    const agregarFila = (label, valor) => {
-      verificarEspacio(7);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(...textoOscuro);
-      doc.text(label, margin + 2, yPos);
-      doc.setFont('helvetica', 'normal');
-      const valorTexto = valor || 'N/A';
-      doc.text(String(valorTexto), margin + 55, yPos);
-      yPos += 6;
-    };
-
-    const agregarLinea = () => {
-      doc.setDrawColor(200, 200, 200);
-      doc.line(margin, yPos, pageWidth - margin, yPos);
-      yPos += 5;
-    };
-
+    // ========== HEADER COMPACTO CON LOGO ==========
     doc.setFillColor(...azulPrimario);
-    doc.rect(0, 0, pageWidth, 45, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(24);
-    doc.setFont('helvetica', 'bold');
-    doc.text('GPS OT MANAGER', pageWidth / 2, 20, { align: 'center' });
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Sistema de Ordenes de Trabajo', pageWidth / 2, 28, { align: 'center' });
-    doc.setFontSize(16);
-    doc.setFont('helvetica', 'bold');
-    const codigoOT = ot.codigoOT || `OT${String(ot.numeroOT).padStart(4, '0')}`;
-    doc.text(codigoOT, pageWidth / 2, 38, { align: 'center' });
-    yPos = 55;
+    doc.rect(0, 0, pageWidth, 35, 'F');
 
-    doc.setTextColor(...textoOscuro);
-    doc.setFontSize(10);
+    // Intentar cargar el logo
+    const logoPath = logosEmpresas[ot.prefijo];
+    if (logoPath) {
+      try {
+        // Agregar logo (ajusta el tamaño según tu logo)
+        doc.addImage(logoPath, 'PNG', margin, 9, 40, 15);
+      } catch (error) {
+        console.warn('No se pudo cargar el logo:', error);
+      }
+    }
+
+    // Título y código OT
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('ORDEN DE TRABAJO', pageWidth / 2, 15, { align: 'center' });
+    
+    const codigoOT = ot.codigoOT || `OT${String(ot.numeroOT).padStart(4, '0')}`;
+    doc.setFontSize(14);
+    doc.text(codigoOT, pageWidth / 2, 23, { align: 'center' });
+    
+    // Fecha
+    doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
     const fechaCreacion = new Date(ot.fechaCreacion).toLocaleDateString('es-CL', {
       day: '2-digit',
@@ -75,145 +64,208 @@ export const generarPDFOT = (ot, preview = false) => {
       hour: '2-digit',
       minute: '2-digit'
     });
-    doc.text(`Fecha: ${fechaCreacion}`, margin, yPos);
-    yPos += 8;
-    agregarLinea();
+    doc.text(`Fecha: ${fechaCreacion}`, pageWidth - margin, 30, { align: 'right' });
+    
+    yPos = 42;
 
-    agregarSeccion('DATOS DE LA EMPRESA');
-    agregarFila('Empresa:', ot.datosEmpresa?.nombreEmpresa);
-    agregarFila('Fecha:', ot.datosEmpresa?.fecha);
-    agregarFila('Contacto:', ot.datosEmpresa?.nombreContacto);
-    agregarFila('Region:', ot.datosEmpresa?.region);
-    agregarFila('Ciudad:', ot.datosEmpresa?.ciudad);
-    agregarFila('Comuna:', ot.datosEmpresa?.comuna);
-    yPos += 3;
-    agregarLinea();
+    // ========== FUNCIÓN PARA SECCIONES COMPACTAS ==========
+    const agregarSeccionCompacta = (titulo, icono = '') => {
+      doc.setFillColor(...grisClaro);
+      doc.rect(margin, yPos - 3, pageWidth - margin * 2, 6, 'F');
+      doc.setTextColor(...textoOscuro);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${icono} ${titulo}`, margin + 2, yPos);
+      yPos += 7;
+    };
 
-    agregarSeccion('DATOS DEL SERVICIO GPS');
-    agregarFila('Tecnico:', ot.datosGPS?.nombreTecnico);
-    agregarFila('Servicio:', ot.datosGPS?.tipoServicio);
-    agregarFila('PPU IN:', ot.datosGPS?.ppuIn);
-    agregarFila('PPU OUT:', ot.datosGPS?.ppuOut);
-    agregarFila('IMEI IN:', ot.datosGPS?.imeiIn);
-    agregarFila('IMEI OUT:', ot.datosGPS?.imeiOut);
+    // ========== FUNCIÓN PARA FILAS EN DOS COLUMNAS ==========
+    const agregarFilaDosColumnas = (label1, valor1, label2, valor2) => {
+      const colWidth = (pageWidth - margin * 2) / 2;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(...grisMedio);
+      
+      // Columna 1
+      doc.text(label1, margin + 2, yPos);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...textoOscuro);
+      doc.setFontSize(8);
+      doc.text(String(valor1 || 'N/A'), margin + 2, yPos + 3.5);
+      
+      // Columna 2
+      if (label2) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(7);
+        doc.setTextColor(...grisMedio);
+        doc.text(label2, margin + colWidth + 2, yPos);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...textoOscuro);
+        doc.setFontSize(8);
+        doc.text(String(valor2 || 'N/A'), margin + colWidth + 2, yPos + 3.5);
+      }
+      
+      yPos += 8;
+    };
 
+    // ========== DATOS DE LA EMPRESA ==========
+    agregarSeccionCompacta('DATOS DE LA EMPRESA', '🏢');
+    agregarFilaDosColumnas('EMPRESA', ot.datosEmpresa?.nombreEmpresa, 'FECHA', ot.datosEmpresa?.fecha);
+    agregarFilaDosColumnas('CONTACTO', ot.datosEmpresa?.nombreContacto, 'REGIÓN', ot.datosEmpresa?.region);
+    agregarFilaDosColumnas('CIUDAD', ot.datosEmpresa?.ciudad, 'COMUNA', ot.datosEmpresa?.comuna);
+    yPos += 2;
+
+    // ========== DATOS DEL SERVICIO GPS ==========
+    agregarSeccionCompacta('SERVICIO GPS', '📡');
+    agregarFilaDosColumnas('TÉCNICO', ot.datosGPS?.nombreTecnico, 'SERVICIO', ot.datosGPS?.tipoServicio);
+    agregarFilaDosColumnas('PPU IN', ot.datosGPS?.ppuIn, 'PPU OUT', ot.datosGPS?.ppuOut);
+    agregarFilaDosColumnas('IMEI IN', ot.datosGPS?.imeiIn, 'IMEI OUT', ot.datosGPS?.imeiOut);
+
+    // Accesorios en línea compacta
     if (ot.datosGPS?.accesoriosInstalados?.length > 0) {
-      yPos += 3;
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.text('Accesorios:', margin + 2, yPos);
-      yPos += 5;
+      doc.setFontSize(7);
+      doc.setTextColor(...grisMedio);
+      doc.text('ACCESORIOS:', margin + 2, yPos);
+      yPos += 3;
       doc.setFont('helvetica', 'normal');
-      ot.datosGPS.accesoriosInstalados.forEach((acc) => {
-        verificarEspacio(5);
-        doc.text(`- ${acc}`, margin + 7, yPos);
-        yPos += 5;
+      doc.setFontSize(7);
+      doc.setTextColor(...textoOscuro);
+      const accesorios = ot.datosGPS.accesoriosInstalados.join(', ');
+      const lineasAcc = doc.splitTextToSize(accesorios, pageWidth - margin * 2 - 4);
+      lineasAcc.forEach(linea => {
+        doc.text(linea, margin + 2, yPos);
+        yPos += 3;
       });
+      yPos += 1;
     }
-    yPos += 3;
-    agregarLinea();
+    yPos += 2;
 
-    agregarSeccion('DATOS DEL VEHICULO');
-    agregarFila('Tipo:', ot.datosVehiculo?.tipo);
-    agregarFila('Marca:', ot.datosVehiculo?.marca);
-    agregarFila('Modelo:', ot.datosVehiculo?.modelo);
-    agregarFila('Ano:', ot.datosVehiculo?.ano);
-    agregarFila('Color:', ot.datosVehiculo?.color);
-    agregarFila('Patente:', ot.datosVehiculo?.patente || 'Sin Patente');
+    // ========== DATOS DEL VEHÍCULO ==========
+    agregarSeccionCompacta('VEHÍCULO', '🚗');
+    agregarFilaDosColumnas('TIPO', ot.datosVehiculo?.tipo, 'MARCA', ot.datosVehiculo?.marca);
+    agregarFilaDosColumnas('MODELO', ot.datosVehiculo?.modelo, 'AÑO', ot.datosVehiculo?.ano);
+    agregarFilaDosColumnas('COLOR', ot.datosVehiculo?.color, 'PATENTE', ot.datosVehiculo?.patente || 'Sin Patente');
+    
     if (ot.datosVehiculo?.kilometraje) {
-      agregarFila('Kilometraje:', `${ot.datosVehiculo.kilometraje} km`);
+      agregarFilaDosColumnas('KILOMETRAJE', `${ot.datosVehiculo.kilometraje} km`, '', '');
     }
 
+    // Observaciones compactas
     if (ot.datosVehiculo?.observaciones) {
-      yPos += 3;
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.text('Observaciones:', margin + 2, yPos);
-      yPos += 5;
+      doc.setFontSize(7);
+      doc.setTextColor(...grisMedio);
+      doc.text('OBSERVACIONES:', margin + 2, yPos);
+      yPos += 3;
       doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      doc.setTextColor(...textoOscuro);
       const obs = doc.splitTextToSize(ot.datosVehiculo.observaciones, pageWidth - margin * 2 - 4);
       obs.forEach(linea => {
-        verificarEspacio(5);
         doc.text(linea, margin + 2, yPos);
-        yPos += 5;
+        yPos += 3;
       });
+      yPos += 1;
     }
-    yPos += 3;
-    agregarLinea();
+    yPos += 2;
 
+    // ========== CHECKLIST COMPACTO ==========
     if (ot.checklist && Object.keys(ot.checklist).length > 0) {
-      agregarSeccion('CHECKLIST DEL VEHICULO');
+      agregarSeccionCompacta('CHECKLIST', '✅');
       const labels = {
         luces: 'Luces',
         radio: 'Radio',
         tablero: 'Tablero',
         checkEngine: 'Check Engine',
-        bateria: 'Bateria'
+        bateria: 'Batería'
       };
-      Object.entries(ot.checklist).forEach(([key, value]) => {
-        if (value.estado) {
-          verificarEspacio(8);
-          const icono = value.estado === 'bueno' ? '[OK]' : '[!]';
-          const estado = value.estado === 'bueno' ? 'OK' : 'Ver detalle';
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(9);
-          doc.text(`${icono} ${labels[key]}:`, margin + 2, yPos);
-          doc.setFont('helvetica', 'normal');
-          doc.text(estado, margin + 55, yPos);
-          yPos += 5;
-          if (value.detalle) {
-            doc.setFont('helvetica', 'italic');
-            doc.setFontSize(8);
-            const det = doc.splitTextToSize(`> ${value.detalle}`, pageWidth - margin * 2 - 10);
-            det.forEach(linea => {
-              verificarEspacio(4);
-              doc.text(linea, margin + 7, yPos);
-              yPos += 4;
-            });
-            yPos += 2;
-            doc.setFontSize(9);
-          }
+
+      // Mostrar en dos columnas
+      const items = Object.entries(ot.checklist).filter(([_, value]) => value.estado);
+      for (let i = 0; i < items.length; i += 2) {
+        const [key1, value1] = items[i];
+        const icono1 = value1.estado === 'bueno' ? '✓' : '⚠';
+        const texto1 = `${icono1} ${labels[key1]}`;
+        
+        let texto2 = '';
+        if (items[i + 1]) {
+          const [key2, value2] = items[i + 1];
+          const icono2 = value2.estado === 'bueno' ? '✓' : '⚠';
+          texto2 = `${icono2} ${labels[key2]}`;
         }
-      });
-      yPos += 3;
-      agregarLinea();
+        
+        const colWidth = (pageWidth - margin * 2) / 2;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7);
+        doc.setTextColor(...textoOscuro);
+        doc.text(texto1, margin + 2, yPos);
+        if (texto2) {
+          doc.text(texto2, margin + colWidth + 2, yPos);
+        }
+        yPos += 4;
+        
+        // Detalles si existen
+        if (value1.detalle) {
+          doc.setFont('helvetica', 'italic');
+          doc.setFontSize(6);
+          doc.text(`> ${value1.detalle}`, margin + 4, yPos);
+          yPos += 3;
+        }
+        if (items[i + 1] && items[i + 1][1].detalle) {
+          doc.setFont('helvetica', 'italic');
+          doc.setFontSize(6);
+          doc.text(`> ${items[i + 1][1].detalle}`, margin + colWidth + 4, yPos);
+          yPos += 3;
+        }
+      }
+      yPos += 2;
     }
 
+    // ========== DATOS DEL CLIENTE Y FIRMA ==========
     if (ot.datosCliente) {
-      agregarSeccion('DATOS DEL CLIENTE');
-      agregarFila('Nombre:', ot.datosCliente.nombre);
-      agregarFila('RUT:', ot.datosCliente.rut);
-      agregarFila('Contacto:', ot.datosCliente.contacto);
-      yPos += 5;
+      agregarSeccionCompacta('CLIENTE', '👤');
+      agregarFilaDosColumnas('NOMBRE', ot.datosCliente.nombre, 'RUT', ot.datosCliente.rut);
+      agregarFilaDosColumnas('CONTACTO', ot.datosCliente.contacto, '', '');
+      yPos += 2;
+
+      // Firma compacta
       if (ot.datosCliente.firma) {
-        verificarEspacio(40);
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(10);
-        doc.text('Firma:', margin + 2, yPos);
-        yPos += 5;
+        doc.setFontSize(7);
+        doc.setTextColor(...grisMedio);
+        doc.text('FIRMA:', margin + 2, yPos);
+        yPos += 2;
+        
         try {
-          doc.addImage(ot.datosCliente.firma, 'PNG', margin + 2, yPos, 80, 30);
-          yPos += 35;
+          // Firma más pequeña
+          doc.addImage(ot.datosCliente.firma, 'PNG', margin + 2, yPos, 50, 20);
+          
+          // Línea debajo de la firma
+          doc.setDrawColor(...grisMedio);
+          doc.line(margin + 2, yPos + 21, margin + 52, yPos + 21);
+          doc.setFontSize(6);
+          doc.setFont('helvetica', 'normal');
+          doc.text('Firma del Cliente', margin + 27, yPos + 24, { align: 'center' });
+          yPos += 26;
         } catch (error) {
-          console.error('Error firma:', error);
+          console.error('Error al agregar firma:', error);
           doc.setFont('helvetica', 'italic');
-          doc.setFontSize(9);
+          doc.setFontSize(7);
           doc.text('(Firma no disponible)', margin + 2, yPos);
-          yPos += 10;
+          yPos += 8;
         }
       }
     }
 
-    const totalPages = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= totalPages; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.setTextColor(100, 100, 100);
-      doc.setFont('helvetica', 'normal');
-      doc.text(`Pagina ${i} de ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
-      doc.text('(c) 2025 GPS OT Manager', pageWidth / 2, pageHeight - 5, { align: 'center' });
-    }
+    // ========== FOOTER ==========
+    doc.setFontSize(6);
+    doc.setTextColor(...grisMedio);
+    doc.setFont('helvetica', 'normal');
+    doc.text('© 2025 GPS OT Manager - Sistema de Gestión de Órdenes de Trabajo', pageWidth / 2, pageHeight - 8, { align: 'center' });
+    doc.text(`Página 1 de 1`, pageWidth / 2, pageHeight - 4, { align: 'center' });
 
+    // ========== GUARDAR O PREVISUALIZAR ==========
     const nombreArchivo = `${codigoOT}.pdf`;
     if (preview) {
       const pdfBlob = doc.output('blob');
@@ -225,8 +277,8 @@ export const generarPDFOT = (ot, preview = false) => {
     }
     return true;
   } catch (error) {
-    console.error('Error PDF:', error);
-    alert(`Error: ${error.message}`);
+    console.error('Error al generar PDF:', error);
+    alert(`Error al generar PDF: ${error.message}`);
     throw error;
   }
 };

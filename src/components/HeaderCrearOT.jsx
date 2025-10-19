@@ -12,7 +12,7 @@ function HeaderCrearOT({ codigoOT, onVolver }) {
         </button>
       </div>
       <div className="ot-numero" style={{ color: '#f69a00' }}>
-        <span>Orden de Trabajo N°</span>
+        <span>OT N°</span>
         <span className="ot-numero-badge">{codigoOT}</span>
       </div>
     </div>

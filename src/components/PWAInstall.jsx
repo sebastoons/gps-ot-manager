@@ -126,9 +126,8 @@ function PWAInstall() {
   return (
     <div className="pwa-install-banner">
       <div className="pwa-banner-content">
-        <div className="pwa-banner-icon">📱</div>
         <div className="pwa-banner-text">
-          <strong>Instala GPS OT Manager</strong>
+          <strong>Instalar GPS OT Manager</strong>
           <span>Accede más rápido desde tu pantalla de inicio</span>
         </div>
       </div>
