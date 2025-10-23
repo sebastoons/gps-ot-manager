@@ -1,5 +1,4 @@
-// src/utils/validaciones.js
-
+// src/utils/validaciones.js - ACTUALIZADO CON VALIDACIÓN POR PASOS
 export const validarCamposObligatorios = (datosOT) => {
   const errores = [];
   
@@ -46,6 +45,63 @@ export const validarCamposObligatorios = (datosOT) => {
   }
   if (!datosOT.datosVehiculo.color?.trim()) {
     errores.push('Color del Vehículo');
+  }
+  
+  return errores;
+};
+
+export const validarCamposObligatoriosPorPaso = (datosOT, paso) => {
+  const errores = [];
+  
+  switch(paso) {
+    case 0: // Datos Empresa
+      if (!datosOT.datosEmpresa.nombreEmpresa?.trim()) {
+        errores.push('Nombre de la Empresa');
+      }
+      if (!datosOT.datosEmpresa.fecha?.trim()) {
+        errores.push('Fecha');
+      }
+      if (!datosOT.datosEmpresa.nombreContacto?.trim()) {
+        errores.push('Nombre del Contacto');
+      }
+      if (!datosOT.datosEmpresa.region?.trim()) {
+        errores.push('Región');
+      }
+      if (!datosOT.datosEmpresa.ciudad?.trim()) {
+        errores.push('Ciudad');
+      }
+      if (!datosOT.datosEmpresa.comuna?.trim()) {
+        errores.push('Comuna');
+      }
+      break;
+      
+    case 1: // Datos Servicio y Vehículo
+      if (!datosOT.datosGPS.nombreTecnico?.trim()) {
+        errores.push('Nombre del Técnico');
+      }
+      if (!datosOT.datosGPS.tipoServicio?.trim()) {
+        errores.push('Tipo de Servicio');
+      }
+      if (!datosOT.datosVehiculo.tipo?.trim()) {
+        errores.push('Tipo de Vehículo');
+      }
+      if (!datosOT.datosVehiculo.marca?.trim()) {
+        errores.push('Marca del Vehículo');
+      }
+      if (!datosOT.datosVehiculo.modelo?.trim()) {
+        errores.push('Modelo del Vehículo');
+      }
+      if (!datosOT.datosVehiculo.ano?.trim()) {
+        errores.push('Año del Vehículo');
+      }
+      if (!datosOT.datosVehiculo.color?.trim()) {
+        errores.push('Color del Vehículo');
+      }
+      break;
+      
+    case 2: // CheckList (opcional)
+      // El checklist es opcional, no hay validaciones obligatorias
+      break;
   }
   
   return errores;

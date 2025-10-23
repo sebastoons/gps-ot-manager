@@ -1,12 +1,15 @@
-// src/components/BaseDatos.jsx - VERSIÓN COMPLETA CORREGIDA
-import { useState, useEffect, useCallback } from 'react';
+// src/components/BaseDatos.jsx - CON SISTEMA DE BACKUP
+import { useState, useEffect, useCallback, useRef } from 'react';
 import '../styles/baseDatos.css';
 import { 
   obtenerTodasLasOTs, 
   eliminarOT, 
   exportarOTsJSON, 
   obtenerEstadisticas, 
-  limpiarOTsAntiguas 
+  limpiarOTsAntiguas,
+  crearBackup,
+  restaurarBackup,
+  restaurarBackupAutomatico
 } from '../utils/storage';
 import { generarPDFOT } from '../utils/pdfService';
 import { formatearFecha, getNombreEmpresa, obtenerEmpresasUnicas } from '../utils/formatters';
@@ -19,6 +22,7 @@ function BaseDatos({ navigateTo }) {
   const [ots, setOts] = useState([]);
   const [empresasDisponibles, setEmpresasDisponibles] = useState([]);
   const [estadisticas, setEstadisticas] = useState({ total: 0, ultimaSemana: 0, ultimoMes: 0 });
+  const inputFileRef = useRef(null);
 
   const { 
     otsFiltradas, 
@@ -77,17 +81,69 @@ function BaseDatos({ navigateTo }) {
     }
   }, []);
 
+  // ============ FUNCIONES DE BACKUP ============
+  
+  const handleCrearBackup = useCallback(() => {
+    if (crearBackup()) {
+      alert('✅ Backup creado exitosamente\n\nEl archivo se ha descargado y también se guardó un respaldo automático.');
+    } else {
+      alert('❌ Error al crear el backup');
+    }
+  }, []);
+
+  const handleSeleccionarArchivo = useCallback(() => {
+    inputFileRef.current?.click();
+  }, []);
+
+  const handleRestaurarBackup = useCallback((event) => {
+    const archivo = event.target.files?.[0];
+    if (!archivo) return;
+
+    if (!archivo.name.endsWith('.json')) {
+      alert('❌ Por favor selecciona un archivo JSON válido');
+      return;
+    }
+
+    if (window.confirm('⚠️ ¿Estás seguro de restaurar este backup?\n\nEsto reemplazará todos los datos actuales.')) {
+      restaurarBackup(archivo)
+        .then((cantidadOTs) => {
+          alert(`✅ Backup restaurado exitosamente\n\nSe restauraron ${cantidadOTs} OTs`);
+          cargarOTs();
+          event.target.value = '';
+        })
+        .catch((error) => {
+          console.error('Error al restaurar backup:', error);
+          alert(`❌ Error al restaurar el backup:\n\n${error.message}`);
+          event.target.value = '';
+        });
+    } else {
+      event.target.value = '';
+    }
+  }, [cargarOTs]);
+
+  const handleRestaurarBackupAutomatico = useCallback(() => {
+    if (window.confirm('⚠️ ¿Deseas restaurar el último backup automático?\n\nEsto reemplazará todos los datos actuales.')) {
+      const resultado = restaurarBackupAutomatico();
+      if (resultado.success) {
+        alert(`✅ ${resultado.message}`);
+        cargarOTs();
+      } else {
+        alert(`❌ ${resultado.message}`);
+      }
+    }
+  }, [cargarOTs]);
+
   return (
     <div className="base-datos-container">
-      {/* Header */}
+      {/* Header mejorado */}
       <div className="base-datos-header">
         <div className="base-datos-header-top">
-          <h1 className="base-datos-title">Base de Datos de OTs</h1>
+          <h1 className="base-datos-title">Base de Datos</h1>
           <button 
-            className="btn btn-volver"
+            className="btn-volver"
             onClick={() => navigateTo('index')}
           >
-            Volver
+            ← Volver
           </button>
         </div>
       </div>
@@ -95,19 +151,54 @@ function BaseDatos({ navigateTo }) {
       {/* Estadísticas */}
       <EstadisticasOT estadisticas={estadisticas} />
 
+      {/* Sistema de Backup/Restore */}
+      <div className="acciones-backup">
+        <div className="acciones-backup-titulo">
+          💾 Sistema de Respaldo
+        </div>
+        <div className="acciones-backup-botones">
+          <button 
+            className="btn-backup"
+            onClick={handleCrearBackup}
+          >
+            📥 Crear Backup
+          </button>
+          <button 
+            className="btn-restore"
+            onClick={handleSeleccionarArchivo}
+          >
+            📤 Restaurar Backup
+          </button>
+        </div>
+        <button 
+          className="btn btn-secondary"
+          style={{ fontSize: '0.75em', padding: '10px' }}
+          onClick={handleRestaurarBackupAutomatico}
+        >
+          🔄 Restaurar Último Backup Automático
+        </button>
+        <input
+          ref={inputFileRef}
+          type="file"
+          accept=".json"
+          className="input-restore"
+          onChange={handleRestaurarBackup}
+        />
+      </div>
+
       {/* Acciones Generales */}
       <div className="acciones-generales">
         <button 
           className="btn btn-primary"
           onClick={exportarOTsJSON}
         >
-          📥 Exportar a JSON
+          📥 Exportar JSON
         </button>
         <button 
           className="btn btn-secondary"
           onClick={handleLimpiarAntiguas}
         >
-          🗑️ Limpiar OTs Antiguas
+          🗑️ Limpiar Antiguas
         </button>
       </div>
 
@@ -120,7 +211,7 @@ function BaseDatos({ navigateTo }) {
         empresasDisponibles={empresasDisponibles}
       />
 
-      {/* Tabla Simplificada */}
+      {/* Tabla */}
       {otsFiltradas.length === 0 ? (
         <div className="mensaje-vacio">
           <div className="mensaje-vacio-icon">📋</div>

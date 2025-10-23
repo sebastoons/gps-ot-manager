@@ -1,5 +1,7 @@
+// src/utils/storage.js - CON FUNCIONES DE BACKUP Y RESTORE
 const STORAGE_KEY = 'gps_ots';
 const COUNTER_KEY_PREFIX = 'gps_ot_counter_';
+const BACKUP_KEY = 'gps_ots_backup';
 
 export const obtenerNumeroOTActual = (prefijo) => {
   const contador = localStorage.getItem(COUNTER_KEY_PREFIX + prefijo);
@@ -144,4 +146,111 @@ export const obtenerEstadisticas = () => {
       return fecha >= hace30Dias;
     }).length
   };
+};
+
+// ============ FUNCIONES DE BACKUP Y RESTORE ============
+
+export const crearBackup = () => {
+  try {
+    const ots = localStorage.getItem(STORAGE_KEY);
+    const contadores = {};
+    
+    // Obtener todos los contadores
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith(COUNTER_KEY_PREFIX)) {
+        contadores[key] = localStorage.getItem(key);
+      }
+    }
+    
+    const backup = {
+      ots: ots ? JSON.parse(ots) : [],
+      contadores: contadores,
+      fechaBackup: new Date().toISOString(),
+      version: '1.0'
+    };
+    
+    const dataStr = JSON.stringify(backup, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `backup_completo_${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    
+    // Guardar también en localStorage como respaldo automático
+    localStorage.setItem(BACKUP_KEY, dataStr);
+    
+    return true;
+  } catch (error) {
+    console.error('Error al crear backup:', error);
+    return false;
+  }
+};
+
+export const restaurarBackup = (archivo) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      try {
+        const backup = JSON.parse(e.target.result);
+        
+        // Validar estructura del backup
+        if (!backup.ots || !backup.contadores || !backup.version) {
+          reject(new Error('Archivo de backup inválido'));
+          return;
+        }
+        
+        // Restaurar OTs
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(backup.ots));
+        
+        // Restaurar contadores
+        Object.keys(backup.contadores).forEach(key => {
+          localStorage.setItem(key, backup.contadores[key]);
+        });
+        
+        // Guardar copia del backup restaurado
+        localStorage.setItem(BACKUP_KEY, JSON.stringify(backup));
+        
+        resolve(backup.ots.length);
+      } catch (error) {
+        reject(error);
+      }
+    };
+    
+    reader.onerror = () => {
+      reject(new Error('Error al leer el archivo'));
+    };
+    
+    reader.readAsText(archivo);
+  });
+};
+
+export const restaurarBackupAutomatico = () => {
+  try {
+    const backupStr = localStorage.getItem(BACKUP_KEY);
+    if (!backupStr) {
+      return { success: false, message: 'No hay backup automático disponible' };
+    }
+    
+    const backup = JSON.parse(backupStr);
+    
+    // Restaurar OTs
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(backup.ots));
+    
+    // Restaurar contadores
+    Object.keys(backup.contadores).forEach(key => {
+      localStorage.setItem(key, backup.contadores[key]);
+    });
+    
+    return { 
+      success: true, 
+      message: `Se restauraron ${backup.ots.length} OTs desde el backup automático del ${new Date(backup.fechaBackup).toLocaleString('es-CL')}` 
+    };
+  } catch (error) {
+    console.error('Error al restaurar backup automático:', error);
+    return { success: false, message: 'Error al restaurar backup automático' };
+  }
 };

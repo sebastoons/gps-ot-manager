@@ -1,18 +1,16 @@
-// src/components/CrearOT.jsx - VERSIÓN COMPLETA Y OPTIMIZADA
+// src/components/CrearOT.jsx
 import { useState } from 'react';
 import DatosEmpresa from './DatosEmpresa';
 import CheckList from './CheckList';
-import DatosGPS from './DatosGPS';
-import DatosVehiculo from './DatosVehiculo';
-import FormularioCliente from './FormularioCliente';
-import SeccionFormulario from './SeccionFormulario';
+import DatosServicioVehiculo from './DatosServicioVehiculo';
 import ModalConfirmacionOT from './ModalConfirmacionOT';
-import HeaderCrearOT from './HeaderCrearOT';
+import FormularioCliente from './FormularioCliente';
 import { useCrearOT } from '../hooks/useCrearOT';
-import { validarCamposObligatorios } from '../utils/validaciones';
+import { validarCamposObligatoriosPorPaso } from '../utils/validaciones';
 import '../styles/crearOT.css';
 
 function CrearOT({ navigateTo, empresaData }) {
+  const [pasoActual, setPasoActual] = useState(0);
   const [mostrarModalOtraBT, setMostrarModalOtraBT] = useState(false);
   const [mostrarFormularioCliente, setMostrarFormularioCliente] = useState(false);
 
@@ -20,15 +18,72 @@ function CrearOT({ navigateTo, empresaData }) {
     codigoOT,
     otsCreadas,
     datosOT,
-    seccionAbierta,
-    toggleSeccion,
     actualizarDatos,
     finalizarOT,
     crearNuevaOT
   } = useCrearOT(empresaData);
 
+  const pasos = [
+    {
+      id: 'datosEmpresa',
+      titulo: 'Datos de la Empresa',
+      icono: '🏢',
+      componente: (
+        <DatosEmpresa 
+          datos={datosOT.datosEmpresa}
+          onChange={(datos) => actualizarDatos('datosEmpresa', datos)}
+        />
+      )
+    },
+    {
+      id: 'datosServicioVehiculo',
+      titulo: 'Servicio y Vehículo',
+      icono: '🚗',
+      componente: (
+        <DatosServicioVehiculo 
+          datosGPS={datosOT.datosGPS}
+          datosVehiculo={datosOT.datosVehiculo}
+          onChangeGPS={(datos) => actualizarDatos('datosGPS', datos)}
+          onChangeVehiculo={(datos) => actualizarDatos('datosVehiculo', datos)}
+        />
+      )
+    },
+    {
+      id: 'checklist',
+      titulo: 'CheckList del Vehículo',
+      icono: '✅',
+      componente: (
+        <CheckList 
+          datos={datosOT.checklist}
+          onChange={(datos) => actualizarDatos('checklist', datos)}
+        />
+      )
+    }
+  ];
+
+  const handleSiguiente = () => {
+    const errores = validarCamposObligatoriosPorPaso(datosOT, pasoActual);
+    
+    if (errores.length > 0) {
+      alert(`⚠️ Faltan los siguientes campos obligatorios:\n\n${errores.join('\n')}`);
+      return;
+    }
+
+    if (pasoActual < pasos.length - 1) {
+      setPasoActual(pasoActual + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleAtras = () => {
+    if (pasoActual > 0) {
+      setPasoActual(pasoActual - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const handleFinalizarOT = () => {
-    const otGuardada = finalizarOT(validarCamposObligatorios);
+    const otGuardada = finalizarOT(() => []);
     
     if (otGuardada) {
       setMostrarModalOtraBT(true);
@@ -40,6 +95,7 @@ function CrearOT({ navigateTo, empresaData }) {
   const handleCrearOtraBT = () => {
     crearNuevaOT();
     setMostrarModalOtraBT(false);
+    setPasoActual(0);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -48,7 +104,6 @@ function CrearOT({ navigateTo, empresaData }) {
     setMostrarFormularioCliente(true);
   };
 
-  // Si se muestra el formulario de cliente, renderizarlo
   if (mostrarFormularioCliente) {
     return (
       <FormularioCliente 
@@ -58,90 +113,80 @@ function CrearOT({ navigateTo, empresaData }) {
     );
   }
 
-  // Configuración de secciones
-  const secciones = [
-    {
-      id: 'datosEmpresa',
-      icono: '🏢',
-      titulo: 'Datos de la Empresa',
-      componente: (
-        <DatosEmpresa 
-          datos={datosOT.datosEmpresa}
-          onChange={(datos) => actualizarDatos('datosEmpresa', datos)}
-        />
-      )
-    },
-    {
-      id: 'datosGPS',
-      icono: '📡',
-      titulo: 'Datos del Servicio GPS',
-      componente: (
-        <DatosGPS 
-          datos={datosOT.datosGPS}
-          onChange={(datos) => actualizarDatos('datosGPS', datos)}
-        />
-      )
-    },
-    {
-      id: 'datosVehiculo',
-      icono: '🚗',
-      titulo: 'Datos del Vehículo',
-      componente: (
-        <DatosVehiculo 
-          datos={datosOT.datosVehiculo}
-          onChange={(datos) => actualizarDatos('datosVehiculo', datos)}
-          ppuIn={datosOT.datosGPS?.ppuIn}
-        />
-      )
-    },
-    {
-      id: 'checklist',
-      icono: '✅',
-      titulo: 'CheckList del Vehículo',
-      componente: (
-        <CheckList 
-          datos={datosOT.checklist}
-          onChange={(datos) => actualizarDatos('checklist', datos)}
-        />
-      )
-    }
-  ];
+  const pasoActualData = pasos[pasoActual];
 
   return (
     <div className="crear-ot-container">
-      {/* Header */}
-      <HeaderCrearOT 
-        codigoOT={codigoOT}
-        onVolver={() => navigateTo('index')}
-      />
-
-      {/* Formulario por secciones */}
-      <form className="crear-ot-form">
-        {secciones.map((seccion) => (
-          <SeccionFormulario
-            key={seccion.id}
-            id={seccion.id}
-            icono={seccion.icono}
-            titulo={seccion.titulo}
-            estaAbierta={seccionAbierta === seccion.id}
-            onToggle={toggleSeccion}
+      {/* Header mejorado */}
+      <div className="crear-ot-header">
+        <div className="header-top-row">
+          <button 
+            className="btn-volver-header"
+            onClick={() => navigateTo('index')}
           >
-            {seccion.componente}
-          </SeccionFormulario>
-        ))}
-      </form>
+            ← Volver
+          </button>
+          <div className="ot-codigo-badge">
+            {codigoOT}
+          </div>
+        </div>
+        <h1 className="crear-ot-title">Crear Orden de Trabajo</h1>
+      </div>
 
-      {/* Botón de Finalizar */}
-      <div className="form-actions">
-        <div className="form-actions-buttons">
+      {/* Indicador de progreso */}
+      <div className="progreso-pasos">
+        {pasos.map((paso, index) => (
+          <div 
+            key={paso.id}
+            className={`paso-indicador ${index === pasoActual ? 'activo' : ''} ${index < pasoActual ? 'completado' : ''}`}
+          >
+            <div className="paso-numero">{index + 1}</div>
+            <div className="paso-linea"></div>
+          </div>
+        ))}
+      </div>
+
+      {/* Contenido del paso actual con animación */}
+      <div className="paso-container">
+        <div className="paso-header">
+          <span className="paso-icono">{pasoActualData.icono}</span>
+          <h2 className="paso-titulo">{pasoActualData.titulo}</h2>
+        </div>
+        
+        <div className="paso-contenido">
+          {pasoActualData.componente}
+        </div>
+      </div>
+
+      {/* Botones de navegación fijos */}
+      <div className="navegacion-pasos">
+        {pasoActual > 0 && (
           <button 
             type="button"
-            className="btn btn-success btn-full"
+            className="btn btn-secondary btn-navegacion"
+            onClick={handleAtras}
+          >
+            ← Atrás
+          </button>
+        )}
+        
+        {pasoActual < pasos.length - 1 ? (
+          <button 
+            type="button"
+            className="btn btn-primary btn-navegacion"
+            onClick={handleSiguiente}
+          >
+            Siguiente →
+          </button>
+        ) : (
+          <button 
+            type="button"
+            className="btn btn-success btn-navegacion"
             onClick={handleFinalizarOT}
           >
-            Finalizar Orden de Trabajo
+            Finalizar OT
           </button>
-        </div>
+        )}
       </div>
 
       {/* Modal de confirmación */}
