@@ -1,49 +1,73 @@
+/* src/styles/crearOT.css - Modern OT Creation */
+
 .crear-ot-container {
   max-width: 100%;
   padding: var(--spacing-md);
   padding-bottom: var(--spacing-xl);
+  animation: fadeIn 0.5s ease;
 }
 
 .crear-ot-header {
-  background: linear-gradient(135deg, #dedede, #ffffff, #dedede);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: var(--text-white);
-  padding: 20px ;
+  padding: 30px;
   border-radius: var(--border-radius-lg);
   margin-bottom: var(--spacing-lg);
-  box-shadow: var(--shadow-xl), 0 0 40px rgba(102, 126, 234, 0.4);
+  box-shadow: var(--shadow-xl), var(--shadow-glow);
   position: relative;
   overflow: hidden;
+}
+
+.crear-ot-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .crear-ot-header-top {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 5px;
+  align-items: center;
+  margin-bottom: 15px;
   position: relative;
   z-index: 1;
 }
 
 .crear-ot-title {
   font-family: var(--font-title);
-  font-size: 1em;
-  margin: 5px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 10%);
+  font-size: 1.5em;
+  margin: 0;
   text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .btn-volver {
-  background-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   color: var(--text-white);
-  padding: 5px 15px;
+  padding: 8px 16px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  font-size: 0.6em;
+  font-size: 0.7em;
   backdrop-filter: blur(10px);
+  transition: all var(--transition-normal);
 }
 
 .btn-volver:hover {
-  background-color: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
   transform: translateX(-4px);
 }
 
@@ -60,17 +84,18 @@
 }
 
 .ot-numero-badge {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(10px);
-  padding: 5px 10px;
+  padding: 8px 16px;
   border-radius: 30px;
-  font-size: 0.7em;
-  letter-spacing: 1px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  font-size: 0.85em;
+  letter-spacing: 2px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s ease-in-out infinite;
 }
 
-@keyframes glow {
+@keyframes pulse {
   0%, 100% {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   }
@@ -86,33 +111,29 @@
 }
 
 .form-section {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: var(--bg-primary);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all var(--transition-normal);
+  border: 2px solid transparent;
 }
 
 .form-section:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-xl), 0 0 30px rgba(99, 102, 241, 0.2);
-}
-
-.form-section.collapsed {
-  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary-light);
 }
 
 .form-section-header {
-  background: linear-gradient(135deg, #438de5, #56b9f4, #438de5);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: var(--text-white);
-  padding: 5px 10px;
+  padding: 16px 20px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal);
   position: relative;
   overflow: hidden;
 }
@@ -125,7 +146,7 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  transition: left 0.6s;
 }
 
 .form-section-header:hover::before {
@@ -133,7 +154,7 @@
 }
 
 .form-section-header:hover {
-  background: linear-gradient(135deg, #463fc3, #6c31d1, #463fc3);
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary-dark) 100%);
 }
 
 .form-section-header-content {
@@ -145,59 +166,57 @@
 }
 
 .form-section-icon {
-  font-size: 1.25em;
+  font-size: 1.5em;
   filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .form-section-title {
   font-family: var(--font-subtitle);
-  font-size: 0.9em;
+  font-size: 1em;
   font-weight: 600;
   margin: 0;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   text-transform: uppercase;
-  color: white;
+  letter-spacing: 0.5px;
 }
 
 .form-section-toggle {
-  font-size: 1em;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1.2em;
+  transition: transform var(--transition-normal);
   position: relative;
   z-index: 1;
 }
 
 .form-section-toggle.collapsed {
-  transform: rotate(-180deg);
+  transform: rotate(-90deg);
 }
 
 .form-section-body {
   padding: 30px;
   max-height: 3000px;
   overflow: hidden;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--transition-slow);
 }
 
 .form-section-body.collapsed {
   max-height: 0;
-  padding: 0 var(--spacing-lg);
+  padding: 0 30px;
   opacity: 0;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 5px;
-  margin-bottom: 5px;
+  gap: 15px;
+  margin-bottom: 15px;
 }
 
 .form-actions {
   position: sticky;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
+  background: var(--bg-primary);
   padding: var(--spacing-md);
-  border-top: 3px solid transparent;
-  box-shadow: 3px 4px 20px rgba(0, 0, 0, 0.15);
+  border-top: 3px solid var(--color-primary);
+  box-shadow: 0 -4px 20px rgba(0, 153, 255, 0.15);
   margin-top: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
   z-index: 50;
@@ -215,7 +234,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(44, 62, 80, 0.8);
   backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
@@ -223,6 +242,17 @@
   z-index: 1000;
   padding: var(--spacing-md);
   animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--shadow-xl), var(--shadow-glow);
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid var(--color-primary-light);
 }
 
 @keyframes fadeIn {
@@ -234,25 +264,13 @@
   }
 }
 
-.modal-content {
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px);
-  border-radius: var(--border-radius-lg);
-  padding: 25px;
-  max-width: 280px;
-  width: 100%;
-  box-shadow: var(--shadow-xl), 0 0 60px rgba(99, 102, 241, 0.3);
-  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
 @keyframes slideUp {
   from {
-    transform: translateY(50px) scale(0.9);
+    transform: translateY(50px);
     opacity: 0;
   }
   to {
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
     opacity: 1;
   }
 }
@@ -263,25 +281,36 @@
 }
 
 .modal-icon {
-  font-size: 2em;
-  margin-bottom: 0;
+  font-size: 3em;
+  margin-bottom: 10px;
   animation: bounce 1s ease;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 4px 8px rgba(0, 153, 255, 0.3));
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
 }
 
 .modal-title {
   font-family: var(--font-subtitle);
-  font-size: 1.3em;
-  color: #4f83cd;
-  margin-bottom: 5px;
-  background-clip: text;
+  font-size: 1.5em;
+  color: var(--color-primary);
+  margin-bottom: 10px;
   text-transform: uppercase;
   font-weight: 600;
 }
 
 .modal-description {
   color: var(--text-secondary);
-  font-size: 0.7em;
+  font-size: 0.85em;
   line-height: 1.6;
   text-align: center;
 }
@@ -302,7 +331,7 @@
 .campo-incompleto {
   border-color: var(--color-danger) !important;
   animation: shake 0.3s ease;
-  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+  box-shadow: 0 0 0 4px rgba(255, 71, 87, 0.1);
 }
 
 @keyframes shake {

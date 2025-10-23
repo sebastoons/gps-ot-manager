@@ -1,6 +1,6 @@
 {
-  "name": "GPS OT Manager",
-  "short_name": "GPS OT",
+  "name": "GPS OT SERVITRAK",
+  "short_name": "OT SERVITRAK",
   "description": "Sistema de gestión de órdenes de trabajo para instalaciones GPS",
   "start_url": "/",
   "display": "standalone",

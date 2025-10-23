@@ -1,22 +1,31 @@
-/* ========================================
-   BASE DE DATOS - ESTILOS SIMPLIFICADOS
-   ======================================== */
+/* src/styles/baseDatos.css - Modern Database View */
 
 .base-datos-container {
   max-width: 100%;
   padding: var(--spacing-md);
   min-height: 100vh;
+  animation: fadeIn 0.5s ease;
 }
 
 .base-datos-header {
-  background: linear-gradient(135deg, #438de5, #56b9f4, #438de5);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: var(--text-white);
-  padding: 20px;
+  padding: 30px;
   border-radius: var(--border-radius-lg);
   margin-bottom: 20px;
-  box-shadow: var(--shadow-xl), 0 0 40px rgba(67, 141, 229, 0.4);
+  box-shadow: var(--shadow-xl), var(--shadow-glow);
   position: relative;
   overflow: hidden;
+}
+
+.base-datos-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
 }
 
 .base-datos-header-top {
@@ -30,24 +39,23 @@
 
 .base-datos-title {
   font-family: var(--font-title);
-  font-size: 1.1em;
-  text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);
+  font-size: 1.5em;
   text-transform: uppercase;
-  color: #f6f6f6;
+  letter-spacing: 1px;
 }
 
 .btn-volver {
-  background-color: #277bb7;
+  background: rgba(255, 255, 255, 0.2);
   color: var(--text-white);
-  padding: 7px 10px;
+  padding: 8px 16px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  font-size: 0.6em;
+  font-size: 0.7em;
   backdrop-filter: blur(10px);
 }
 
 .btn-volver:hover {
-  background-color: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
   transform: translateX(-4px);
 }
 
@@ -59,54 +67,74 @@
 }
 
 .estadistica-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 5px;
+  background: var(--bg-primary);
+  padding: 20px;
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
   text-align: center;
-  border-left: 4px solid #438de5;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-left: 4px solid var(--color-primary);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.estadistica-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 153, 255, 0.05) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
 }
 
 .estadistica-card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-xl), 0 0 30px rgba(67, 141, 229, 0.2);
+  box-shadow: var(--shadow-xl);
+  border-left-color: var(--color-primary-light);
+}
+
+.estadistica-card:hover::before {
+  opacity: 1;
 }
 
 .estadistica-numero {
   font-family: var(--font-title);
-  font-size: 1.2em;
-  background: linear-gradient(135deg, #438de5, #56b9f4);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 2px;
+  font-size: 2em;
+  color: var(--color-primary);
+  margin-bottom: 5px;
+  position: relative;
+  z-index: 1;
 }
 
 .estadistica-label {
   font-family: var(--font-subtitle);
-  font-size: 0.8em;
+  font-size: 0.75em;
   color: var(--text-secondary);
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  z-index: 1;
 }
 
-/* ========================================
-   FILTROS Y BÚSQUEDA
-   ======================================== */
-
+/* Filtros y Búsqueda */
 .filtros-container {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 15px;
+  background: var(--bg-primary);
+  padding: 20px;
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
   margin-bottom: var(--spacing-lg);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 2px solid transparent;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+  transition: all var(--transition-normal);
+}
+
+.filtros-container:hover {
+  border-color: var(--color-primary-light);
 }
 
 .filtro-empresa {
@@ -121,24 +149,25 @@
   color: var(--text-primary);
   font-size: 0.75em;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .filtro-select {
   width: 100%;
-  padding: 5px;
+  padding: 10px;
   border: 2px solid var(--border-color);
-  border-radius: 10px;
-  font-size: 0.65em;
+  border-radius: var(--border-radius);
+  font-size: 0.75em;
   font-family: var(--font-text);
   background-color: var(--bg-primary);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal);
 }
 
 .filtro-select:focus {
   outline: none;
-  border-color: #438de5;
-  box-shadow: 0 0 0 4px rgba(67, 141, 229, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(0, 153, 255, 0.1);
 }
 
 .busqueda-input-container {
@@ -147,202 +176,196 @@
 
 .busqueda-input {
   width: 100%;
-  padding: 5px;
+  padding: 10px;
   border: 2px solid var(--border-color);
   border-radius: var(--border-radius);
-  font-size: 0.65em;
+  font-size: 0.75em;
   font-family: var(--font-text);
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal);
 }
 
 .busqueda-input:focus {
   outline: none;
-  border-color: #438de5;
-  box-shadow: 0 0 0 4px rgba(67, 141, 229, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(0, 153, 255, 0.1);
 }
 
-/* ========================================
-   TABLA SIMPLIFICADA
-   ======================================== */
-
+/* Mensaje vacío */
 .mensaje-vacio {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: var(--bg-primary);
   padding: var(--spacing-xl);
   border-radius: var(--border-radius-lg);
   text-align: center;
   box-shadow: var(--shadow-md);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 2px dashed var(--border-color);
 }
 
 .mensaje-vacio-icon {
   font-size: 4rem;
   margin-bottom: var(--spacing-md);
+  opacity: 0.5;
 }
 
 .mensaje-vacio-texto {
   font-family: var(--font-subtitle);
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: var(--text-secondary);
   margin-bottom: var(--spacing-md);
 }
 
+/* Tabla moderna */
 .tabla-container {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 10px;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
-  overflow-x: auto;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: all var(--transition-normal);
+}
+
+.tabla-container:hover {
+  border-color: var(--color-primary-light);
 }
 
 .tabla-ots {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.7rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.75rem;
 }
 
 .tabla-ots thead {
-  background: #438de5;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: white;
 }
 
 .tabla-ots th {
-  padding: 8px 4px;
+  padding: 15px 8px;
   text-align: center;
   font-family: var(--font-subtitle);
   font-weight: 600;
   text-transform: uppercase;
-  font-size: 0.65rem;
-  letter-spacing: 0.3px;
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
   white-space: nowrap;
 }
 
 .tabla-ots tbody tr {
-  border-bottom: 1px solid #e2e8f0;
-  transition: background-color 0.2s ease;
+  border-bottom: 1px solid var(--border-color);
+  transition: all var(--transition-fast);
 }
 
 .tabla-ots tbody tr:hover {
-  background-color: #f8fafc;
+  background: linear-gradient(90deg, rgba(0, 153, 255, 0.05) 0%, transparent 100%);
+  transform: scale(1.01);
 }
 
 .tabla-ots td {
-  padding: 6px 4px;
+  padding: 12px 8px;
   vertical-align: middle;
   text-align: center;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
 }
 
 .ot-numero-cell {
   font-weight: 700;
-  color: #277cb8;
-  font-size: 0.6rem;
-  max-width: 60px;
+  color: var(--color-primary);
+  font-size: 0.75rem;
 }
 
 .fecha-cell {
-  font-size: 0.55rem;
+  font-size: 0.65rem;
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
 .ppu-cell {
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
-/* ========================================
-   BADGES SIMPLIFICADOS
-   ======================================== */
-
+/* Badges modernos */
 .badge {
   display: inline-block;
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 4px 12px;
+  border-radius: 20px;
   font-weight: 600;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
-}
-
-.badge-info {
-  background-color: #438de5;
-  color: white;
+  letter-spacing: 0.5px;
+  transition: all var(--transition-fast);
 }
 
 .empresa-badge {
-  background-color: #16924e;
+  background: linear-gradient(135deg, var(--color-success) 0%, #00b84d 100%);
   color: white;
-  font-size: 0.8em;
-  border-radius: 20px;
-  padding: 1px 0 1px;
+  box-shadow: 0 2px 8px rgba(0, 216, 89, 0.3);
 }
 
 .servicio-badge {
-  background-color: #c47c03;
+  background: linear-gradient(135deg, var(--color-warning) 0%, #e89002 100%);
   color: white;
-  border-radius: 20px;
-  padding: 1px 1px;
+  box-shadow: 0 2px 8px rgba(255, 165, 2, 0.3);
 }
 
-/* ========================================
-   BOTONES DE ACCIÓN COMPACTOS
-   ======================================== */
-
+/* Botones de acción */
 .acciones-cell {
   display: flex;
-  gap: 2px;
+  gap: 4px;
   justify-content: center;
   flex-wrap: nowrap;
 }
 
 .btn-icono {
-  padding: 4px 6px;
+  padding: 6px 8px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-  background-color: transparent;
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+  background: transparent;
+  border: 2px solid transparent;
 }
 
 .btn-preview {
-  color: #6366f1;
+  color: var(--color-primary);
 }
 
 .btn-preview:hover {
-  background-color: rgba(99, 102, 241, 0.1);
+  background: rgba(0, 153, 255, 0.1);
+  border-color: var(--color-primary-light);
+  transform: scale(1.1);
 }
 
 .btn-descargar {
-  color: #10b981;
+  color: var(--color-success);
 }
 
 .btn-descargar:hover {
-  background-color: rgba(16, 185, 129, 0.1);
-}
-
-.btn-ver {
-  color: #3b82f6;
-}
-
-.btn-ver:hover {
-  background-color: rgba(59, 130, 246, 0.1);
+  background: rgba(0, 216, 89, 0.1);
+  border-color: var(--color-success);
+  transform: scale(1.1);
 }
 
 .btn-editar {
-  color: #f59e0b;
+  color: var(--color-warning);
 }
 
 .btn-editar:hover {
-  background-color: rgba(245, 158, 11, 0.1);
+  background: rgba(255, 165, 2, 0.1);
+  border-color: var(--color-warning);
+  transform: scale(1.1);
 }
 
 .btn-eliminar {
-  color: #ef4444;
+  color: var(--color-danger);
 }
 
 .btn-eliminar:hover {
-  background-color: rgba(239, 68, 68, 0.1);
+  background: rgba(255, 71, 87, 0.1);
+  border-color: var(--color-danger);
+  transform: scale(1.1);
 }
 
 .acciones-generales {
@@ -352,22 +375,15 @@
   margin-bottom: var(--spacing-lg);
 }
 
-/* ========================================
-   RESPONSIVE DESIGN
-   ======================================== */
-
+/* Responsive */
 @media (min-width: 768px) {
-  .base-datos-header-top {
-    margin-bottom: var(--spacing-sm);
+  .base-datos-title {
+    font-size: 2rem;
   }
 
   .acciones-generales {
     flex-direction: row;
     justify-content: space-between;
-  }
-
-  .base-datos-title {
-    font-size: 2rem;
   }
 
   .filtros-container {
@@ -380,50 +396,39 @@
     max-width: 300px;
   }
 
-  .busqueda-input-container {
-    flex: 1;
-  }
-
   .tabla-ots {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
   }
   
   .tabla-ots th {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    padding: 18px 10px;
   }
   
   .tabla-ots td {
-    padding: 8px 6px;
-    font-size: 0.7rem;
+    padding: 15px 10px;
+    font-size: 0.75rem;
   }
 }
 
 @media (max-width: 767px) {
-  .tabla-ots {
-    font-size: 0.6rem;
-  }
-  
   .tabla-ots th,
   .tabla-ots td {
-    padding: 1px 1.5px;
-    font-size: 0.65em;
-    text-transform: uppercase;
-  }
-  
-  .ot-numero-cell {
-    font-size: 0.55rem;
-  }
-  
-  .fecha-cell {
-    font-size: 0.5rem;
-  }
-  
-  .ppu-cell {
-    font-size: 0.55rem;
+    padding: 8px 4px;
   }
   
   .btn-icono {
-    font-size: 0.8rem;
-    padding: 3px 4px;
+    font-size: 0.9rem;
+    padding: 4px 6px;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
