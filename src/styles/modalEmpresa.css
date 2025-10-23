@@ -75,11 +75,10 @@
 
 .modal-empresa-title {
   font-family: var(--font-title);
-  font-size: 1.8em;
+  font-size: 1.2em;
   color: var(--color-primary);
   margin-bottom: 8px;
   text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
 .modal-empresa-subtitle {
@@ -93,14 +92,14 @@
 .empresas-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
+  gap: 8px;
   margin-bottom: 24px;
 }
 
 .empresa-option {
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   color: var(--text-white);
-  padding: 20px;
+  padding: 8px;
   border-radius: var(--border-radius-lg);
   border: 3px solid transparent;
   cursor: pointer;
@@ -145,11 +144,11 @@
 
 .empresa-nombre {
   font-family: var(--font-subtitle);
-  font-size: 1.1em;
-  font-weight: 700;
+  font-size: 1em;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .otra-empresa-input {
@@ -190,13 +189,13 @@
 .modal-empresa-acciones {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   margin-top: 24px;
 }
 
 .modal-empresa-acciones .btn {
-  padding: 14px 24px;
-  font-size: 0.9em;
+  padding: 10px 15px;
+  font-size: 0.85em;
 }
 
 .modal-empresa-acciones .btn:disabled {

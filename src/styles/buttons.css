@@ -3,22 +3,22 @@
 .btn {
   font-family: var(--font-text);
   font-weight: 700;
-  padding: 6px 10px;
+  padding: 5px 10px;
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
-  font-size: 0.7em;
+  font-size: 0.65em;
   transition: all var(--transition-normal);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   text-decoration: none;
   box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .btn::before {

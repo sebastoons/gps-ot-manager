@@ -172,7 +172,7 @@ function BaseDatos({ navigateTo }) {
         </div>
         <button 
           className="btn btn-secondary"
-          style={{ fontSize: '0.75em', padding: '10px' }}
+          style={{ fontSize: '0.65em', padding: '6px' }}
           onClick={handleRestaurarBackupAutomatico}
         >
           🔄 Restaurar Último Backup Automático

@@ -26,7 +26,7 @@ body {
 h1, .title-large {
   font-family: var(--font-title);
   font-size: 2rem;
-  color: var(--color-primary);
+  color: #ffffff;
   letter-spacing: -0.5px;
 }
 
@@ -40,7 +40,7 @@ h2, .subtitle {
 p, span, label, input, textarea, select, button {
   font-family: var(--font-text);
   text-transform: uppercase;
-  font-size: 0.65em;
+  font-size: 0.55em;
   color: var(--text-primary); 
 }
 
