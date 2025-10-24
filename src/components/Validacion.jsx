@@ -65,27 +65,27 @@ function Validacion({ navigateTo }) {
     let texto = '';
     
     // Fecha siempre al inicio con la fecha actual del sistema
-    texto += `Fecha: ${obtenerFechaActual()}\n`;
+    texto += `FECHA: ${obtenerFechaActual()}\n`;
     
-    if (datosValidacion.cliente) texto += `cliente: ${datosValidacion.cliente}\n`;
-    if (datosValidacion.servicio) texto += `Servicio: ${datosValidacion.servicio}\n`;
-    if (datosValidacion.ppuVin) texto += `Ppu/Vin: ${datosValidacion.ppuVin}\n`;
-    if (mostrarPpuOut && datosValidacion.ppuOut) texto += `Ppu/Vin Out: ${datosValidacion.ppuOut}\n`;
+    if (datosValidacion.cliente) texto += `CLIENTE: ${datosValidacion.cliente.toUpperCase()}\n`;
+    if (datosValidacion.servicio) texto += `SERVICIO: ${datosValidacion.servicio.toUpperCase()}\n`;
+    if (datosValidacion.ppuVin) texto += `PPU/VIN: ${datosValidacion.ppuVin.toUpperCase()}\n`;
+    if (mostrarPpuOut && datosValidacion.ppuOut) texto += `PPU/VIN OUT: ${datosValidacion.ppuOut.toUpperCase()}\n`;
     
     // Construir marca completa
     if (datosValidacion.marca || datosValidacion.modelo || datosValidacion.año) {
       let marcaCompleta = [];
-      if (datosValidacion.marca) marcaCompleta.push(datosValidacion.marca);
-      if (datosValidacion.modelo) marcaCompleta.push(datosValidacion.modelo);
-      if (datosValidacion.año) marcaCompleta.push(datosValidacion.año);
-      texto += `Marca: ${marcaCompleta.join(' ')}\n`;
+      if (datosValidacion.marca) marcaCompleta.push(datosValidacion.marca.toUpperCase());
+      if (datosValidacion.modelo) marcaCompleta.push(datosValidacion.modelo.toUpperCase());
+      if (datosValidacion.año) marcaCompleta.push(datosValidacion.año.toString().toUpperCase());
+      texto += `MARCA: ${marcaCompleta.join(' ')}\n`;
     }
     
-    if (datosValidacion.gpsIn) texto += `Gps In: ${datosValidacion.gpsIn}\n`;
-    if (mostrarKms && datosValidacion.kmsHrs) texto += `Kms/Hrs : ${datosValidacion.kmsHrs}\n`;
-    if (mostrarUbicacion && datosValidacion.ubicacion) texto += `Ubicación: ${datosValidacion.ubicacion}\n`;
-    if (mostrarPerifericos && datosValidacion.perifericos) texto += `Periféricos: ${datosValidacion.perifericos}\n`;
-    if (mostrarDetalles && datosValidacion.detalles) texto += `Detalles: ${datosValidacion.detalles}\n`;
+    if (datosValidacion.gpsIn) texto += `GPS IN: ${datosValidacion.gpsIn.toUpperCase()}\n`;
+    if (mostrarKms && datosValidacion.kmsHrs) texto += `KMS/HRS: ${datosValidacion.kmsHrs.toUpperCase()}\n`;
+    if (mostrarUbicacion && datosValidacion.ubicacion) texto += `UBICACION: ${datosValidacion.ubicacion.toUpperCase()}\n`;
+    if (mostrarPerifericos && datosValidacion.perifericos) texto += `PERIFERICOS: ${datosValidacion.perifericos.toUpperCase()}\n`;
+    if (mostrarDetalles && datosValidacion.detalles) texto += `DETALLES: ${datosValidacion.detalles.toUpperCase()}\n`;
     
     return texto.trim();
   };
@@ -164,6 +164,11 @@ function Validacion({ navigateTo }) {
   for (let año = 2030; año >= 1990; año--) {
     años.push(año);
   }
+
+  const colores = [
+    'Amarillo', 'Azul', 'Beige', 'Blanco', 'Café', 'Gris', 
+    'Morado', 'Naranja', 'Negro', 'Plata', 'Rojo', 'Rosa', 'Verde'
+  ];
 
   return (
     <div className="validacion-container">
