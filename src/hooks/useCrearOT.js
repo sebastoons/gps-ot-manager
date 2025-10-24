@@ -1,4 +1,4 @@
-// src/hooks/useCrearOT.js
+// src/hooks/useCrearOT.js - COMPLETO CON datosCliente
 import { useState, useEffect } from 'react';
 import { guardarOT, obtenerNumeroOTActual } from '../utils/storage';
 
@@ -13,7 +13,8 @@ export const useCrearOT = (empresaData) => {
     datosEmpresa: {},
     checklist: {},
     datosGPS: {},
-    datosVehiculo: {}
+    datosVehiculo: {},
+    datosCliente: {}
   });
 
   useEffect(() => {
@@ -62,7 +63,8 @@ export const useCrearOT = (empresaData) => {
       datosEmpresa: datosEmpresaGuardados,
       checklist: {},
       datosGPS: {},
-      datosVehiculo: {}
+      datosVehiculo: {},
+      datosCliente: {}
     });
     setSeccionAbierta('datosGPS');
   };

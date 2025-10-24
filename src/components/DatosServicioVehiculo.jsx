@@ -1,9 +1,11 @@
-// src/components/DatosServicioVehiculo.jsx - NUEVO COMPONENTE COMBINADO
+// src/components/DatosServicioVehiculo.jsx - COMPLETO CON CHECKBOXES PPU OUT E IMEI OUT
 import { useState, useEffect } from 'react';
 import '../styles/global.css';
 
 function DatosServicioVehiculo({ datosGPS, datosVehiculo, onChangeGPS, onChangeVehiculo }) {
   const [mostrarAccesorios, setMostrarAccesorios] = useState(false);
+  const [mostrarPpuOut, setMostrarPpuOut] = useState(false);
+  const [mostrarImeiOut, setMostrarImeiOut] = useState(false);
 
   const handleChangeGPS = (campo, valor) => {
     onChangeGPS({
@@ -45,6 +47,26 @@ function DatosServicioVehiculo({ datosGPS, datosVehiculo, onChangeGPS, onChangeV
       });
     }
   }, [datosGPS?.ppuIn]);
+
+  // Limpiar PPU OUT si se desmarca
+  useEffect(() => {
+    if (!mostrarPpuOut && datosGPS?.ppuOut) {
+      onChangeGPS({
+        ...datosGPS,
+        ppuOut: ''
+      });
+    }
+  }, [mostrarPpuOut]);
+
+  // Limpiar IMEI OUT si se desmarca
+  useEffect(() => {
+    if (!mostrarImeiOut && datosGPS?.imeiOut) {
+      onChangeGPS({
+        ...datosGPS,
+        imeiOut: ''
+      });
+    }
+  }, [mostrarImeiOut]);
 
   const accesoriosDisponibles = [
     'Inmovilizador', 'Edata', 'Dallas', 'Buzzer', 
@@ -186,16 +208,32 @@ function DatosServicioVehiculo({ datosGPS, datosVehiculo, onChangeGPS, onChangeV
           </div>
 
           <div className="form-group">
-            <label className="form-label">PPU OUT</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Patente salida"
-              maxLength="6"
-              style={{ textTransform: 'uppercase' }}
-              value={datosGPS?.ppuOut || ''}
-              onChange={(e) => handleChangeGPS('ppuOut', e.target.value.toUpperCase())}
-            />
+            <div className="form-check" style={{ marginBottom: '8px' }}>
+              <input
+                type="checkbox"
+                id="checkbox-ppu-out"
+                className="form-check-input"
+                checked={mostrarPpuOut}
+                onChange={(e) => setMostrarPpuOut(e.target.checked)}
+              />
+              <label htmlFor="checkbox-ppu-out" className="form-check-label">
+                ¿PPU OUT?
+              </label>
+            </div>
+            {mostrarPpuOut && (
+              <>
+                <label className="form-label">PPU OUT</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Patente salida"
+                  maxLength="6"
+                  style={{ textTransform: 'uppercase' }}
+                  value={datosGPS?.ppuOut || ''}
+                  onChange={(e) => handleChangeGPS('ppuOut', e.target.value.toUpperCase())}
+                />
+              </>
+            )}
           </div>
         </div>
 
@@ -213,15 +251,31 @@ function DatosServicioVehiculo({ datosGPS, datosVehiculo, onChangeGPS, onChangeV
           </div>
 
           <div className="form-group">
-            <label className="form-label">IMEI OUT</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="IMEI salida"
-              maxLength="15"
-              value={datosGPS?.imeiOut || ''}
-              onChange={(e) => handleChangeGPS('imeiOut', e.target.value.replace(/\D/g, ''))}
-            />
+            <div className="form-check" style={{ marginBottom: '8px' }}>
+              <input
+                type="checkbox"
+                id="checkbox-imei-out"
+                className="form-check-input"
+                checked={mostrarImeiOut}
+                onChange={(e) => setMostrarImeiOut(e.target.checked)}
+              />
+              <label htmlFor="checkbox-imei-out" className="form-check-label">
+                ¿IMEI OUT?
+              </label>
+            </div>
+            {mostrarImeiOut && (
+              <>
+                <label className="form-label">IMEI OUT</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="IMEI salida"
+                  maxLength="15"
+                  value={datosGPS?.imeiOut || ''}
+                  onChange={(e) => handleChangeGPS('imeiOut', e.target.value.replace(/\D/g, ''))}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -1,10 +1,10 @@
-// src/components/CrearOT.jsx
+// src/components/CrearOT.jsx - COMPLETO CON PASO 4
 import { useState } from 'react';
 import DatosEmpresa from './DatosEmpresa';
 import CheckList from './CheckList';
 import DatosServicioVehiculo from './DatosServicioVehiculo';
+import FirmaDigital from './FirmaDigital';
 import ModalConfirmacionOT from './ModalConfirmacionOT';
-import FormularioCliente from './FormularioCliente';
 import { useCrearOT } from '../hooks/useCrearOT';
 import { validarCamposObligatoriosPorPaso } from '../utils/validaciones';
 import '../styles/crearOT.css';
@@ -12,7 +12,6 @@ import '../styles/crearOT.css';
 function CrearOT({ navigateTo, empresaData }) {
   const [pasoActual, setPasoActual] = useState(0);
   const [mostrarModalOtraBT, setMostrarModalOtraBT] = useState(false);
-  const [mostrarFormularioCliente, setMostrarFormularioCliente] = useState(false);
 
   const {
     codigoOT,
@@ -58,6 +57,17 @@ function CrearOT({ navigateTo, empresaData }) {
           onChange={(datos) => actualizarDatos('checklist', datos)}
         />
       )
+    },
+    {
+      id: 'datosCliente',
+      titulo: 'Datos del Cliente',
+      icono: '👤',
+      componente: (
+        <FormularioClienteIntegrado 
+          datosCliente={datosOT.datosCliente}
+          onChange={(datos) => actualizarDatos('datosCliente', datos)}
+        />
+      )
     }
   ];
 
@@ -83,6 +93,13 @@ function CrearOT({ navigateTo, empresaData }) {
   };
 
   const handleFinalizarOT = () => {
+    const errores = validarCamposObligatoriosPorPaso(datosOT, pasoActual);
+    
+    if (errores.length > 0) {
+      alert(`⚠️ Faltan los siguientes campos obligatorios:\n\n${errores.join('\n')}`);
+      return;
+    }
+
     const otGuardada = finalizarOT(() => []);
     
     if (otGuardada) {
@@ -101,23 +118,13 @@ function CrearOT({ navigateTo, empresaData }) {
 
   const handleNoCrearOtraBT = () => {
     setMostrarModalOtraBT(false);
-    setMostrarFormularioCliente(true);
+    navigateTo('index');
   };
-
-  if (mostrarFormularioCliente) {
-    return (
-      <FormularioCliente 
-        otsCreadas={otsCreadas}
-        navigateTo={navigateTo}
-      />
-    );
-  }
 
   const pasoActualData = pasos[pasoActual];
 
   return (
     <div className="crear-ot-container">
-      {/* Header mejorado */}
       <div className="crear-ot-header">
         <div className="header-top-row">
           <button 
@@ -133,7 +140,6 @@ function CrearOT({ navigateTo, empresaData }) {
         <h1 className="crear-ot-title">Crear Orden de Trabajo</h1>
       </div>
 
-      {/* Indicador de progreso */}
       <div className="progreso-pasos">
         {pasos.map((paso, index) => (
           <div 
@@ -146,7 +152,6 @@ function CrearOT({ navigateTo, empresaData }) {
         ))}
       </div>
 
-      {/* Contenido del paso actual con animación */}
       <div className="paso-container">
         <div className="paso-header">
           <span className="paso-icono">{pasoActualData.icono}</span>
@@ -158,7 +163,6 @@ function CrearOT({ navigateTo, empresaData }) {
         </div>
       </div>
 
-      {/* Botones de navegación fijos */}
       <div className="navegacion-pasos">
         {pasoActual > 0 && (
           <button 
@@ -184,18 +188,125 @@ function CrearOT({ navigateTo, empresaData }) {
             className="btn btn-success btn-navegacion"
             onClick={handleFinalizarOT}
           >
-            Finalizar OT
+            ✓ Finalizar OT
           </button>
         )}
       </div>
 
-      {/* Modal de confirmación */}
       <ModalConfirmacionOT
         mostrar={mostrarModalOtraBT}
         ultimaOTCreada={otsCreadas[otsCreadas.length - 1]}
         onCrearOtra={handleCrearOtraBT}
         onFinalizar={handleNoCrearOtraBT}
       />
+    </div>
+  );
+}
+
+// Componente interno para el paso 4
+function FormularioClienteIntegrado({ datosCliente, onChange }) {
+  const handleChange = (campo, valor) => {
+    onChange({
+      ...datosCliente,
+      [campo]: valor
+    });
+  };
+
+  const formatearRUT = (rut) => {
+    const rutLimpio = rut.replace(/[^0-9kK]/g, '');
+    if (rutLimpio.length <= 1) return rutLimpio;
+    
+    const cuerpo = rutLimpio.slice(0, -1);
+    const dv = rutLimpio.slice(-1).toUpperCase();
+    
+    const cuerpoFormateado = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return `${cuerpoFormateado}-${dv}`;
+  };
+
+  const handleRutChange = (valor) => {
+    const rutFormateado = formatearRUT(valor);
+    handleChange('rut', rutFormateado);
+  };
+
+  return (
+    <div>
+      <div className="form-group">
+        <label className="form-label required-field">Nombre Completo</label>
+        <input
+          type="text"
+          className="form-input"
+          placeholder="Nombre y apellidos del cliente"
+          value={datosCliente?.nombre || ''}
+          onChange={(e) => handleChange('nombre', e.target.value)}
+        />
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label required-field">RUT</label>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="12.345.678-9"
+            maxLength="12"
+            value={datosCliente?.rut || ''}
+            onChange={(e) => handleRutChange(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label required-field">Teléfono o Email</label>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="+56 9 1234 5678 o correo@ejemplo.com"
+            value={datosCliente?.contacto || ''}
+            onChange={(e) => handleChange('contacto', e.target.value)}
+          />
+        </div>
+      </div>
+
+      <div style={{ 
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
+        padding: '24px',
+        borderRadius: '12px',
+        boxShadow: '0 4px 12px rgba(0, 153, 255, 0.12)',
+        border: '2px solid transparent',
+        transition: 'all 0.3s ease',
+        marginTop: '20px'
+      }}>
+        <h3 style={{
+          fontFamily: 'var(--font-subtitle)',
+          fontSize: '1em',
+          color: 'var(--text-primary)',
+          marginBottom: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          textTransform: 'uppercase',
+          fontWeight: '700',
+          letterSpacing: '0.5px',
+          paddingBottom: '12px',
+          borderBottom: '2px solid var(--color-primary)'
+        }}>
+          ✍️ Firma del Cliente
+        </h3>
+        <FirmaDigital 
+          onFirmaChange={(firma) => handleChange('firma', firma)} 
+        />
+        {!datosCliente?.firma && (
+          <small style={{ 
+            color: 'var(--color-danger)', 
+            fontSize: '0.75em', 
+            marginTop: '8px',
+            display: 'block',
+            textAlign: 'center'
+          }}>
+            * La firma del cliente es obligatoria para finalizar la OT
+          </small>
+        )}
+      </div>
     </div>
   );
 }
