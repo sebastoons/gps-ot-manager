@@ -99,7 +99,7 @@
 .empresa-option {
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   color: var(--text-white);
-  padding: 8px;
+  padding: 5px;
   border-radius: var(--border-radius-lg);
   border: 3px solid transparent;
   cursor: pointer;
@@ -171,7 +171,7 @@
 
 .otra-empresa-input .form-label {
   text-align: left;
-  font-size: 0.9em;
+  font-size: 0.75em;
   margin-bottom: 8px;
   color: var(--text-primary);
 }
@@ -194,8 +194,8 @@
 }
 
 .modal-empresa-acciones .btn {
-  padding: 10px 15px;
-  font-size: 0.85em;
+  padding: 8px 12px;
+  font-size: 0.8em;
 }
 
 .modal-empresa-acciones .btn:disabled {

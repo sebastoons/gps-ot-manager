@@ -40,9 +40,8 @@
   margin-bottom: var(--spacing-sm);
   text-transform: uppercase;
   font-weight: bold;
-  color: var(--color-primary);
-  text-shadow: 0 2px 20px rgba(0, 153, 255, 0.3);
-  letter-spacing: 2px;
+  color: #000000;
+  letter-spacing: 1px;
   position: relative;
 }
 
