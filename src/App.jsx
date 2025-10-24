@@ -1,8 +1,10 @@
+// src/App.jsx
 import { useState, useEffect } from 'react';
 import Index from './components/Index';
 import CrearOT from './components/CrearOT';
 import BaseDatos from './components/BaseDatos';
 import DetalleOT from './components/DetalleOT';
+import Validacion from './components/Validacion';
 import PWAInstall from './components/PWAInstall';
 import ErrorBoundary from './components/ErrorBoundary';
 import { logger } from './utils/logger';
@@ -14,14 +16,13 @@ function App() {
   const [editMode, setEditMode] = useState(false);
   const [empresaData, setEmpresaData] = useState(null);
 
-  // Logging para debugging
   useEffect(() => {
     console.log('App montado');
     return () => console.log('App desmontado');
   }, []);
 
   useEffect(() => {
-    logger.log('Vista actual:', currentView); // Usar logger en lugar de console.log
+    logger.log('Vista actual:', currentView);
   }, [currentView]);
 
   const navigateTo = (view, otId = null, edit = false, empresa = null) => {
@@ -49,6 +50,8 @@ function App() {
             otId={selectedOTId} 
             editMode={editMode}
           />;
+        case 'validacion':
+          return <Validacion navigateTo={navigateTo} />;
         default:
           console.warn('Vista desconocida:', currentView);
           return <Index navigateTo={navigateTo} />;

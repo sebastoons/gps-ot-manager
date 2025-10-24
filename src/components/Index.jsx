@@ -1,3 +1,4 @@
+// src/components/Index.jsx
 import { useState } from 'react';
 import ModalEmpresa from './ModalEmpresa';
 import '../styles/index.css';
@@ -40,6 +41,17 @@ function Index({ navigateTo }) {
           <h2 className="index-menu-title">Base de Datos</h2>
           <p className="index-menu-description">
             Consulta, edita o elimina órdenes de trabajo existentes
+          </p>
+        </div>
+
+        <div 
+          className="index-menu-item"
+          onClick={() => navigateTo('validacion')}
+        >
+          <span className="index-menu-icon">✅</span>
+          <h2 className="index-menu-title">Validación</h2>
+          <p className="index-menu-description">
+            Crea formato rápido para enviar datos por WhatsApp
           </p>
         </div>
       </div>
