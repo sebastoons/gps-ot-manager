@@ -1,275 +1,203 @@
-/* src/styles/validacion.css */
+/* src/styles/validacion.css - VERSIÓN COMPACTA */
 .validacion-container {
   max-width: 100%;
-  padding: 16px;
-  padding-bottom: 100px;
+  padding: 12px;
+  padding-bottom: 80px;
   min-height: 100vh;
   animation: fadeIn 0.4s ease;
 }
 
-/* Header */
 .validacion-header {
   background: linear-gradient(135deg, var(--color-success), #00b84d);
   color: var(--text-white);
-  padding: 20px;
-  border-radius: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 6px 24px rgba(0, 216, 89, 0.25);
-  position: relative;
-  overflow: hidden;
-}
-
-.validacion-header::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(0, 216, 89, 0.25);
 }
 
 .validacion-header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
-  z-index: 1;
-  margin-bottom: 8px;
 }
 
 .validacion-title {
   font-family: var(--font-title);
-  font-size: 1.2em;
+  font-size: 1em;
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  line-height: 1.2;
 }
 
-.validacion-subtitle {
-  font-family: var(--font-subtitle);
-  font-size: 0.7em;
-  opacity: 0.95;
-  margin: 0;
-  position: relative;
-  z-index: 1;
-}
-
-/* Vista Previa */
-.vista-previa {
+.vista-previa-compacta {
   background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 2px solid rgba(0, 216, 89, 0.2);
 }
 
 .vista-previa-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
   border-bottom: 2px solid rgba(0, 216, 89, 0.2);
 }
 
 .vista-previa-icon {
-  font-size: 1.8rem;
-  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+  font-size: 1.2rem;
 }
 
 .vista-previa-title {
   font-family: var(--font-subtitle);
-  font-size: 0.95em;
+  font-size: 0.8em;
   color: var(--color-success);
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   font-weight: 700;
 }
 
 .vista-previa-contenido {
   background: #f8f9fa;
-  border-radius: 12px;
-  padding: 16px;
-  min-height: 120px;
-  max-height: 300px;
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 80px;
+  max-height: 150px;
   overflow-y: auto;
   border: 2px solid #e1e8ed;
 }
 
 .vista-previa-texto {
   font-family: var(--font-text);
-  font-size: 0.7em;
+  font-size: 0.65em;
   color: var(--text-primary);
   margin: 0;
   white-space: pre-wrap;
-  line-height: 1.6;
+  line-height: 1.4;
   text-transform: none;
 }
 
 .vista-previa-vacia {
   font-family: var(--font-text);
-  font-size: 0.75em;
+  font-size: 0.7em;
   color: var(--text-secondary);
   text-align: center;
   font-style: italic;
-  padding: 40px 20px;
+  padding: 20px;
 }
 
-/* Formulario */
-.validacion-formulario {
+.validacion-formulario-compacto {
   background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 25px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.campos-opcionales {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 2px dashed var(--border-color);
+.form-group-compacto {
+  margin-bottom: 8px;
 }
 
-.campos-opcionales-titulo {
-  font-family: var(--font-subtitle);
-  font-size: 0.9em;
-  color: var(--text-secondary);
-  margin-bottom: 16px;
+.form-input-compacto,
+.form-select-compacto,
+.form-textarea-compacto {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.75em;
+  font-family: var(--font-text);
+  background-color: var(--bg-primary);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 700;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
 }
 
-.campos-opcionales .form-check {
-  margin-bottom: 16px;
+.form-input-compacto:focus,
+.form-select-compacto:focus,
+.form-textarea-compacto:focus {
+  outline: none;
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 3px rgba(0, 216, 89, 0.1);
 }
 
-/* Acciones fijas */
-.validacion-acciones {
+.form-row-compacto {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.form-check-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 6px;
+  font-size: 0.7em;
+}
+
+.form-check-inline input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--color-success);
+}
+
+.form-check-inline label {
+  cursor: pointer;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.validacion-acciones-compactas {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
-  padding: 16px;
+  padding: 12px;
   display: grid;
   grid-template-columns: auto 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
   border-top: 3px solid var(--color-success);
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
   z-index: 100;
 }
 
-.validacion-acciones .btn {
-  font-size: 0.7em;
-  padding: 12px 16px;
+.btn-compact {
+  font-size: 0.75em;
+  padding: 10px 14px;
 }
 
-/* Responsive */
 @media (min-width: 768px) {
   .validacion-container {
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
-    padding: 20px;
-    padding-bottom: 120px;
+    padding: 16px;
+    padding-bottom: 100px;
   }
 
   .validacion-title {
-    font-size: 1.8em;
-  }
-
-  .validacion-subtitle {
-    font-size: 1em;
+    font-size: 1.4em;
   }
 
   .vista-previa-contenido {
-    max-height: 400px;
+    max-height: 200px;
   }
 
-  .validacion-formulario {
-    padding: 32px;
-  }
-
-  .validacion-acciones {
+  .validacion-acciones-compactas {
     position: sticky;
-    border-radius: 16px 16px 0 0;
+    border-radius: 12px 12px 0 0;
   }
 }
 
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-/* Sección de vehículo */
-.seccion-vehiculo {
-  background: linear-gradient(135deg, rgba(0, 153, 255, 0.05), rgba(255, 255, 255, 0.95));
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  border: 2px solid rgba(0, 153, 255, 0.1);
-}
-
-.seccion-titulo {
-  font-family: var(--font-subtitle);
-  font-size: 0.9em;
-  color: var(--color-primary);
-  margin-bottom: 16px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 700;
-  text-align: center;
-  padding-bottom: 12px;
-  border-bottom: 2px solid rgba(0, 153, 255, 0.2);
-}
-
-.seccion-vehiculo .form-group {
-  margin-bottom: 16px;
-}
-
-.seccion-vehiculo .form-group:last-child {
-  margin-bottom: 0;
-}
-
-/* Campo de fecha de solo lectura */
-.fecha-readonly {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background: linear-gradient(135deg, rgba(0, 216, 89, 0.08), rgba(255, 255, 255, 0.95));
-  border: 2px solid rgba(0, 216, 89, 0.3);
-  border-radius: var(--border-radius);
-  padding: 4px 10px;
-  font-family: var(--font-subtitle);
-  font-size: 0.65em;
-  font-weight: 700;
-  color: var(--color-success);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(0, 216, 89, 0.1);
-  transition: all 0.3s ease;
-}
-
-.fecha-readonly:hover {
-  box-shadow: 0 4px 12px rgba(0, 216, 89, 0.15);
-  transform: translateY(-2px);
-}
-
-.fecha-icon {
-  font-size: 1.4em;
-  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.fecha-texto {
-  font-size: 1em;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
 }

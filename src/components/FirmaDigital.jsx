@@ -1,115 +1,61 @@
+// src/components/FirmaDigital.jsx - AJUSTADO PARA NO SALIR DEL RECUADRO
 import { useRef, useState, useEffect } from 'react';
+import SignatureCanvas from 'react-signature-canvas';
+import '../styles/firmaDigital.css';
 
-function FirmaDigital({ onFirmaChange }) {
-  const canvasRef = useRef(null);
-  const [estaDibujando, setEstaDibujando] = useState(false);
-  const [firmaVacia, setFirmaVacia] = useState(true);
+function FirmaDigital({ onFirmaChange, firmaInicial }) {
+  const sigCanvas = useRef(null);
+  const [isEmpty, setIsEmpty] = useState(true);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * 2;
-    canvas.height = rect.height * 2;
-    ctx.scale(2, 2);
-    
-    ctx.strokeStyle = '#1f2937';
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-  }, []);
-
-  const obtenerPosicion = (e) => {
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    
-    if (e.touches) {
-      return {
-        x: e.touches[0].clientX - rect.left,
-        y: e.touches[0].clientY - rect.top
-      };
+    if (firmaInicial && sigCanvas.current) {
+      sigCanvas.current.fromDataURL(firmaInicial);
+      setIsEmpty(false);
     }
-    
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    };
-  };
-
-  const iniciarDibujo = (e) => {
-    e.preventDefault();
-    setEstaDibujando(true);
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    const pos = obtenerPosicion(e);
-    
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-  };
-
-  const dibujar = (e) => {
-    if (!estaDibujando) return;
-    e.preventDefault();
-    
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    const pos = obtenerPosicion(e);
-    
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-    setFirmaVacia(false);
-  };
-
-  const finalizarDibujo = (e) => {
-    if (!estaDibujando) return;
-    e.preventDefault();
-    
-    setEstaDibujando(false);
-    const canvas = canvasRef.current;
-    const firmaDataURL = canvas.toDataURL('image/png');
-    onFirmaChange(firmaDataURL);
-  };
+  }, [firmaInicial]);
 
   const limpiarFirma = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    setFirmaVacia(true);
+    sigCanvas.current.clear();
+    setIsEmpty(true);
     onFirmaChange(null);
   };
 
+  const handleEnd = () => {
+    if (sigCanvas.current && !sigCanvas.current.isEmpty()) {
+      const dataURL = sigCanvas.current.toDataURL('image/png');
+      setIsEmpty(false);
+      onFirmaChange(dataURL);
+    }
+  };
+
   return (
-    <div>
+    <div className="firma-digital-wrapper">
       <div className="firma-canvas-container">
-        <canvas
-          ref={canvasRef}
-          className="firma-canvas"
-          onMouseDown={iniciarDibujo}
-          onMouseMove={dibujar}
-          onMouseUp={finalizarDibujo}
-          onMouseLeave={finalizarDibujo}
-          onTouchStart={iniciarDibujo}
-          onTouchMove={dibujar}
-          onTouchEnd={finalizarDibujo}
+        <SignatureCanvas
+          ref={sigCanvas}
+          canvasProps={{
+            className: 'firma-canvas'
+          }}
+          backgroundColor="rgba(255, 255, 255, 1)"
+          penColor="#000000"
+          minWidth={1}
+          maxWidth={2.5}
+          onEnd={handleEnd}
         />
-        {firmaVacia && (
+        {isEmpty && (
           <div className="firma-placeholder">
-           Firme aquí con su dedo o lápiz
+            ✍️ Firme aquí
           </div>
         )}
       </div>
       
-      <div className="firma-actions">
-        <button 
-          type="button"
-          className="btn btn-limpiar-firma"
-          onClick={limpiarFirma}
-        >
-          Limpiar Firma
-        </button>
-      </div>
+      <button 
+        type="button"
+        className="btn-limpiar-firma" 
+        onClick={limpiarFirma}
+      >
+        🗑️ Limpiar
+      </button>
     </div>
   );
 }

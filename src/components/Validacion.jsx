@@ -1,15 +1,10 @@
-// src/components/Validacion.jsx
+// src/components/Validacion.jsx - VERSIÓN SIMPLIFICADA Y RÁPIDA
 import { useState, useEffect } from 'react';
 import '../styles/validacion.css';
 
 function Validacion({ navigateTo }) {
   const [mostrarPpuOut, setMostrarPpuOut] = useState(false);
-  const [mostrarKms, setMostrarKms] = useState(false);
-  const [mostrarUbicacion, setMostrarUbicacion] = useState(false);
-  const [mostrarPerifericos, setMostrarPerifericos] = useState(false);
-  const [mostrarDetalles, setMostrarDetalles] = useState(false);
 
-  // Función para obtener fecha actual en formato dd-mm-yyyy
   const obtenerFechaActual = () => {
     const hoy = new Date();
     const dia = String(hoy.getDate()).padStart(2, '0');
@@ -26,30 +21,22 @@ function Validacion({ navigateTo }) {
     marca: '',
     modelo: '',
     año: '',
-    gpsIn: '',
-    kmsHrs: '',
+    imeiIn: '',
+    kms: '',
     ubicacion: '',
     perifericos: '',
     detalles: ''
   });
 
-  // Cargar datos guardados al montar
   useEffect(() => {
     const datosGuardados = localStorage.getItem('gps_validacion_temp');
     if (datosGuardados) {
       const datos = JSON.parse(datosGuardados);
       setDatosValidacion(datos);
-      
-      // Restaurar checkboxes
       if (datos.ppuOut) setMostrarPpuOut(true);
-      if (datos.kmsHrs) setMostrarKms(true);
-      if (datos.ubicacion) setMostrarUbicacion(true);
-      if (datos.perifericos) setMostrarPerifericos(true);
-      if (datos.detalles) setMostrarDetalles(true);
     }
   }, []);
 
-  // Guardar automáticamente
   useEffect(() => {
     localStorage.setItem('gps_validacion_temp', JSON.stringify(datosValidacion));
   }, [datosValidacion]);
@@ -62,17 +49,13 @@ function Validacion({ navigateTo }) {
   };
 
   const generarTextoWhatsApp = () => {
-    let texto = '';
-    
-    // Fecha siempre al inicio con la fecha actual del sistema
-    texto += `FECHA: ${obtenerFechaActual()}\n`;
+    let texto = `FECHA: ${obtenerFechaActual()}\n`;
     
     if (datosValidacion.cliente) texto += `CLIENTE: ${datosValidacion.cliente.toUpperCase()}\n`;
     if (datosValidacion.servicio) texto += `SERVICIO: ${datosValidacion.servicio.toUpperCase()}\n`;
     if (datosValidacion.ppuVin) texto += `PPU/VIN: ${datosValidacion.ppuVin.toUpperCase()}\n`;
     if (mostrarPpuOut && datosValidacion.ppuOut) texto += `PPU/VIN OUT: ${datosValidacion.ppuOut.toUpperCase()}\n`;
     
-    // Construir marca completa
     if (datosValidacion.marca || datosValidacion.modelo || datosValidacion.año) {
       let marcaCompleta = [];
       if (datosValidacion.marca) marcaCompleta.push(datosValidacion.marca.toUpperCase());
@@ -81,11 +64,11 @@ function Validacion({ navigateTo }) {
       texto += `MARCA: ${marcaCompleta.join(' ')}\n`;
     }
     
-    if (datosValidacion.gpsIn) texto += `GPS IN: ${datosValidacion.gpsIn.toUpperCase()}\n`;
-    if (mostrarKms && datosValidacion.kmsHrs) texto += `KMS/HRS: ${datosValidacion.kmsHrs.toUpperCase()}\n`;
-    if (mostrarUbicacion && datosValidacion.ubicacion) texto += `UBICACION: ${datosValidacion.ubicacion.toUpperCase()}\n`;
-    if (mostrarPerifericos && datosValidacion.perifericos) texto += `PERIFERICOS: ${datosValidacion.perifericos.toUpperCase()}\n`;
-    if (mostrarDetalles && datosValidacion.detalles) texto += `DETALLES: ${datosValidacion.detalles.toUpperCase()}\n`;
+    if (datosValidacion.imeiIn) texto += `IMEI IN: ${datosValidacion.imeiIn}\n`;
+    if (datosValidacion.kms) texto += `KMS/HRS: ${datosValidacion.kms}\n`;
+    if (datosValidacion.ubicacion) texto += `UBICACION: ${datosValidacion.ubicacion.toUpperCase()}\n`;
+    if (datosValidacion.perifericos) texto += `PERIFERICOS: ${datosValidacion.perifericos.toUpperCase()}\n`;
+    if (datosValidacion.detalles) texto += `DETALLES: ${datosValidacion.detalles.toUpperCase()}\n`;
     
     return texto.trim();
   };
@@ -126,368 +109,205 @@ function Validacion({ navigateTo }) {
         marca: '',
         modelo: '',
         año: '',
-        gpsIn: '',
-        kmsHrs: '',
+        imeiIn: '',
+        kms: '',
         ubicacion: '',
         perifericos: '',
         detalles: ''
       });
       setMostrarPpuOut(false);
-      setMostrarKms(false);
-      setMostrarUbicacion(false);
-      setMostrarPerifericos(false);
-      setMostrarDetalles(false);
       localStorage.removeItem('gps_validacion_temp');
     }
   };
 
-  const tiposServicio = [
-    'Instalación',
-    'Mantención',
-    'Migración',
-    'Desinstalación',
-    'Visita Fallida'
-  ];
-
-  const marcasPopulares = [
-    'Audi', 'Alfa Romeo', 'BMW', 'BYD', 'Changan', 'Chery', 'Chevrolet', 'Chrysler', 
-    'Citroën', 'Cupra', 'DFSK','Dodge', 'Dongfeng', 'DS', 'Fiat', 'Ford', 'Foton', 
-    'Freightlinner', 'Great Wall', 'Haval', 'Honda', 'Hyundai', 'International', 'Isuzu', 
-    'JAC', 'Jaecco', 'Jeep', 'Kia', 'Land Rover', 'Lexus', 'Mack', 'Mahindra', 
-    'Maxus', 'Mazda', 'Mercedes Benz', 'MG', 'Mitsubishi', 'Nissan', 'Omoda', 'Opel', 
-    'Peugeot', 'RAM', 'Renault', 'Scania', 'Seat', 'Skoda','Ssangyong', 'Subaru', 
-    'Suzuki', 'Tesla', 'Toyota', 'Volkswagen', 'Volvo'
-  ].sort();
-
-  // Generar años del 1990 al 2030
+  const tiposServicio = ['Instalación', 'Mantención', 'Migración', 'Desinstalación', 'Visita Fallida'];
+  const marcasPopulares = ['Audi', 'BMW', 'Chevrolet', 'Ford', 'Hyundai', 'Kia', 'Mazda', 'Mercedes Benz', 'Mitsubishi', 'Nissan', 'Peugeot', 'Renault', 'Toyota', 'Volkswagen'].sort();
   const años = [];
   for (let año = 2030; año >= 1990; año--) {
     años.push(año);
   }
 
-  const colores = [
-    'Amarillo', 'Azul', 'Beige', 'Blanco', 'Café', 'Gris', 
-    'Morado', 'Naranja', 'Negro', 'Plata', 'Rojo', 'Rosa', 'Verde'
-  ];
-
   return (
     <div className="validacion-container">
-      {/* Header */}
       <div className="validacion-header">
         <div className="validacion-header-top">
           <h1 className="validacion-title">Validación WhatsApp</h1>
-          <button 
-            className="btn-volver"
-            onClick={() => navigateTo('index')}
-          >
+          <button className="btn-volver" onClick={() => navigateTo('index')}>
             ← Volver
           </button>
         </div>
-        <p className="validacion-subtitle">
-          Crea un formato rápido para compartir información
-        </p>
       </div>
 
-      {/* Vista previa */}
-      <div className="vista-previa">
+      <div className="vista-previa-compacta">
         <div className="vista-previa-header">
           <span className="vista-previa-icon">📱</span>
-          <h3 className="vista-previa-title">Vista Previa WhatsApp</h3>
+          <h3 className="vista-previa-title">Vista Previa</h3>
         </div>
         <div className="vista-previa-contenido">
           {generarTextoWhatsApp() ? (
             <pre className="vista-previa-texto">{generarTextoWhatsApp()}</pre>
           ) : (
-            <div className="vista-previa-vacia">
-              Completa los campos para ver la vista previa
-            </div>
+            <div className="vista-previa-vacia">Completa los campos...</div>
           )}
         </div>
       </div>
 
-      {/* Formulario */}
-      <div className="validacion-formulario">
-        {/* Fecha como campo de solo lectura */}
-        <div className="form-group">
-          <label className="form-label">Fecha</label>
-          <div className="fecha-readonly">
-            <span className="fecha-icon">📅</span>
-            <span className="fecha-texto">{obtenerFechaActual()}</span>
-          </div>
-          <small style={{ 
-            display: 'block', 
-            marginTop: '6px', 
-            fontSize: '0.6em', 
-            color: 'var(--text-secondary)',
-            textAlign: 'center',
-            fontStyle: 'italic'
-          }}>
-            La fecha se actualiza automáticamente con el día actual
-          </small>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label required-field">Cliente</label>
+      <div className="validacion-formulario-compacto">
+        <div className="form-group-compacto">
           <input
             type="text"
-            className="form-input"
-            placeholder="Nombre de la empresa o cliente"
+            className="form-input-compacto"
+            placeholder="CLIENTE *"
             value={datosValidacion.cliente}
             onChange={(e) => handleChange('cliente', e.target.value)}
           />
         </div>
 
-        <div className="form-group">
-          <label className="form-label required-field">Servicio</label>
+        <div className="form-group-compacto">
           <select
-            className="form-select"
+            className="form-select-compacto"
             value={datosValidacion.servicio}
             onChange={(e) => handleChange('servicio', e.target.value)}
           >
-            <option value="">Seleccionar servicio</option>
+            <option value="">SERVICIO *</option>
             {tiposServicio.map(tipo => (
               <option key={tipo} value={tipo}>{tipo}</option>
             ))}
           </select>
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="form-label required-field">PPU/VIN</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="TDRP80"
-              maxLength="20"
-              style={{ textTransform: 'uppercase' }}
-              value={datosValidacion.ppuVin}
-              onChange={(e) => handleChange('ppuVin', e.target.value.toUpperCase())}
-            />
-          </div>
-
-          <div className="form-group">
-            <div className="form-check" style={{ marginBottom: '8px' }}>
-              <input
-                type="checkbox"
-                id="checkbox-ppu-out-val"
-                className="form-check-input"
-                checked={mostrarPpuOut}
-                onChange={(e) => {
-                  setMostrarPpuOut(e.target.checked);
-                  if (!e.target.checked) handleChange('ppuOut', '');
-                }}
-              />
-              <label htmlFor="checkbox-ppu-out-val" className="form-check-label">
-                ¿PPU/VIN OUT?
-              </label>
-            </div>
-            {mostrarPpuOut && (
-              <>
-                <label className="form-label">PPU/VIN OUT</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="Patente o VIN salida"
-                  maxLength="20"
-                  style={{ textTransform: 'uppercase' }}
-                  value={datosValidacion.ppuOut}
-                  onChange={(e) => handleChange('ppuOut', e.target.value.toUpperCase())}
-                />
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Marca, Modelo y Año */}
-        <div className="seccion-vehiculo">
-          <h3 className="seccion-titulo">Datos del Vehículo</h3>
-          
-          <div className="form-group">
-            <label className="form-label">Marca</label>
-            <select
-              className="form-select"
-              value={datosValidacion.marca}
-              onChange={(e) => handleChange('marca', e.target.value)}
-            >
-              <option value="">Seleccionar marca</option>
-              {marcasPopulares.map(marca => (
-                <option key={marca} value={marca}>{marca}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Modelo</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Ej: Corolla, Axor, Ranger"
-              value={datosValidacion.modelo}
-              onChange={(e) => handleChange('modelo', e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Año</label>
-            <select
-              className="form-select"
-              value={datosValidacion.año}
-              onChange={(e) => handleChange('año', e.target.value)}
-            >
-              <option value="">Seleccionar año</option>
-              {años.map(año => (
-                <option key={año} value={año}>{año}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">GPS IN</label>
+        <div className="form-row-compacto">
           <input
             type="text"
-            className="form-input"
-            placeholder="Número de GPS o IMEI"
-            value={datosValidacion.gpsIn}
-            onChange={(e) => handleChange('gpsIn', e.target.value)}
+            className="form-input-compacto"
+            placeholder="PPU/VIN *"
+            maxLength="20"
+            style={{ textTransform: 'uppercase' }}
+            value={datosValidacion.ppuVin}
+            onChange={(e) => handleChange('ppuVin', e.target.value.toUpperCase())}
+          />
+          
+          {mostrarPpuOut && (
+            <input
+              type="text"
+              className="form-input-compacto"
+              placeholder="PPU OUT"
+              maxLength="20"
+              style={{ textTransform: 'uppercase' }}
+              value={datosValidacion.ppuOut}
+              onChange={(e) => handleChange('ppuOut', e.target.value.toUpperCase())}
+            />
+          )}
+        </div>
+
+        <div className="form-check-inline">
+          <input
+            type="checkbox"
+            id="checkbox-ppu-out"
+            checked={mostrarPpuOut}
+            onChange={(e) => {
+              setMostrarPpuOut(e.target.checked);
+              if (!e.target.checked) handleChange('ppuOut', '');
+            }}
+          />
+          <label htmlFor="checkbox-ppu-out">¿PPU OUT?</label>
+        </div>
+
+        <div className="form-row-compacto">
+          <select
+            className="form-select-compacto"
+            value={datosValidacion.marca}
+            onChange={(e) => handleChange('marca', e.target.value)}
+          >
+            <option value="">MARCA</option>
+            {marcasPopulares.map(marca => (
+              <option key={marca} value={marca}>{marca}</option>
+            ))}
+          </select>
+
+          <input
+            type="text"
+            className="form-input-compacto"
+            placeholder="MODELO"
+            value={datosValidacion.modelo}
+            onChange={(e) => handleChange('modelo', e.target.value)}
           />
         </div>
 
-        {/* Campos opcionales */}
-        <div className="campos-opcionales">
-          <h3 className="campos-opcionales-titulo">Campos Opcionales</h3>
-          
-          {/* Kms/Hrs primero */}
-          <div className="form-check">
-            <input
-              type="checkbox"
-              id="checkbox-kms"
-              className="form-check-input"
-              checked={mostrarKms}
-              onChange={(e) => {
-                setMostrarKms(e.target.checked);
-                if (!e.target.checked) handleChange('kmsHrs', '');
-              }}
-            />
-            <label htmlFor="checkbox-kms" className="form-check-label">
-              Agregar Kms/Hrs
-            </label>
-          </div>
-          {mostrarKms && (
-            <div className="form-group" style={{ marginTop: '8px' }}>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="177159"
-                value={datosValidacion.kmsHrs}
-                onChange={(e) => handleChange('kmsHrs', e.target.value)}
-              />
-            </div>
-          )}
+        <div className="form-group-compacto">
+          <select
+            className="form-select-compacto"
+            value={datosValidacion.año}
+            onChange={(e) => handleChange('año', e.target.value)}
+          >
+            <option value="">AÑO</option>
+            {años.map(año => (
+              <option key={año} value={año}>{año}</option>
+            ))}
+          </select>
+        </div>
 
-          {/* Ubicación segundo */}
-          <div className="form-check">
-            <input
-              type="checkbox"
-              id="checkbox-ubicacion"
-              className="form-check-input"
-              checked={mostrarUbicacion}
-              onChange={(e) => {
-                setMostrarUbicacion(e.target.checked);
-                if (!e.target.checked) handleChange('ubicacion', '');
-              }}
-            />
-            <label htmlFor="checkbox-ubicacion" className="form-check-label">
-              Agregar Ubicación
-            </label>
-          </div>
-          {mostrarUbicacion && (
-            <div className="form-group" style={{ marginTop: '8px' }}>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="arriba de fusilera copiloto"
-                value={datosValidacion.ubicacion}
-                onChange={(e) => handleChange('ubicacion', e.target.value)}
-              />
-            </div>
-          )}
+        <div className="form-group-compacto">
+          <input
+            type="number"
+            className="form-input-compacto"
+            placeholder="IMEI IN"
+            maxLength="15"
+            value={datosValidacion.imeiIn}
+            onChange={(e) => handleChange('imeiIn', e.target.value.replace(/\D/g, ''))}
+          />
+        </div>
 
-          <div className="form-check">
-            <input
-              type="checkbox"
-              id="checkbox-perifericos"
-              className="form-check-input"
-              checked={mostrarPerifericos}
-              onChange={(e) => {
-                setMostrarPerifericos(e.target.checked);
-                if (!e.target.checked) handleChange('perifericos', '');
-              }}
-            />
-            <label htmlFor="checkbox-perifericos" className="form-check-label">
-              Agregar Periféricos
-            </label>
-          </div>
-          {mostrarPerifericos && (
-            <div className="form-group" style={{ marginTop: '8px' }}>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="Básico"
-                value={datosValidacion.perifericos}
-                onChange={(e) => handleChange('perifericos', e.target.value)}
-              />
-            </div>
-          )}
+        <div className="form-group-compacto">
+          <input
+            type="text"
+            className="form-input-compacto"
+            placeholder="KMS/HRS"
+            value={datosValidacion.kms}
+            onChange={(e) => handleChange('kms', e.target.value)}
+          />
+        </div>
 
-          <div className="form-check">
-            <input
-              type="checkbox"
-              id="checkbox-detalles"
-              className="form-check-input"
-              checked={mostrarDetalles}
-              onChange={(e) => {
-                setMostrarDetalles(e.target.checked);
-                if (!e.target.checked) handleChange('detalles', '');
-              }}
-            />
-            <label htmlFor="checkbox-detalles" className="form-check-label">
-              Agregar Detalles
-            </label>
-          </div>
-          {mostrarDetalles && (
-            <div className="form-group" style={{ marginTop: '8px' }}>
-              <textarea
-                className="form-textarea"
-                rows="3"
-                placeholder="accesorios externos. Detalles por uso."
-                value={datosValidacion.detalles}
-                onChange={(e) => handleChange('detalles', e.target.value)}
-              />
-            </div>
-          )}
+        <div className="form-group-compacto">
+          <input
+            type="text"
+            className="form-input-compacto"
+            placeholder="UBICACIÓN"
+            value={datosValidacion.ubicacion}
+            onChange={(e) => handleChange('ubicacion', e.target.value)}
+          />
+        </div>
+
+        <div className="form-group-compacto">
+          <input
+            type="text"
+            className="form-input-compacto"
+            placeholder="PERIFÉRICOS"
+            value={datosValidacion.perifericos}
+            onChange={(e) => handleChange('perifericos', e.target.value)}
+          />
+        </div>
+
+        <div className="form-group-compacto">
+          <textarea
+            className="form-textarea-compacto"
+            rows="3"
+            placeholder="DETALLES"
+            value={datosValidacion.detalles}
+            onChange={(e) => handleChange('detalles', e.target.value)}
+          />
         </div>
       </div>
 
-      {/* Botones de acción */}
-      <div className="validacion-acciones">
-        <button 
-          className="btn btn-secondary"
-          onClick={handleLimpiar}
-        >
-          🗑️ Limpiar
+      <div className="validacion-acciones-compactas">
+        <button className="btn btn-secondary btn-compact" onClick={handleLimpiar}>
+          🗑️
         </button>
-        <button 
-          className="btn btn-info"
-          onClick={handleCopiar}
-        >
-          📋 Copiar
+        <button className="btn btn-info btn-compact" onClick={handleCopiar}>
+          📋
         </button>
-        <button 
-          className="btn btn-success"
-          onClick={handleExportarWhatsApp}
-        >
-          📤 Exportar a WhatsApp
+        <button className="btn btn-success btn-compact" onClick={handleExportarWhatsApp}>
+          📤
         </button>
       </div>
     </div>
