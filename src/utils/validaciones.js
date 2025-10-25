@@ -1,9 +1,9 @@
-// src/utils/validaciones.js - CORREGIDO SIN NOMBRE CONTACTO
+// src/utils/validaciones.js
 export const validarCamposObligatoriosPorPaso = (datosOT, paso) => {
   const errores = [];
   
   switch(paso) {
-    case 0: // Datos Empresa
+    case 0:
       if (!datosOT.datosEmpresa.nombreEmpresa?.trim()) {
         errores.push('Nombre de la Empresa');
       }
@@ -21,15 +21,12 @@ export const validarCamposObligatoriosPorPaso = (datosOT, paso) => {
       }
       break;
       
-    case 1: // Datos Servicio y Vehículo
+    case 1:
       if (!datosOT.datosGPS.nombreTecnico?.trim()) {
         errores.push('Nombre del Técnico');
       }
       if (!datosOT.datosGPS.tipoServicio?.trim()) {
         errores.push('Tipo de Servicio');
-      }
-      if (!datosOT.datosVehiculo.tipo?.trim()) {
-        errores.push('Tipo de Vehículo');
       }
       if (!datosOT.datosVehiculo.marca?.trim()) {
         errores.push('Marca del Vehículo');
@@ -45,11 +42,10 @@ export const validarCamposObligatoriosPorPaso = (datosOT, paso) => {
       }
       break;
       
-    case 2: // CheckList (opcional)
-      // El checklist es opcional, no hay validaciones obligatorias
+    case 2:
       break;
 
-    case 3: // Datos Cliente
+    case 3:
       if (!datosOT.datosCliente?.nombre?.trim()) {
         errores.push('Nombre del Cliente');
       }
@@ -71,7 +67,6 @@ export const validarCamposObligatoriosPorPaso = (datosOT, paso) => {
 export const validarCamposObligatorios = (datosOT) => {
   const errores = [];
   
-  // Validar Datos Empresa
   if (!datosOT.datosEmpresa.nombreEmpresa?.trim()) {
     errores.push('Nombre de la Empresa');
   }
@@ -88,7 +83,6 @@ export const validarCamposObligatorios = (datosOT) => {
     errores.push('Comuna');
   }
   
-  // Validar Datos GPS
   if (!datosOT.datosGPS.nombreTecnico?.trim()) {
     errores.push('Nombre del Técnico');
   }
@@ -96,10 +90,6 @@ export const validarCamposObligatorios = (datosOT) => {
     errores.push('Tipo de Servicio');
   }
   
-  // Validar Datos Vehículo
-  if (!datosOT.datosVehiculo.tipo?.trim()) {
-    errores.push('Tipo de Vehículo');
-  }
   if (!datosOT.datosVehiculo.marca?.trim()) {
     errores.push('Marca del Vehículo');
   }
@@ -113,7 +103,6 @@ export const validarCamposObligatorios = (datosOT) => {
     errores.push('Color del Vehículo');
   }
 
-  // Validar Datos Cliente
   if (!datosOT.datosCliente?.nombre?.trim()) {
     errores.push('Nombre del Cliente');
   }

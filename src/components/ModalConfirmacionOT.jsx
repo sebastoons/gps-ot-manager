@@ -1,4 +1,6 @@
 // src/components/ModalConfirmacionOT.jsx
+import '../styles/modalConfirmacion.css';
+
 function ModalConfirmacionOT({ 
   mostrar, 
   ultimaOTCreada, 
@@ -12,9 +14,9 @@ function ModalConfirmacionOT({
       <div className="modal-content">
         <div className="modal-header">
           <div className="modal-icon">✅</div>
-          <h2 className="modal-title">¡OT Guardada Exitosamente!</h2>
+          <h2 className="modal-title">¡OT Creada Exitosamente!</h2>
           <p className="modal-description">
-            La Orden de Trabajo {ultimaOTCreada?.codigoOT} ha sido registrada correctamente.
+            La Orden de Trabajo {ultimaOTCreada?.codigoOT} ha sido guardada correctamente.
           </p>
         </div>
         <div className="modal-actions">
@@ -22,13 +24,13 @@ function ModalConfirmacionOT({
             className="btn btn-primary btn-full"
             onClick={onCrearOtra}
           >
-            Crear Otra OT
+            ➕ Crear Otra OT
           </button>
           <button 
             className="btn btn-secondary btn-full"
             onClick={onFinalizar}
           >
-            Finalizar y Obtener Firma
+            ✓ Finalizar
           </button>
         </div>
       </div>

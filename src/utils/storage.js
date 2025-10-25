@@ -1,4 +1,4 @@
-// src/utils/storage.js - CON FUNCIONES DE BACKUP Y RESTORE
+// src/utils/storage.js
 const STORAGE_KEY = 'gps_ots';
 const COUNTER_KEY_PREFIX = 'gps_ot_counter_';
 const BACKUP_KEY = 'gps_ots_backup';
@@ -48,7 +48,9 @@ export const obtenerTodasLasOTs = () => {
       return [];
     }
     const todasLasOTs = JSON.parse(ots);
-    return filtrarOTsUltimosDosUmeses(todasLasOTs);
+    const filtradas = filtrarOTsUltimosDosUmeses(todasLasOTs);
+    // Ordenar por fecha de creación, más recientes primero
+    return filtradas.sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
   } catch (error) {
     console.error('Error al obtener OTs:', error);
     return [];
@@ -148,14 +150,11 @@ export const obtenerEstadisticas = () => {
   };
 };
 
-// ============ FUNCIONES DE BACKUP Y RESTORE ============
-
 export const crearBackup = () => {
   try {
     const ots = localStorage.getItem(STORAGE_KEY);
     const contadores = {};
     
-    // Obtener todos los contadores
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key.startsWith(COUNTER_KEY_PREFIX)) {
@@ -179,7 +178,6 @@ export const crearBackup = () => {
     link.click();
     URL.revokeObjectURL(url);
     
-    // Guardar también en localStorage como respaldo automático
     localStorage.setItem(BACKUP_KEY, dataStr);
     
     return true;
@@ -197,21 +195,17 @@ export const restaurarBackup = (archivo) => {
       try {
         const backup = JSON.parse(e.target.result);
         
-        // Validar estructura del backup
         if (!backup.ots || !backup.contadores || !backup.version) {
           reject(new Error('Archivo de backup inválido'));
           return;
         }
         
-        // Restaurar OTs
         localStorage.setItem(STORAGE_KEY, JSON.stringify(backup.ots));
         
-        // Restaurar contadores
         Object.keys(backup.contadores).forEach(key => {
           localStorage.setItem(key, backup.contadores[key]);
         });
         
-        // Guardar copia del backup restaurado
         localStorage.setItem(BACKUP_KEY, JSON.stringify(backup));
         
         resolve(backup.ots.length);
@@ -237,10 +231,8 @@ export const restaurarBackupAutomatico = () => {
     
     const backup = JSON.parse(backupStr);
     
-    // Restaurar OTs
     localStorage.setItem(STORAGE_KEY, JSON.stringify(backup.ots));
     
-    // Restaurar contadores
     Object.keys(backup.contadores).forEach(key => {
       localStorage.setItem(key, backup.contadores[key]);
     });

@@ -5,84 +5,88 @@ export const generarPDFOT = (ot, preview = false) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 15;
-    let yPos = 20;
+    const margin = 12;
+    let yPos = 15;
 
     // Colores
-    const azulPrimario = [0, 153, 255];
+    const azulPrimario = [38, 126, 184]; // #267eb8
     const textoOscuro = [15, 23, 42];
     const grisClaro = [248, 250, 252];
     const grisMedio = [100, 116, 139];
     const verde = [16, 185, 129];
     const naranja = [245, 158, 11];
 
-    // ========== HEADER CON LOGO ==========
-    doc.setFillColor(255, 255, 255);
-    doc.rect(0, 0, pageWidth, 40, 'F');
+    // Mapeo de logos según prefijo
+    const logosEmpresas = {
+      'LWE': '/logos/lw-entel.png',
+      'U': '/logos/ugps.png'
+    };
 
-    // Logo SERVITRAK en esquina superior izquierda
-    try {
-      doc.addImage('/logos/servitrak-logo.png', 'PNG', margin, 8, 40, 12);
-    } catch (error) {
-      // Si no existe el logo, mostrar texto
-      doc.setTextColor(...azulPrimario);
-      doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
-      doc.text('SERVITRAK', margin, 15);
+    // ========== HEADER BLANCO CON LOGO ==========
+    doc.setFillColor(255, 255, 255);
+    doc.rect(0, 0, pageWidth, 35, 'F');
+
+    // Intentar cargar el logo
+    const logoPath = logosEmpresas[ot.prefijo];
+    if (logoPath) {
+      try {
+        doc.addImage(logoPath, 'PNG', margin, 9, 45, 15);
+      } catch (error) {
+        console.warn('No se pudo cargar el logo:', error);
+      }
     }
 
-    // N° OT en esquina superior derecha
-    const codigoOT = ot.codigoOT || `OT${String(ot.numeroOT).padStart(4, '0')}`;
-    doc.setFillColor(...azulPrimario);
-    doc.roundedRect(pageWidth - margin - 35, 8, 35, 12, 3, 3, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.text(codigoOT, pageWidth - margin - 17.5, 16, { align: 'center' });
-
-    // Título centrado
+    // Título y código OT en azul
     doc.setTextColor(...azulPrimario);
-    doc.setFontSize(16);
+    doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
-    doc.text('ORDEN DE TRABAJO', pageWidth / 2, 30, { align: 'center' });
+    doc.text('ORDEN DE TRABAJO', pageWidth / 2, 15, { align: 'center' });
     
-    yPos = 45;
+    const codigoOT = ot.codigoOT || `OT${String(ot.numeroOT).padStart(4, '0')}`;
+    doc.setFontSize(14);
+    doc.text(codigoOT, pageWidth / 2, 23, { align: 'center' });
+    
+    // Fecha en gris
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...grisMedio);
+    const fechaCreacion = new Date(ot.fechaCreacion).toLocaleDateString('es-CL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    doc.text(`Fecha: ${fechaCreacion}`, pageWidth - margin, 30, { align: 'right' });
+    
+    yPos = 42;
 
-    // ========== FUNCIONES AUXILIARES ==========
-    const agregarSeccion = (titulo) => {
+    // ========== FUNCIÓN PARA SECCIONES COMPACTAS ==========
+    const agregarSeccionCompacta = (titulo) => {
       doc.setFillColor(...grisClaro);
-      doc.rect(margin, yPos - 3, pageWidth - margin * 2, 7, 'F');
+      doc.rect(margin, yPos - 3, pageWidth - margin * 2, 6, 'F');
       doc.setTextColor(...azulPrimario);
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
-      doc.text(titulo, margin + 2, yPos + 1);
-      yPos += 9;
+      doc.text(titulo, margin + 2, yPos);
+      yPos += 7;
     };
 
-    const agregarCampo = (label, valor, xPos = margin + 2) => {
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor(...grisMedio);
-      doc.text(label, xPos, yPos);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(...textoOscuro);
-      doc.setFontSize(8);
-      doc.text(String(valor || 'N/A'), xPos, yPos + 4);
-      yPos += 9;
-    };
-
-    const agregarCampoDoble = (label1, valor1, label2, valor2) => {
+    // ========== FUNCIÓN PARA FILAS EN DOS COLUMNAS ==========
+    const agregarFilaDosColumnas = (label1, valor1, label2, valor2) => {
       const colWidth = (pageWidth - margin * 2) / 2;
-      
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(7);
       doc.setTextColor(...grisMedio);
+      
+      // Columna 1
       doc.text(label1, margin + 2, yPos);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(...textoOscuro);
       doc.setFontSize(8);
-      doc.text(String(valor1 || 'N/A'), margin + 2, yPos + 4);
+      doc.text(String(valor1 || 'N/A'), margin + 2, yPos + 3.5);
       
+      // Columna 2
       if (label2) {
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(7);
@@ -91,31 +95,32 @@ export const generarPDFOT = (ot, preview = false) => {
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(...textoOscuro);
         doc.setFontSize(8);
-        doc.text(String(valor2 || 'N/A'), margin + colWidth + 2, yPos + 4);
+        doc.text(String(valor2 || 'N/A'), margin + colWidth + 2, yPos + 3.5);
       }
       
-      yPos += 9;
+      yPos += 8;
     };
 
     // ========== DATOS DE LA EMPRESA ==========
-    agregarSeccion('DATOS DE LA EMPRESA');
-    agregarCampoDoble('EMPRESA', ot.datosEmpresa?.nombreEmpresa, 'FECHA', ot.datosEmpresa?.fecha);
-    agregarCampoDoble('REGION', ot.datosEmpresa?.region, 'CIUDAD', ot.datosEmpresa?.ciudad);
-    agregarCampo('COMUNA', ot.datosEmpresa?.comuna);
-    yPos += 3;
+    agregarSeccionCompacta('DATOS DE LA EMPRESA');
+    agregarFilaDosColumnas('EMPRESA', ot.datosEmpresa?.nombreEmpresa, 'FECHA', ot.datosEmpresa?.fecha);
+    agregarFilaDosColumnas('CONTACTO', ot.datosEmpresa?.nombreContacto, 'REGION', ot.datosEmpresa?.region);
+    agregarFilaDosColumnas('CIUDAD', ot.datosEmpresa?.ciudad, 'COMUNA', ot.datosEmpresa?.comuna);
+    yPos += 2;
 
-    // ========== SERVICIO GPS Y VEHÍCULO ==========
-    agregarSeccion('SERVICIO Y VEHICULO');
-    agregarCampoDoble('TECNICO', ot.datosGPS?.nombreTecnico, 'SERVICIO', ot.datosGPS?.tipoServicio);
-    agregarCampoDoble('PPU IN', ot.datosGPS?.ppuIn, 'PPU OUT', ot.datosGPS?.ppuOut);
-    agregarCampoDoble('IMEI IN', ot.datosGPS?.imeiIn, 'IMEI OUT', ot.datosGPS?.imeiOut);
-    
+    // ========== DATOS DEL SERVICIO GPS ==========
+    agregarSeccionCompacta('SERVICIO GPS');
+    agregarFilaDosColumnas('TECNICO', ot.datosGPS?.nombreTecnico, 'SERVICIO', ot.datosGPS?.tipoServicio);
+    agregarFilaDosColumnas('PPU IN', ot.datosGPS?.ppuIn, 'PPU OUT', ot.datosGPS?.ppuOut);
+    agregarFilaDosColumnas('IMEI IN', ot.datosGPS?.imeiIn, 'IMEI OUT', ot.datosGPS?.imeiOut);
+
+    // Accesorios en línea compacta
     if (ot.datosGPS?.accesoriosInstalados?.length > 0) {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(7);
       doc.setTextColor(...grisMedio);
       doc.text('ACCESORIOS:', margin + 2, yPos);
-      yPos += 4;
+      yPos += 3;
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7);
       doc.setTextColor(...textoOscuro);
@@ -125,23 +130,27 @@ export const generarPDFOT = (ot, preview = false) => {
         doc.text(linea, margin + 2, yPos);
         yPos += 3;
       });
-      yPos += 2;
+      yPos += 1;
     }
+    yPos += 2;
 
-    agregarCampoDoble('TIPO', ot.datosVehiculo?.tipo, 'MARCA', ot.datosVehiculo?.marca);
-    agregarCampoDoble('MODELO', ot.datosVehiculo?.modelo, 'AÑO', ot.datosVehiculo?.ano);
-    agregarCampoDoble('COLOR', ot.datosVehiculo?.color, 'PATENTE', ot.datosVehiculo?.patente || 'Sin Patente');
+    // ========== DATOS DEL VEHÍCULO ==========
+    agregarSeccionCompacta('VEHICULO');
+    agregarFilaDosColumnas('TIPO', ot.datosVehiculo?.tipo, 'MARCA', ot.datosVehiculo?.marca);
+    agregarFilaDosColumnas('MODELO', ot.datosVehiculo?.modelo, 'AÑO', ot.datosVehiculo?.ano);
+    agregarFilaDosColumnas('COLOR', ot.datosVehiculo?.color, 'PATENTE', ot.datosVehiculo?.patente || 'Sin Patente');
     
     if (ot.datosVehiculo?.kilometraje) {
-      agregarCampo('KILOMETRAJE', `${ot.datosVehiculo.kilometraje} km`);
+      agregarFilaDosColumnas('KILOMETRAJE', `${ot.datosVehiculo.kilometraje} km`, '', '');
     }
 
+    // Observaciones compactas
     if (ot.datosVehiculo?.observaciones) {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(7);
       doc.setTextColor(...grisMedio);
       doc.text('OBSERVACIONES:', margin + 2, yPos);
-      yPos += 4;
+      yPos += 3;
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7);
       doc.setTextColor(...textoOscuro);
@@ -150,65 +159,83 @@ export const generarPDFOT = (ot, preview = false) => {
         doc.text(linea, margin + 2, yPos);
         yPos += 3;
       });
-      yPos += 2;
+      yPos += 1;
     }
-    yPos += 3;
+    yPos += 2;
 
-    // ========== CHECKLIST ==========
+    // ========== CHECKLIST MEJORADO ==========
     if (ot.checklist && Object.keys(ot.checklist).length > 0) {
-      agregarSeccion('CHECKLIST');
+      agregarSeccionCompacta('CHECKLIST DEL VEHICULO');
       const labels = {
         luces: 'Luces',
         radio: 'Radio',
         tablero: 'Tablero',
         checkEngine: 'Check Engine',
         bateria: 'Bateria',
-        plasticosEstetica: 'Plasticos'
+        plasticosEstetica: 'Plasticos y Estetica'
       };
 
       const items = Object.entries(ot.checklist).filter(([_, value]) => value.estado);
       
+      // Contar buenos y con detalles
+      const itemsBuenos = items.filter(([_, v]) => v.estado === 'bueno').length;
+      const itemsConDetalles = items.filter(([_, v]) => v.estado === 'detalle').length;
+      
+      // Mostrar resumen
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(...verde);
+      doc.text(`Estado OK: ${itemsBuenos}`, margin + 2, yPos);
+      doc.setTextColor(...naranja);
+      doc.text(`Con Observaciones: ${itemsConDetalles}`, margin + 50, yPos);
+      yPos += 5;
+
+      // Mostrar items
       for (let i = 0; i < items.length; i++) {
         const [key, value] = items[i];
         
+        // Símbolo según estado
         if (value.estado === 'bueno') {
           doc.setTextColor(...verde);
           doc.setFont('helvetica', 'bold');
-          doc.text('✓', margin + 2, yPos);
+          doc.text('OK', margin + 2, yPos);
         } else {
           doc.setTextColor(...naranja);
           doc.setFont('helvetica', 'bold');
-          doc.text('⚠', margin + 2, yPos);
+          doc.text('!', margin + 2, yPos);
         }
         
+        // Nombre del item
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(...textoOscuro);
         doc.setFontSize(7);
-        doc.text(labels[key], margin + 8, yPos);
+        doc.text(labels[key], margin + 10, yPos);
         yPos += 4;
         
+        // Detalle si existe
         if (value.detalle) {
           doc.setFont('helvetica', 'italic');
           doc.setFontSize(6);
           doc.setTextColor(...grisMedio);
-          const detalleTexto = doc.splitTextToSize(`- ${value.detalle}`, pageWidth - margin * 2 - 10);
+          const detalleTexto = doc.splitTextToSize(`- ${value.detalle}`, pageWidth - margin * 2 - 12);
           detalleTexto.forEach(linea => {
-            doc.text(linea, margin + 10, yPos);
+            doc.text(linea, margin + 12, yPos);
             yPos += 3;
           });
           yPos += 1;
         }
       }
-      yPos += 3;
+      yPos += 2;
     }
 
-    // ========== CLIENTE Y FIRMA ==========
+    // ========== DATOS DEL CLIENTE Y FIRMA ==========
     if (ot.datosCliente) {
-      agregarSeccion('CLIENTE');
-      agregarCampoDoble('NOMBRE', ot.datosCliente.nombre, 'RUT', ot.datosCliente.rut);
-      agregarCampo('CONTACTO', ot.datosCliente.contacto);
+      agregarSeccionCompacta('CLIENTE');
+      agregarFilaDosColumnas('NOMBRE', ot.datosCliente.nombre, 'RUT', ot.datosCliente.rut);
+      agregarFilaDosColumnas('CONTACTO', ot.datosCliente.contacto, '', '');
       yPos += 2;
 
+      // Firma compacta
       if (ot.datosCliente.firma) {
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(7);
@@ -226,6 +253,10 @@ export const generarPDFOT = (ot, preview = false) => {
           yPos += 26;
         } catch (error) {
           console.error('Error al agregar firma:', error);
+          doc.setFont('helvetica', 'italic');
+          doc.setFontSize(7);
+          doc.text('(Firma no disponible)', margin + 2, yPos);
+          yPos += 8;
         }
       }
     }
@@ -234,15 +265,8 @@ export const generarPDFOT = (ot, preview = false) => {
     doc.setFontSize(6);
     doc.setTextColor(...grisMedio);
     doc.setFont('helvetica', 'normal');
-    const fechaCreacion = new Date(ot.fechaCreacion).toLocaleDateString('es-CL', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-    doc.text(`Generado: ${fechaCreacion}`, pageWidth / 2, pageHeight - 8, { align: 'center' });
-    doc.text('© 2025 SERVITRAK - Sistema de Gestión OT', pageWidth / 2, pageHeight - 4, { align: 'center' });
+    doc.text('2025 GPS OT Manager - Sistema de Gestion de Ordenes de Trabajo', pageWidth / 2, pageHeight - 8, { align: 'center' });
+    doc.text('Pagina 1 de 1', pageWidth / 2, pageHeight - 4, { align: 'center' });
 
     // ========== GUARDAR O PREVISUALIZAR ==========
     const nombreArchivo = `${codigoOT}.pdf`;

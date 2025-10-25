@@ -1,7 +1,8 @@
-// src/components/CrearOT.jsx - VERSIÓN MEJORADA Y COMPACTA
+// src/components/CrearOT.jsx
 import { useState, useEffect } from 'react';
 import CheckList from './CheckList';
 import FirmaDigital from './FirmaDigital';
+import ModalConfirmacionOT from './ModalConfirmacionOT';
 import { useCrearOT } from '../hooks/useCrearOT';
 import { validarCamposObligatoriosPorPaso } from '../utils/validaciones';
 import '../styles/crearOT.css';
@@ -14,12 +15,16 @@ function CrearOT({ navigateTo, empresaData }) {
   const [mostrarPpuOut, setMostrarPpuOut] = useState(false);
   const [mostrarImeiOut, setMostrarImeiOut] = useState(false);
   const [mostrarAccesorios, setMostrarAccesorios] = useState(false);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [ultimaOTCreada, setUltimaOTCreada] = useState(null);
+  const [tipoContacto, setTipoContacto] = useState('telefono');
 
   const {
     codigoOT,
     datosOT,
     actualizarDatos,
-    finalizarOT
+    finalizarOT,
+    reiniciarFormulario
   } = useCrearOT(empresaData);
 
   useEffect(() => {
@@ -62,7 +67,7 @@ function CrearOT({ navigateTo, empresaData }) {
     }
   };
 
-  const handleFinalizarOT = () => {
+  const handleCrearOT = () => {
     const errores = validarCamposObligatoriosPorPaso(datosOT, pasoActual);
     
     if (errores.length > 0) {
@@ -73,14 +78,31 @@ function CrearOT({ navigateTo, empresaData }) {
     const otGuardada = finalizarOT(() => []);
     
     if (otGuardada) {
-      alert(`✅ ¡OT ${otGuardada.codigoOT} guardada exitosamente!`);
-      navigateTo('index');
+      setUltimaOTCreada(otGuardada);
+      setMostrarModal(true);
     }
+  };
+
+  const handleCrearOtra = () => {
+    setMostrarModal(false);
+    setUltimaOTCreada(null);
+    setPasoActual(0);
+    setMostrarPpuOut(false);
+    setMostrarImeiOut(false);
+    setMostrarAccesorios(false);
+    setTipoContacto('telefono');
+    reiniciarFormulario();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleFinalizar = () => {
+    setMostrarModal(false);
+    alert(`✅ ¡OT ${ultimaOTCreada.codigoOT} guardada exitosamente!`);
+    navigateTo('index');
   };
 
   const tiposServicio = ['Instalación', 'Mantención', 'Migración', 'Desinstalación', 'Visita Fallida'];
   const tecnicos = ['Sebastian Parra'];
-  const tiposVehiculo = ['Auto', 'Moto', 'Camioneta', 'Bus', 'Camión', 'Furgón', 'Van', 'SUV', 'Pickup', 'Otro'];
   const marcasPopulares = ['Audi', 'BMW', 'Chevrolet', 'Citroën', 'Ford', 'Hyundai', 'Kia', 'Mazda', 'Mercedes Benz', 'Mitsubishi', 'Nissan', 'Peugeot', 'Renault', 'Toyota', 'Volkswagen'].sort();
   const años = [];
   for (let año = 2030; año >= 1990; año--) {
@@ -124,6 +146,11 @@ function CrearOT({ navigateTo, empresaData }) {
       return ppuLimpio;
     }
     return ppuLimpio.slice(0, 6);
+  };
+
+  const formatearTelefono = (telefono) => {
+    const telefonoLimpio = telefono.replace(/\D/g, '');
+    return telefonoLimpio.slice(0, 9);
   };
 
   return (
@@ -324,29 +351,16 @@ function CrearOT({ navigateTo, empresaData }) {
 
           <div className="separador-flow"></div>
 
-          <div className="input-row-compact">
-            <select
-              className="select-flow-small"
-              value={datosOT.datosVehiculo.tipo || ''}
-              onChange={(e) => actualizarDatos('datosVehiculo', { ...datosOT.datosVehiculo, tipo: e.target.value })}
-            >
-              <option value="">TIPO *</option>
-              {tiposVehiculo.map(tipo => (
-                <option key={tipo} value={tipo}>{tipo}</option>
-              ))}
-            </select>
-
-            <select
-              className="select-flow-small"
-              value={datosOT.datosVehiculo.marca || ''}
-              onChange={(e) => actualizarDatos('datosVehiculo', { ...datosOT.datosVehiculo, marca: e.target.value })}
-            >
-              <option value="">MARCA *</option>
-              {marcasPopulares.map(marca => (
-                <option key={marca} value={marca}>{marca}</option>
-              ))}
-            </select>
-          </div>
+          <select
+            className="select-flow"
+            value={datosOT.datosVehiculo.marca || ''}
+            onChange={(e) => actualizarDatos('datosVehiculo', { ...datosOT.datosVehiculo, marca: e.target.value })}
+          >
+            <option value="">MARCA *</option>
+            {marcasPopulares.map(marca => (
+              <option key={marca} value={marca}>{marca}</option>
+            ))}
+          </select>
 
           <div className="input-row-compact">
             <input
@@ -427,13 +441,45 @@ function CrearOT({ navigateTo, empresaData }) {
             onChange={(e) => actualizarDatos('datosCliente', { ...datosOT.datosCliente, rut: formatearRUT(e.target.value) })}
           />
 
-          <input
-            type="text"
-            className="input-flow"
-            placeholder="TELÉFONO O EMAIL *"
-            value={datosOT.datosCliente?.contacto || ''}
-            onChange={(e) => actualizarDatos('datosCliente', { ...datosOT.datosCliente, contacto: e.target.value })}
-          />
+          <div className="tipo-contacto-selector">
+            <button
+              type="button"
+              className={`tipo-contacto-btn ${tipoContacto === 'telefono' ? 'activo' : ''}`}
+              onClick={() => setTipoContacto('telefono')}
+            >
+              📱 Teléfono
+            </button>
+            <button
+              type="button"
+              className={`tipo-contacto-btn ${tipoContacto === 'correo' ? 'activo' : ''}`}
+              onClick={() => setTipoContacto('correo')}
+            >
+              ✉️ Correo
+            </button>
+          </div>
+
+          {tipoContacto === 'telefono' ? (
+            <div className="input-telefono-container">
+              <div className="prefijo-telefono">+56</div>
+              <input
+                type="tel"
+                className="input-flow"
+                placeholder="9 1234 5678 *"
+                maxLength="9"
+                value={datosOT.datosCliente?.contacto || ''}
+                onChange={(e) => actualizarDatos('datosCliente', { ...datosOT.datosCliente, contacto: formatearTelefono(e.target.value) })}
+              />
+            </div>
+          ) : (
+            <input
+              type="email"
+              className="input-flow"
+              placeholder="correo@ejemplo.com *"
+              style={{ textTransform: 'none' }}
+              value={datosOT.datosCliente?.contacto || ''}
+              onChange={(e) => actualizarDatos('datosCliente', { ...datosOT.datosCliente, contacto: e.target.value })}
+            />
+          )}
 
           <div className="firma-container-flow-compact">
             <label className="label-flow-firma">✍️ FIRMA *</label>
@@ -456,11 +502,18 @@ function CrearOT({ navigateTo, empresaData }) {
             Siguiente →
           </button>
         ) : (
-          <button className="btn btn-success btn-nav" onClick={handleFinalizarOT}>
-            ✓ Finalizar OT
+          <button className="btn btn-success btn-nav" onClick={handleCrearOT}>
+            ✓ Crear OT
           </button>
         )}
       </div>
+
+      <ModalConfirmacionOT
+        mostrar={mostrarModal}
+        ultimaOTCreada={ultimaOTCreada}
+        onCrearOtra={handleCrearOtra}
+        onFinalizar={handleFinalizar}
+      />
     </div>
   );
 }

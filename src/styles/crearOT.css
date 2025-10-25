@@ -222,7 +222,7 @@
   text-transform: uppercase;
 }
 
-/* Dropdown de accesorios personalizado */
+/* Dropdown de accesorios personalizado - TAMAÑO MEJORADO */
 .accesorios-dropdown-custom {
   position: relative;
   margin-bottom: 10px;
@@ -244,6 +244,7 @@
   text-transform: uppercase;
   color: var(--text-primary);
   transition: all 0.2s ease;
+  min-height: 44px;
 }
 
 .accesorios-dropdown-toggle-custom:hover {
@@ -294,7 +295,7 @@
   gap: 10px;
   transition: all 0.15s ease;
   border-bottom: 1px solid #f3f4f6;
-  font-size: 0.7em;
+  font-size: 0.75em;
   text-transform: uppercase;
 }
 
@@ -353,6 +354,62 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-align: center;
+}
+
+/* Selector de tipo de contacto */
+.tipo-contacto-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tipo-contacto-btn {
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  font-family: var(--font-text);
+  font-size: 0.75em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.tipo-contacto-btn.activo {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(0, 153, 255, 0.3);
+}
+
+.tipo-contacto-btn:hover:not(.activo) {
+  border-color: var(--color-primary);
+  background: rgba(0, 153, 255, 0.05);
+}
+
+.input-telefono-container {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.prefijo-telefono {
+  padding: 10px 8px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 0.75em;
+  font-family: var(--font-text);
+  background: #f3f4f6;
+  color: var(--text-primary);
+  text-align: center;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .navegacion-fixed {
