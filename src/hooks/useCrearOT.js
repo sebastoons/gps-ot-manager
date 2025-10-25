@@ -1,4 +1,4 @@
-// src/hooks/useCrearOT.js - COMPLETO CON datosCliente
+// src/hooks/useCrearOT.js - CORREGIDO PARA FINALIZAR CORRECTAMENTE
 import { useState, useEffect } from 'react';
 import { guardarOT, obtenerNumeroOTActual } from '../utils/storage';
 
@@ -7,11 +7,17 @@ export const useCrearOT = (empresaData) => {
   const [codigoOT, setCodigoOT] = useState('');
   const [otsCreadas, setOtsCreadas] = useState([]);
   const [datosEmpresaGuardados, setDatosEmpresaGuardados] = useState({});
-  const [seccionAbierta, setSeccionAbierta] = useState('datosEmpresa');
   
   const [datosOT, setDatosOT] = useState({
     datosEmpresa: {},
-    checklist: {},
+    checklist: {
+      luces: { estado: '', detalle: '' },
+      radio: { estado: '', detalle: '' },
+      tablero: { estado: '', detalle: '' },
+      checkEngine: { estado: '', detalle: '' },
+      bateria: { estado: '', detalle: '' },
+      plasticosEstetica: { estado: '', detalle: '' }
+    },
     datosGPS: {},
     datosVehiculo: {},
     datosCliente: {}
@@ -24,10 +30,6 @@ export const useCrearOT = (empresaData) => {
       setCodigoOT(`${empresaData.prefijo}${String(numeroActual).padStart(4, '0')}`);
     }
   }, [empresaData]);
-
-  const toggleSeccion = (seccion) => {
-    setSeccionAbierta(seccionAbierta === seccion ? '' : seccion);
-  };
 
   const actualizarDatos = (seccion, nuevosDatos) => {
     setDatosOT({ ...datosOT, [seccion]: nuevosDatos });
@@ -55,29 +57,12 @@ export const useCrearOT = (empresaData) => {
     return null;
   };
 
-  const crearNuevaOT = () => {
-    const nuevoNumero = obtenerNumeroOTActual(empresaData.prefijo);
-    setNumeroOT(nuevoNumero);
-    setCodigoOT(`${empresaData.prefijo}${String(nuevoNumero).padStart(4, '0')}`);
-    setDatosOT({
-      datosEmpresa: datosEmpresaGuardados,
-      checklist: {},
-      datosGPS: {},
-      datosVehiculo: {},
-      datosCliente: {}
-    });
-    setSeccionAbierta('datosGPS');
-  };
-
   return {
     numeroOT,
     codigoOT,
     otsCreadas,
     datosOT,
-    seccionAbierta,
-    toggleSeccion,
     actualizarDatos,
-    finalizarOT,
-    crearNuevaOT
+    finalizarOT
   };
 };

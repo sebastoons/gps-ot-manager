@@ -1,4 +1,4 @@
-// src/utils/validaciones.js - COMPLETO CON VALIDACIÓN PASO 4
+// src/utils/validaciones.js - CORREGIDO SIN NOMBRE CONTACTO
 export const validarCamposObligatoriosPorPaso = (datosOT, paso) => {
   const errores = [];
   
@@ -9,9 +9,6 @@ export const validarCamposObligatoriosPorPaso = (datosOT, paso) => {
       }
       if (!datosOT.datosEmpresa.fecha?.trim()) {
         errores.push('Fecha');
-      }
-      if (!datosOT.datosEmpresa.nombreContacto?.trim()) {
-        errores.push('Nombre del Contacto');
       }
       if (!datosOT.datosEmpresa.region?.trim()) {
         errores.push('Región');
@@ -80,9 +77,6 @@ export const validarCamposObligatorios = (datosOT) => {
   }
   if (!datosOT.datosEmpresa.fecha?.trim()) {
     errores.push('Fecha');
-  }
-  if (!datosOT.datosEmpresa.nombreContacto?.trim()) {
-    errores.push('Nombre del Contacto');
   }
   if (!datosOT.datosEmpresa.region?.trim()) {
     errores.push('Región');

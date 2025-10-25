@@ -1,9 +1,9 @@
-// src/components/CheckList.jsx - VERSIÓN COMPACTA
-import { useState } from 'react';
+// src/components/CheckList.jsx - VERSIÓN COMPACTA CORREGIDA
+import { useState, useEffect } from 'react';
 import '../styles/checkList.css';
 
 function CheckList({ datos, onChange }) {
-  const [checklist, setChecklist] = useState(datos || {
+  const [checklist, setChecklist] = useState({
     luces: { estado: '', detalle: '' },
     radio: { estado: '', detalle: '' },
     tablero: { estado: '', detalle: '' },
@@ -11,6 +11,15 @@ function CheckList({ datos, onChange }) {
     bateria: { estado: '', detalle: '' },
     plasticosEstetica: { estado: '', detalle: '' }
   });
+
+  useEffect(() => {
+    if (datos && typeof datos === 'object') {
+      setChecklist(prevState => ({
+        ...prevState,
+        ...datos
+      }));
+    }
+  }, [datos]);
 
   const items = [
     { key: 'luces', label: 'Luces', icon: '💡' },
@@ -51,26 +60,26 @@ function CheckList({ datos, onChange }) {
           <div className="checklist-estados">
             <button
               type="button"
-              className={`estado-btn ${checklist[key].estado === 'bueno' ? 'bueno' : ''}`}
+              className={`estado-btn ${checklist[key]?.estado === 'bueno' ? 'bueno' : ''}`}
               onClick={() => handleEstadoChange(key, 'bueno')}
             >
               ✓
             </button>
             <button
               type="button"
-              className={`estado-btn ${checklist[key].estado === 'regular' ? 'regular' : ''}`}
+              className={`estado-btn ${checklist[key]?.estado === 'regular' ? 'regular' : ''}`}
               onClick={() => handleEstadoChange(key, 'regular')}
             >
               ⚠
             </button>
           </div>
 
-          {checklist[key].estado === 'regular' && (
+          {checklist[key]?.estado === 'regular' && (
             <input
               type="text"
               className="detalle-input-compact"
               placeholder="Especificar problema..."
-              value={checklist[key].detalle}
+              value={checklist[key]?.detalle || ''}
               onChange={(e) => handleDetalleChange(key, e.target.value)}
             />
           )}

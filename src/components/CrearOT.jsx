@@ -1,8 +1,7 @@
-// src/components/CrearOT.jsx - UNA SOLA PANTALLA CON DESVANECIMIENTO
+// src/components/CrearOT.jsx - VERSIÓN MEJORADA Y COMPACTA
 import { useState, useEffect } from 'react';
 import CheckList from './CheckList';
 import FirmaDigital from './FirmaDigital';
-import ModalConfirmacionOT from './ModalConfirmacionOT';
 import { useCrearOT } from '../hooks/useCrearOT';
 import { validarCamposObligatoriosPorPaso } from '../utils/validaciones';
 import '../styles/crearOT.css';
@@ -10,19 +9,17 @@ import regionesData from '../data/regiones.json';
 
 function CrearOT({ navigateTo, empresaData }) {
   const [pasoActual, setPasoActual] = useState(0);
-  const [mostrarModalOtraBT, setMostrarModalOtraBT] = useState(false);
   const [ciudades, setCiudades] = useState([]);
   const [comunas, setComunas] = useState([]);
   const [mostrarPpuOut, setMostrarPpuOut] = useState(false);
   const [mostrarImeiOut, setMostrarImeiOut] = useState(false);
+  const [mostrarAccesorios, setMostrarAccesorios] = useState(false);
 
   const {
     codigoOT,
-    otsCreadas,
     datosOT,
     actualizarDatos,
-    finalizarOT,
-    crearNuevaOT
+    finalizarOT
   } = useCrearOT(empresaData);
 
   useEffect(() => {
@@ -76,20 +73,9 @@ function CrearOT({ navigateTo, empresaData }) {
     const otGuardada = finalizarOT(() => []);
     
     if (otGuardada) {
-      setMostrarModalOtraBT(true);
+      alert(`✅ ¡OT ${otGuardada.codigoOT} guardada exitosamente!`);
+      navigateTo('index');
     }
-  };
-
-  const handleCrearOtraBT = () => {
-    crearNuevaOT();
-    setMostrarModalOtraBT(false);
-    setPasoActual(0);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleNoCrearOtraBT = () => {
-    setMostrarModalOtraBT(false);
-    navigateTo('index');
   };
 
   const tiposServicio = ['Instalación', 'Mantención', 'Migración', 'Desinstalación', 'Visita Fallida'];
@@ -237,33 +223,60 @@ function CrearOT({ navigateTo, empresaData }) {
             ))}
           </select>
 
-          <div className="accesorios-compact">
-            <label className="label-flow">ACCESORIOS</label>
-            <div className="accesorios-grid-compact">
-              {accesoriosDisponibles.map((accesorio) => {
-                const seleccionado = (datosOT.datosGPS.accesoriosInstalados || []).includes(accesorio);
-                return (
-                  <button
-                    key={accesorio}
-                    type="button"
-                    className={`accesorio-btn-compact ${seleccionado ? 'selected' : ''}`}
-                    onClick={() => handleAccesorioToggle(accesorio)}
-                  >
-                    {seleccionado && '✓ '}{accesorio}
-                  </button>
-                );
-              })}
-            </div>
+          <div className="accesorios-dropdown-custom">
+            <button
+              type="button"
+              className="accesorios-dropdown-toggle-custom"
+              onClick={() => setMostrarAccesorios(!mostrarAccesorios)}
+            >
+              <span>
+                {(datosOT.datosGPS.accesoriosInstalados || []).length > 0 
+                  ? `${(datosOT.datosGPS.accesoriosInstalados || []).length} accesorios`
+                  : 'Accesorios'}
+              </span>
+              <span className={`dropdown-arrow ${mostrarAccesorios ? 'open' : ''}`}>▼</span>
+            </button>
+
+            {mostrarAccesorios && (
+              <div className="accesorios-dropdown-menu-custom">
+                {accesoriosDisponibles.map((accesorio) => {
+                  const seleccionado = (datosOT.datosGPS.accesoriosInstalados || []).includes(accesorio);
+                  return (
+                    <div
+                      key={accesorio}
+                      className={`accesorio-item-custom ${seleccionado ? 'selected' : ''}`}
+                      onClick={() => handleAccesorioToggle(accesorio)}
+                    >
+                      <span className="accesorio-check-custom">{seleccionado ? '✓' : ''}</span>
+                      <span>{accesorio}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
-          <input
-            type="text"
-            className="input-flow"
-            placeholder="PPU IN"
-            maxLength="6"
-            value={datosOT.datosGPS.ppuIn || ''}
-            onChange={(e) => actualizarDatos('datosGPS', { ...datosOT.datosGPS, ppuIn: formatearPPU(e.target.value) })}
-          />
+          <div className="input-row-compact">
+            <input
+              type="text"
+              className="input-flow-small"
+              placeholder="PPU IN"
+              maxLength="6"
+              value={datosOT.datosGPS.ppuIn || ''}
+              onChange={(e) => actualizarDatos('datosGPS', { ...datosOT.datosGPS, ppuIn: formatearPPU(e.target.value) })}
+            />
+            <label className="checkbox-inline-mini">
+              <input
+                type="checkbox"
+                checked={mostrarPpuOut}
+                onChange={(e) => {
+                  setMostrarPpuOut(e.target.checked);
+                  if (!e.target.checked) actualizarDatos('datosGPS', { ...datosOT.datosGPS, ppuOut: '' });
+                }}
+              />
+              <span>PPU OUT</span>
+            </label>
+          </div>
 
           {mostrarPpuOut && (
             <input
@@ -276,27 +289,27 @@ function CrearOT({ navigateTo, empresaData }) {
             />
           )}
 
-          <div className="checkbox-inline-flow">
+          <div className="input-row-compact">
             <input
-              type="checkbox"
-              id="check-ppu-out"
-              checked={mostrarPpuOut}
-              onChange={(e) => {
-                setMostrarPpuOut(e.target.checked);
-                if (!e.target.checked) actualizarDatos('datosGPS', { ...datosOT.datosGPS, ppuOut: '' });
-              }}
+              type="number"
+              className="input-flow-small"
+              placeholder="IMEI IN"
+              maxLength="15"
+              value={datosOT.datosGPS.imeiIn || ''}
+              onChange={(e) => actualizarDatos('datosGPS', { ...datosOT.datosGPS, imeiIn: e.target.value.replace(/\D/g, '').slice(0, 15) })}
             />
-            <label htmlFor="check-ppu-out">¿PPU OUT?</label>
+            <label className="checkbox-inline-mini">
+              <input
+                type="checkbox"
+                checked={mostrarImeiOut}
+                onChange={(e) => {
+                  setMostrarImeiOut(e.target.checked);
+                  if (!e.target.checked) actualizarDatos('datosGPS', { ...datosOT.datosGPS, imeiOut: '' });
+                }}
+              />
+              <span>IMEI OUT</span>
+            </label>
           </div>
-
-          <input
-            type="number"
-            className="input-flow"
-            placeholder="IMEI IN"
-            maxLength="15"
-            value={datosOT.datosGPS.imeiIn || ''}
-            onChange={(e) => actualizarDatos('datosGPS', { ...datosOT.datosGPS, imeiIn: e.target.value.replace(/\D/g, '').slice(0, 15) })}
-          />
 
           {mostrarImeiOut && (
             <input
@@ -309,61 +322,52 @@ function CrearOT({ navigateTo, empresaData }) {
             />
           )}
 
-          <div className="checkbox-inline-flow">
-            <input
-              type="checkbox"
-              id="check-imei-out"
-              checked={mostrarImeiOut}
-              onChange={(e) => {
-                setMostrarImeiOut(e.target.checked);
-                if (!e.target.checked) actualizarDatos('datosGPS', { ...datosOT.datosGPS, imeiOut: '' });
-              }}
-            />
-            <label htmlFor="check-imei-out">¿IMEI OUT?</label>
-          </div>
-
           <div className="separador-flow"></div>
 
-          <select
-            className="select-flow"
-            value={datosOT.datosVehiculo.tipo || ''}
-            onChange={(e) => actualizarDatos('datosVehiculo', { ...datosOT.datosVehiculo, tipo: e.target.value })}
-          >
-            <option value="">TIPO VEHÍCULO *</option>
-            {tiposVehiculo.map(tipo => (
-              <option key={tipo} value={tipo}>{tipo}</option>
-            ))}
-          </select>
+          <div className="input-row-compact">
+            <select
+              className="select-flow-small"
+              value={datosOT.datosVehiculo.tipo || ''}
+              onChange={(e) => actualizarDatos('datosVehiculo', { ...datosOT.datosVehiculo, tipo: e.target.value })}
+            >
+              <option value="">TIPO *</option>
+              {tiposVehiculo.map(tipo => (
+                <option key={tipo} value={tipo}>{tipo}</option>
+              ))}
+            </select>
 
-          <select
-            className="select-flow"
-            value={datosOT.datosVehiculo.marca || ''}
-            onChange={(e) => actualizarDatos('datosVehiculo', { ...datosOT.datosVehiculo, marca: e.target.value })}
-          >
-            <option value="">MARCA *</option>
-            {marcasPopulares.map(marca => (
-              <option key={marca} value={marca}>{marca}</option>
-            ))}
-          </select>
+            <select
+              className="select-flow-small"
+              value={datosOT.datosVehiculo.marca || ''}
+              onChange={(e) => actualizarDatos('datosVehiculo', { ...datosOT.datosVehiculo, marca: e.target.value })}
+            >
+              <option value="">MARCA *</option>
+              {marcasPopulares.map(marca => (
+                <option key={marca} value={marca}>{marca}</option>
+              ))}
+            </select>
+          </div>
 
-          <input
-            type="text"
-            className="input-flow"
-            placeholder="MODELO *"
-            value={datosOT.datosVehiculo.modelo || ''}
-            onChange={(e) => actualizarDatos('datosVehiculo', { ...datosOT.datosVehiculo, modelo: e.target.value })}
-          />
+          <div className="input-row-compact">
+            <input
+              type="text"
+              className="input-flow-small"
+              placeholder="MODELO *"
+              value={datosOT.datosVehiculo.modelo || ''}
+              onChange={(e) => actualizarDatos('datosVehiculo', { ...datosOT.datosVehiculo, modelo: e.target.value })}
+            />
 
-          <select
-            className="select-flow"
-            value={datosOT.datosVehiculo.ano || ''}
-            onChange={(e) => actualizarDatos('datosVehiculo', { ...datosOT.datosVehiculo, ano: e.target.value })}
-          >
-            <option value="">AÑO *</option>
-            {años.map(año => (
-              <option key={año} value={año}>{año}</option>
-            ))}
-          </select>
+            <select
+              className="select-flow-small"
+              value={datosOT.datosVehiculo.ano || ''}
+              onChange={(e) => actualizarDatos('datosVehiculo', { ...datosOT.datosVehiculo, ano: e.target.value })}
+            >
+              <option value="">AÑO *</option>
+              {años.map(año => (
+                <option key={año} value={año}>{año}</option>
+              ))}
+            </select>
+          </div>
 
           <select
             className="select-flow"
@@ -385,9 +389,9 @@ function CrearOT({ navigateTo, empresaData }) {
           />
 
           <textarea
-            className="textarea-flow"
-            rows="3"
-            placeholder="OBSERVACIONES DEL VEHÍCULO"
+            className="textarea-flow-small"
+            rows="2"
+            placeholder="OBSERVACIONES"
             value={datosOT.datosVehiculo.observaciones || ''}
             onChange={(e) => actualizarDatos('datosVehiculo', { ...datosOT.datosVehiculo, observaciones: e.target.value })}
           />
@@ -431,8 +435,8 @@ function CrearOT({ navigateTo, empresaData }) {
             onChange={(e) => actualizarDatos('datosCliente', { ...datosOT.datosCliente, contacto: e.target.value })}
           />
 
-          <div className="firma-container-flow">
-            <label className="label-flow">✍️ FIRMA DEL CLIENTE *</label>
+          <div className="firma-container-flow-compact">
+            <label className="label-flow-firma">✍️ FIRMA *</label>
             <FirmaDigital 
               onFirmaChange={(firma) => actualizarDatos('datosCliente', { ...datosOT.datosCliente, firma })} 
             />
@@ -457,13 +461,6 @@ function CrearOT({ navigateTo, empresaData }) {
           </button>
         )}
       </div>
-
-      <ModalConfirmacionOT
-        mostrar={mostrarModalOtraBT}
-        ultimaOTCreada={otsCreadas[otsCreadas.length - 1]}
-        onCrearOtra={handleCrearOtraBT}
-        onFinalizar={handleNoCrearOtraBT}
-      />
     </div>
   );
 }
