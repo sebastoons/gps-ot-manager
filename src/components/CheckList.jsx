@@ -1,6 +1,6 @@
 // src/components/CheckList.jsx - VERSIÓN COMPACTA
 import { useState } from 'react';
-import '../styles/checklist.css';
+import '../styles/checkList.css';
 
 function CheckList({ datos, onChange }) {
   const [checklist, setChecklist] = useState(datos || {
